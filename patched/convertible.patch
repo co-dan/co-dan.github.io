@@ -1,0 +1,16 @@
+--- Data/Convertible/Utils.hs.old       2013-06-27 13:59:36.166209161 +0000
++++ Data/Convertible/Utils.hs   2013-06-27 13:58:50.803012796 +0000
+@@ -52,10 +52,10 @@
+ {- | Useful for defining 'Typeable' instances.  Example:
+
+ >instance Typeable TimeOfDay where
+->    typeOf _ = mkTypeName "TimeOfDay"
++>    typeOf _ = mkTypeName "timeday" "Time" "TimeOfDay"
+ -}
+-mkTypeName :: String -> TypeRep
+-mkTypeName name = mkTyConApp (mkTyCon name) []
++mkTypeName :: String -> String -> String -> TypeRep
++mkTypeName pkg mod name = mkTyConApp (mkTyCon3 pkg mod name) []
+
+ {- | Useful for defining conversions that are implemented in terms of other
+ conversions via an intermediary type. Instead of:
