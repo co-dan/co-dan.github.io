@@ -1,0 +1,2940 @@
+1 patch for repository http://community.haskell.org/~ndm/darcs/hlint:
+
+Fri Jun 28 08:05:16 UTC 2013  difrumin@gmail.com
+  * Making hlint work with base 4.7
+
+
+New patches:
+
+[Making hlint work with base 4.7
+difrumin@gmail.com**20130628080516
+ Ignore-this: b6173be9c8dbb8aec8e3acd5f278ef70
+] {
+hunk ./src/Util.hs 73
+ headDef x [] = x
+ headDef x (y:ys) = y
+ 
++#if !MIN_VERSION_base(4,7,0)
+ isLeft Left{} = True; isLeft _ = False
+ isRight = not . isLeft
+hunk ./src/Util.hs 76
++#endif
+ 
+ unzipEither :: [Either a b] -> ([a], [b])
+ unzipEither (x:xs) = case x of
+}
+
+Context:
+
+[Version 1.8.46
+Neil Mitchell**20130606201843
+ Ignore-this: c11419bce24c9276e6de65f21e03e428
+] 
+[Remove incorrect isPrefixOf hints
+Neil Mitchell**20130606201755
+ Ignore-this: 62b615df438f02008836858ca1b29c4e
+] 
+[Fix up some accidentally duplicated hints
+Neil Mitchell**20130527183700
+ Ignore-this: 1e6e3df3af5cd547d9429e4ae0fb053b
+] 
+[#586, add span/break/takeWhile/dropWhile hints
+Neil Mitchell**20130527183256
+ Ignore-this: 1b1f8b9a48d8a710e80a6810a5bac846
+] 
+[#588, add sort/reverse hints
+Neil Mitchell**20130527181453
+ Ignore-this: 659f25014489e2c290d827fc4b9fcb5e
+] 
+[#601, add more replicate/map hints
+Neil Mitchell**20130524170445
+ Ignore-this: ca578a2adc062262cecca0c0e46633af
+] 
+[Add a hint about reverse/reverse, people should use better things for strictness annotations
+Neil Mitchell**20130524170400
+ Ignore-this: a946728548b400148c3a144f2a024f8b
+] 
+[Update what is allowable in the syntax of hints
+Neil Mitchell**20130524170316
+ Ignore-this: 79510bd3c2e7ab8296dd1b85f8ae237b
+] 
+[Allow side as a synonym for _ in hints
+Neil Mitchell**20130524170301
+ Ignore-this: 7fed2f41fd13f9a2c09ec5ac81418ccd
+] 
+[Permit "hint" as a severity, allows nicer looking papers
+Neil Mitchell**20130524165924
+ Ignore-this: 756f07f479577379c04d8f236c76438
+] 
+[Version 1.8.45
+Neil Mitchell**20130512152813
+ Ignore-this: 3def69ac96dc9626df084ba180e86a7c
+] 
+[#600, add hints for unnecessary lazy patterns
+Neil Mitchell**20130512152325
+ Ignore-this: 431b0d0d7e6e14482635c83dcca795c1
+] 
+[Add another hints for bang patterns inside AsPatterns
+Neil Mitchell**20130512152109
+ Ignore-this: 8ba4d5033a60e98d70e05ff148277f01
+] 
+[Version 1.8.44
+Neil Mitchell**20130421101133
+ Ignore-this: 12f740b1ceaf371d25d9d11f4144bbf2
+] 
+[#598, warn about unnecessary bang patterns
+Neil Mitchell**20130421095732
+ Ignore-this: ec48f681540853333ff25d5c3392c114
+] 
+[1.8.43
+Neil Mitchell**20130127223351
+ Ignore-this: 324d33e9a4639e886430ef30094f96ff
+] 
+[Update the manual with an error vs warning section
+Neil Mitchell**20130127222803
+ Ignore-this: 79d66ddaaded74bd3c073609fdd933e3
+] 
+[Change the warning level of lambda hints if the reduced version is a single literal
+Neil Mitchell**20130127220310
+ Ignore-this: 22faab265418ea2fc2af171c439ed496
+] 
+[Change the warning level of a hint
+Neil Mitchell**20130127220257
+ Ignore-this: 4df552550bca2fc3e17a870a936bf279
+] 
+[Add isCon
+Neil Mitchell**20130127220243
+ Ignore-this: f2f484268b9d0c1cc93a719344fdcd83
+] 
+[Rename isCon to isCtor, since isCon should do something else
+Neil Mitchell**20130127220226
+ Ignore-this: f9ad87b2e5d92d67c93ea5eeaebeff32
+] 
+[Version 1.8.42
+Neil Mitchell**20130123083500
+ Ignore-this: 9c02b7ec906d85cc1f9181e655cf28b4
+] 
+[Allow cpphs-1.16
+Neil Mitchell**20130123081659
+ Ignore-this: 2f22236e93b03cf92099f68605854935
+] 
+[Version 1.8.41
+Neil Mitchell**20130119093738
+ Ignore-this: 4bf92f8432a842bc5076b6aab64f7639
+] 
+[Compile fixes for Proof
+Neil Mitchell**20130119093726
+ Ignore-this: e5f84f2740ed85c9581186bccc40cd52
+] 
+[Update the command line help for --proof
+Neil Mitchell**20130119092807
+ Ignore-this: 8a5fda6e4e0106063299bfb14744d818
+] 
+[Add missing module
+Neil Mitchell**20130119092757
+ Ignore-this: eb67cee7ac5731e9f87b472a99dca194
+] 
+[#586, add a rule for takeWhile/dropWhile ==> span
+Neil Mitchell**20130119084021
+ Ignore-this: 530632a9dc81cd4fc4822dc6f422c5
+] 
+[Add a rule that app under let doesn't need a bracket
+Neil Mitchell**20130119083930
+ Ignore-this: 474bea63570a4b30b4fc11b569e2b11c
+] 
+[#522, add hints about the state monad
+Neil Mitchell**20130119082924
+ Ignore-this: 35d4d2699d963d9c6060908521495038
+] 
+[Add to the changelog
+Neil Mitchell**20130119082614
+ Ignore-this: 3838daac24aea8e246e7b2953b154b3d
+] 
+[Fix the side conditions on the `isPrefixOf` hint
+Neil Mitchell**20130118172658
+ Ignore-this: d3528143f96b7fe83e6c1f8e58dd293e
+] 
+[Update changelog
+Neil Mitchell**20130118172624
+ Ignore-this: 26ff603c5ba7e66da92c963346f5987f
+] 
+[Add hints about take/drop on non-positive numbers
+Neil Mitchell**20130118172543
+ Ignore-this: a8fced53c4308feeb58fb28b0d9fd908
+] 
+[Tweak capitalisation of one hint
+Neil Mitchell**20130118172531
+ Ignore-this: d51a4774891e5b3041490a1577cfc223
+] 
+[Add a translation if isNegPos to the proof changer
+Neil Mitchell**20130118172405
+ Ignore-this: e5cc775e0b3464a188d96eb46aa0e8ea
+] 
+[Add isNegPos/isNeg as hints
+Neil Mitchell**20130118172346
+ Ignore-this: 8aa38bbaea29b11adc6e7fa21a8d0f5f
+] 
+[Add the ability to evaluate >= on Int to the Evaluate module
+Neil Mitchell**20130118172255
+ Ignore-this: cd0424d56b1b521387580e95c79cb910
+] 
+[Add an addition isPrefixOf hint
+Neil Mitchell**20130118161700
+ Ignore-this: bae9c8966f6b11f584ce0b65414d22f2
+] 
+[Update the manual regarding notes
+Neil Mitchell**20130117091606
+ Ignore-this: bfa33c26bb8f45c812d8486856d9fc5f
+] 
+[Translate isWHNF to an assumption
+Neil Mitchell**20130116191105
+ Ignore-this: 6e1afc34763ea3be550926b73f6a8613
+] 
+[Redefine some categories of proof failure
+Neil Mitchell**20130116191052
+ Ignore-this: c21c3d571f2efe7e5d89f59d0d850bcd
+] 
+[Pass on the isNat assumption when generating proofs
+Neil Mitchell**20130116184027
+ Ignore-this: c38cf96a9509ff1a000e4871fd7a2d9f
+] 
+[Support $ and $! in the proofs
+Neil Mitchell**20130116184009
+ Ignore-this: 411d7cc364c6f8f3b1b6d68cf58dac07
+] 
+[Alpha rename the `on` hint, since o confuses Isabelle
+Neil Mitchell**20130116183942
+ Ignore-this: b77fcb9edf60d7bf971e32a056c7692f
+] 
+[Reinstate the head/drop hint, but with a guard about n being a natural number
+Neil Mitchell**20130116183916
+ Ignore-this: 4c6135276db122aa575a083725762f70
+] 
+[Add isNat/isPos notes
+Neil Mitchell**20130116183902
+ Ignore-this: da5e17a82c70fed1f51979484c4b83cc
+] 
+[Strip qualifications and don't bother proving hints that are equal
+Neil Mitchell**20130116113604
+ Ignore-this: 7bdc5c4ee7fe7e77a0d5259f4028e6d2
+] 
+[Classify a few more missing hints
+Neil Mitchell**20130116113552
+ Ignore-this: 4424800a56a76b7ca89bd7666099c32a
+] 
+[Write the summary into the report file
+Neil Mitchell**20130115180255
+ Ignore-this: d03b26f6859b9e9dc3aaf02ebf4c2d4
+] 
+[Fix the translation of infix ops
+Neil Mitchell**20130115180241
+ Ignore-this: bbdcb9e84e2c9f8f517f2dc95e972e87
+] 
+[Move the ValidInstance note to the right place
+Neil Mitchell**20130115180231
+ Ignore-this: 3b64d499a8f3c381ee265df2a3fc75ab
+] 
+[Make the translation of operators correspond to the Haskell report
+Neil Mitchell**20130115174529
+ Ignore-this: d22e7971bfc4e9db04be6ae3f4ed3bd9
+] 
+[Fix a bug in DecreasesLaziness translations
+Neil Mitchell**20130115174518
+ Ignore-this: e2aa3517b0dd93dd1c5c7f50a4bb07e3
+] 
+[Add a few more infix/prefix operators
+Neil Mitchell**20130115174507
+ Ignore-this: 9a520565a6bcbff046369be13ca44e40
+] 
+[Add typeclass annotations
+Neil Mitchell**20130115174433
+ Ignore-this: ef6896c9fe6adb6b07bd6edfabb9def8
+] 
+[Add more cases of theorem to find
+Neil Mitchell**20130115174359
+ Ignore-this: 5254624d09c6f0a9018499a711aecd4e
+] 
+[Only require each HLint theorem once, for multiple hints that reduce to the same theorem
+Neil Mitchell**20130115174338
+ Ignore-this: d07160bc10708b44e096627d7c7bae99
+] 
+[Add ValidInstance annotations in a few places
+Neil Mitchell**20130115174312
+ Ignore-this: 1d3bb5bb7a0f331047613ce2fef3ceb1
+] 
+[Update the changelog
+Neil Mitchell**20130115161748
+ Ignore-this: 16f2e1655fb90eaef553cafe5fd4aaa8
+] 
+[Switch to structured notes where possible
+Neil Mitchell**20130115161631
+ Ignore-this: 6aae4023077f5d0e9e0a9c760d37419f
+] 
+[Add an additional test
+Neil Mitchell**20130115161616
+ Ignore-this: 8e30ef16bbd7b505f29dad73905587ce
+] 
+[Make the Note type a real structured type
+Neil Mitchell**20130115161526
+ Ignore-this: ded1ef116507aa028d9a7b6c86ab7f26
+] 
+[Use RecordWildCards to make something clearer
+Neil Mitchell**20130115161509
+ Ignore-this: c768fe491f94e55c14a10d6815026fc
+] 
+[Change "" to [] when passing it as a note, future proof
+Neil Mitchell**20130115161435
+ Ignore-this: a06199fa40d3df68066d77df79ef80d0
+] 
+[Put parens around some infix expressions when generating proof terms
+Neil Mitchell**20130114171217
+ Ignore-this: 6d13feafacb53da6a71bce238d8bef0f
+] 
+[Update the test suite for the introduction of --proof
+Neil Mitchell**20130111084829
+ Ignore-this: d8fdc5568d7b1bdd7785a85ddcac3257
+] 
+[Add a --proof feature
+Neil Mitchell**20130111082641
+ Ignore-this: 2bce3711f19564d814d847627655494b
+] 
+[Comment out some dodgy hints, make hiints more regular, use consistent notes
+Neil Mitchell**20130111082246
+ Ignore-this: acc764d036d4761b34e4434fdf451df5
+] 
+[Add isIf
+Neil Mitchell**20130111082028
+ Ignore-this: a1383a4b0d25b3490503d4948d9a449
+] 
+[Split out readAllSettings
+Neil Mitchell**20130110080515
+ Ignore-this: 2fd4e288887ab67d40e5348e7f959b61
+] 
+[Fix up the tests to work without the haskell98 library
+Neil Mitchell**20130110075610
+ Ignore-this: 7756d99c9f4e340afd251d6a0676a409
+] 
+[Fix up the import list in Default.hs
+Neil Mitchell**20130110075550
+ Ignore-this: d2c669564e34c5f68ed9d71600d64ceb
+] 
+[Retire the Prelude.catch hint
+Neil Mitchell**20130110075533
+ Ignore-this: 1a3deb86fd2affee4ac094f1c04de91
+] 
+[Additional boolean equality hints
+Neil Mitchell**20130110073908
+ Ignore-this: f6be5e56da2eed75b1cdbed98579dc7d
+] 
+[Slight refactoring
+Neil Mitchell**20130110073827
+ Ignore-this: f45999dc1563969a99361bd3e8c1cf14
+] 
+[Version 1.8.40
+Neil Mitchell**20130106090344
+ Ignore-this: ed67a085332e7b9e493437579324d183
+] 
+[Update the copyright year
+Neil Mitchell**20130106090336
+ Ignore-this: 3925d201deafdea2d8ba0241f47edf9f
+] 
+[#585, lots of additional list based hints
+Neil Mitchell**20130106085613
+ Ignore-this: bf95b667fc1b13729966cb82805ada9e
+] 
+[Version 1.8.39
+Neil Mitchell**20121206175957
+ Ignore-this: 253a912d26ad881239cefab8a83ca42f
+] 
+[#582, don't suggest renaming things which end with a trailing #
+Neil Mitchell**20121206175846
+ Ignore-this: a779a94b47de5d8dc33ebfcb3cb9d532
+] 
+[Version 1.8.38
+Neil Mitchell**20121206115226
+ Ignore-this: caa7eb5908b9f63ee89cab1608ad2bbe
+] 
+[#578, improve the treatment of _ in lambda bindings in the matcher
+Neil Mitchell**20121206104003
+ Ignore-this: 8f71fe3de50dcb985fe3781c74f79870
+] 
+[Version 1.8.37
+Neil Mitchell**20121201120142
+ Ignore-this: f5121fb374458718f789014e2a2041af
+] 
+[Update the tests following the --with semantics change
+Neil Mitchell**20121201115207
+ Ignore-this: ee3a89643df510a00dae3371642dd606
+] 
+[Add notes on how to include the default hints
+Neil Mitchell**20121201115153
+ Ignore-this: 3f89776a73ca543a651b8cb8ba344e5f
+] 
+[Update the changelog
+Neil Mitchell**20121201104348
+ Ignore-this: 25cf19c2498be025e8f4a12e903f4592
+] 
+[Update the changelog
+Neil Mitchell**20121201102647
+ Ignore-this: b1e6fca80c9ab167cd2bf4a834990f26
+] 
+[Allow cpphs-1.15, too.
+Dirk Ullrich <dirk.ullrich@gmail.com>**20121201083412
+ Ignore-this: 925095ed0c1976382dec526a941ce2
+] 
+[Version 1.8.36
+Neil Mitchell**20121127114601
+ Ignore-this: e69897a050c282f5b68f02a1d594010d
+] 
+[Make --with imply no default hint files
+Neil Mitchell**20121127114459
+ Ignore-this: 3d1bec585f95d8af9a70dcc260d89291
+] 
+[Minor refactoring to use headDef
+Neil Mitchell**20121127113840
+ Ignore-this: 5a955fbbffeb8de7eae292181fcd17ae
+] 
+[Version 1.8.35
+Neil Mitchell**20121117171617
+ Ignore-this: 90c7dc7b7e0cf9890753ef65e135f3c0
+] 
+[Reinstate the PatternGuards thing, is used in one #ifdef
+Neil Mitchell**20121117170311
+ Ignore-this: e574729840c390993472c3deae580d7d
+] 
+[A bunch of HLint suggested cleanups
+Neil Mitchell**20121117165818
+ Ignore-this: 7d5ce45e0bb09d34088ecaf76a8017e4
+] 
+[#567, avoid duplicate hints around . and expansion
+Neil Mitchell**20121117165521
+ Ignore-this: 683a49d6088717fd047c5e084dcb40c9
+] 
+[Move the NoDataFiles sample, so it doesn't get picked up as a test
+Neil Mitchell**20121117165248
+ Ignore-this: 1629852656b5073b83579d11bc2f31f
+] 
+[Version 1.8.34
+Neil Mitchell**20121106230420
+ Ignore-this: 10156fbe09f48c82b3f6a54317a3290c
+] 
+[Switch license from GPL to BSD3
+Neil Mitchell**20121106230310
+ Ignore-this: e11d6cfb5fd74fe3acd5704eb8f65cbe
+] 
+[Add an example for how to use if you don't want data files
+Neil Mitchell**20121026103335
+ Ignore-this: efa1f97187868b6ebe8dda4168b49d2f
+] 
+[Version 1.8.33
+Neil Mitchell**20121023152528
+ Ignore-this: 43d86439d7f52466050a64b5e521ea21
+] 
+[Lots more hints from Henning
+Neil Mitchell**20121023151859
+ Ignore-this: 3072eb7c218b1aa404bfbdc97dca912e
+] 
+[Use mapM_ in more situations, suggestion from Henning
+Neil Mitchell**20121023151813
+ Ignore-this: 2317691a78358bf47383d4b717a35c62
+] 
+[Make ~= more general, not just on Exp_
+Neil Mitchell**20121023151726
+ Ignore-this: 8d263ebbc180c15d3a134085400399e2
+] 
+[Version 1.8.32
+Neil Mitchell**20121023103055
+ Ignore-this: 26d5fc8fb84e9eacdda1c880fb66f1f5
+] 
+[Update my plans regarding automatic replacement
+Neil Mitchell**20121023102231
+ Ignore-this: b5b434580d334934bc086db85c13ce2c
+] 
+[Add notes about how to deal with imported fixities
+Neil Mitchell**20121023101836
+ Ignore-this: bd54a6977e60f67ef56bc86324140cc
+] 
+[Add tests that --with works for fixities
+Neil Mitchell**20121023101807
+ Ignore-this: 98eeaf45c9b3c9780dce87ccf27c62e9
+] 
+[Add a tweak to the test ouptut, if there is no output contents and you mismatch then show the whole got part - makes it easier to figure out what the output should be
+Neil Mitchell**20121023101706
+ Ignore-this: b3b327ad03ce705c9ae8499f2f23f692
+] 
+[Minor tweaks to the changelog
+Neil Mitchell**20121023101640
+ Ignore-this: 60dd4755941c1e10e4b59f6050f88367
+] 
+[Add --with flag for passing settings on the command line
+Neil Mitchell**20121023101548
+ Ignore-this: 9ba8fe8aa6ff48dd2055cd66a478e578
+] 
+[#653, make sure TypeSig's get the right function name, so they can be effectively ignored
+Neil Mitchell**20121023084745
+ Ignore-this: a10ce75fa04d645959af3dc239bda19f
+] 
+[Update the copyright year in the help test as well
+Neil Mitchell**20121023084217
+ Ignore-this: 69ac3575ecc93df1c236a6dcf8d97a0
+] 
+[Update the copyright year to 2012 everywhere
+Neil Mitchell**20121023082057
+ Ignore-this: 436d6896dfa0be718dbf1d0252e56bf6
+] 
+[#564, allow brackets and type signatures on annotations
+Neil Mitchell**20121023081732
+ Ignore-this: a8de46be6b08d053ee8c0e16c49bee77
+] 
+[Update the test output to account for GHC 7.6 differences
+Neil Mitchell**20121023081235
+ Ignore-this: 716ad9a2f00b80f217f3b4a37cf1c32c
+] 
+[Fix the test output, check want and got the same way as the initial test
+Neil Mitchell**20121023081159
+ Ignore-this: a1040a4850207d7e95e2a00921a4ab0
+] 
+[lookup/zip to elemIndex
+Joachim Breitner <mail@joachim-breitner.de>**20120831090450
+ Ignore-this: 951d7ea8f1bf06c6f9d6b6d163b8e933
+ Just some code I came across and thought that I don’t want to see it again :-)
+] 
+[Add a note about !! when the index is negative, from Joachim, based on trying to prove it
+Neil Mitchell**20120902180054
+ Ignore-this: 2628cdd9cbd657eebb3041299439e961
+] 
+[Version 1.8.31
+Neil Mitchell**20120818085813
+ Ignore-this: 44a8d238f5dc139950737a28cc49f4a5
+] 
+[Eliminate a pattern match that GHC warns is redundant
+Neil Mitchell**20120818085801
+ Ignore-this: 72ade028ab1e7f5d0d34ae4673ad4542
+] 
+[Avoid incomplete patterns when reading ANN pragmas
+Neil Mitchell**20120818084931
+ Ignore-this: 1c9ec37a137b2da755a772a85e8cd064
+] 
+[#555, note that top-level SpliceDecl's require TemplateHaskell
+Neil Mitchell**20120812092304
+ Ignore-this: cffedaf5160c01d547615918c2a6e782
+] 
+[Add isSpliceDecl
+Neil Mitchell**20120812092227
+ Ignore-this: 825ce700fc4336c6434898ea39ee7e7
+] 
+[Update the comment on is*, so now it is correct
+Neil Mitchell**20120812092204
+ Ignore-this: beaef3dfb17cf1b5bcdb902cae417f9e
+] 
+[Version 1.8.30
+Neil Mitchell**20120711190401
+ Ignore-this: e55aac524eff3e542a39f10e61a104bf
+] 
+[Add elemIndex/elemIndices hints
+Neil Mitchell**20120711185341
+ Ignore-this: 36291604dbf499a4f8b246c24a4f79c6
+] 
+[Allow cpphs-1.14
+Neil Mitchell**20120711185046
+ Ignore-this: e2231bd56b707f25dafe9d1f8832ac2c
+] 
+[#551, allow case_ as a name prefix
+Neil Mitchell**20120708185208
+ Ignore-this: 492685da65411ad7221aea2ecfe57e39
+] 
+[Version 1.8.29
+Neil Mitchell**20120601081753
+ Ignore-this: 56d46097c8597f410118bef3ad3d7eaf
+] 
+[Allow hscolour 1.20.*
+Neil Mitchell**20120601081156
+ Ignore-this: aa35147167fdab71ef98234deaaf0eb1
+] 
+[#547, add a hint for mapM/zip to zipWith
+Neil Mitchell**20120526112112
+ Ignore-this: a852c8153000a7134c503fb0c14057de
+] 
+[Version 1.8.28
+Neil Mitchell**20120401170517
+ Ignore-this: c04ba9f17d6c5b86417be3bc1500638b
+] 
+[Fix a bug that >=> was missing a check when removing a lambda variable, fixes issue reported by Matej
+Neil Mitchell**20120401170400
+ Ignore-this: a864f7e53e70d195e1ad74fc81213e5b
+] 
+[HLint 1.8.27
+Neil Mitchell**20120330201836
+ Ignore-this: 4fdc8ad7f185ee3f8d06123376e81c5e
+] 
+[Allow HSE 1.13.*
+Neil Mitchell**20120330173731
+ Ignore-this: 41bcd63843470cb7c6e339de33581b2
+] 
+[Version 1.8.26
+Neil Mitchell**20120327183548
+ Ignore-this: 63017105a8180124c0ddce18c227400c
+] 
+[Allow haskell-src-exts-1.12.*
+Neil Mitchell**20120327181246
+ Ignore-this: 5c84cae9be1bdc2d6dea7c75597c310b
+] 
+[Fix up a few conflicts
+Neil Mitchell**20120327180654] 
+[Add a PatternGuards language pragma that was accidentally dropped
+Neil Mitchell**20120312232109] 
+[Don't suggest redundant brackets when turning : into ++
+Neil Mitchell**20120312232054] 
+[Add hints suggesting >=> and <=<
+Neil Mitchell**20120312232015] 
+[Version 1.8.25
+Neil Mitchell**20120325091444
+ Ignore-this: 9a68feaa39f985053130edb0410d7549
+] 
+[Update the copyright year in the Cabal file
+Neil Mitchell**20120325091430
+ Ignore-this: 52549c43df696774b3fb9f4f6769f144
+] 
+[Add a missing LANGUAGE pragma
+Neil Mitchell**20120325091359
+ Ignore-this: b8d5cb8945a9ec5c9949a4d63da97cd
+] 
+[Allow transformers-0.3.*
+Neil Mitchell**20120325091343
+ Ignore-this: 134ce0058bbcc1de8a6d8d611281789d
+] 
+[Fix up a few hlint warnings
+Neil Mitchell**20120221090647
+ Ignore-this: a3ee7b32535ef540e9f2a5bf6d7d4f5
+] 
+[Version 1.8.24
+Neil Mitchell**20120220103043] 
+[#531, make hlint.ghci well formed again
+Neil Mitchell**20120220103010] 
+[Make sure you properly import the hlint rules
+Neil Mitchell**20120220101652] 
+[Version 1.8.23
+Neil Mitchell**20120205182448
+ Ignore-this: 8912715af9ef0556726cbbad421b8adc
+] 
+[Add hints for evaluate/seq which are redundant using isWHNF
+Neil Mitchell**20120205181612
+ Ignore-this: cb11c893de805b311bbba0ea656acd4c
+] 
+[#526, shouldn't be suggesting removal of $! for things where the right is a bracket/typesig, i.e. not a var, but still not WHNF
+Neil Mitchell**20120205181430
+ Ignore-this: 2f68000fd1472ea9a2b82781c446c994
+] 
+[Allow isWHNF as a type to match on
+Neil Mitchell**20120205181416
+ Ignore-this: d71ee23b37a16690051409855a360ba9
+] 
+[Add function isWHNF
+Neil Mitchell**20120205181405
+ Ignore-this: dccfd7e0db1df2f83753cddaaa8de76d
+] 
+[Version 1.8.22
+Neil Mitchell**20120204082350
+ Ignore-this: 60c026c896f79eac87a1bdbc148ea2d4
+] 
+[Add an extra test that we don't warn about good uses of $!
+Neil Mitchell**20120204072858
+ Ignore-this: fba83430e6a476a24dd96d9b04a2bd34
+] 
+[Add hint for $! where the RHS is not a variable
+Neil Mitchell**20120203071749] 
+[Version 1.8.21
+Neil Mitchell**20120126093605
+ Ignore-this: c0c76f092f373f4423a38cdf30940b8a
+] 
+[#508 #317, integrate lots of hints from the base library
+Neil Mitchell**20120126091557
+ Ignore-this: c10c74b207ade953e6c6224ee3b56d3c
+] 
+[Add a fromMaybe/fmap ==> maybe hint
+Neil Mitchell**20120126082754] 
+[Part of #304, don't bracket tuple sections
+Neil Mitchell**20120126082625] 
+[Add a foldl/concat hint
+Neil Mitchell**20120105193829
+ Ignore-this: 9332ebf8683ab4101f417b4cd9fb032a
+] 
+[#512, detect unnecessary case construct
+Neil Mitchell**20111206115153
+ Ignore-this: 3b66895533633a77a5e015d459075d36
+] 
+[When finding hints, don't abort on a parse error
+Neil Mitchell**20111201090711
+ Ignore-this: 8cd2bdb3ea839805f391763098417101
+] 
+[#507, Add hint for exitSuccess
+Neil Mitchell**20111201084635
+ Ignore-this: 9bb8bf1a82e77bcb467f8925220f585e
+] 
+[Update teh changelog
+Neil Mitchell**20111130112904] 
+[#505, add hints to use record patterns
+Neil Mitchell**20111130112629] 
+[Version 1.8.20
+Neil Mitchell**20111129085537
+ Ignore-this: bfe7eb69f47acd6e9a64bf87d9ad010b
+] 
+[Add a test that all generated ideas have good position information
+Neil Mitchell**20111129085404
+ Ignore-this: f4132a09aa6646d2f78e2186313345bd
+] 
+[#500, fix so eta reduction contains position information
+Neil Mitchell**20111129085346
+ Ignore-this: fa023837ab888d94f155fcde091af22f
+] 
+[Version 1.8.19
+Neil Mitchell**20111127130539
+ Ignore-this: e0440e680defdc4777141825c8fd067e
+] 
+[#498, eta reduce even if there are bindings
+Neil Mitchell**20111127125717
+ Ignore-this: 1266ec8a547c83038d021bedb68919b1
+] 
+[#497, don't suggest an incorrect lambda when using flip
+Neil Mitchell**20111127124427
+ Ignore-this: f4cfb4d5b0af75e68830583ac4423ab0
+] 
+[Version 1.8.18
+Neil Mitchell**20111105200554] 
+[Add back in the PatternGuards to the src\Utils, since it's only used in #ifdef branch (hence why hlint suggested it's removal)
+Neil Mitchell**20111105200524] 
+[#438, use Foo.Bar to mean Foo/Bar.hs
+Neil Mitchell**20111105195450] 
+[Move the file test inside the if, want to avoid file tests if possible
+Neil Mitchell**20111105192325] 
+[Avoid introducing ./ in paths unnecessarily
+Neil Mitchell**20111105192238] 
+[Add a --path command, for finding files
+Neil Mitchell**20111105191653] 
+[Add a comment about cmdCross, since it took me a long time to figure it out
+Neil Mitchell**20111105190247] 
+[#441, avoid bad matches due to eta reducing away parts of rules that are meant to unify with other parts
+Neil Mitchell**20111105183419] 
+[#489, import Foo as Foo is redundant
+Neil Mitchell**20111105180428] 
+[Remove 3 redundant language extensions, spotted by HLint
+Neil Mitchell**20111105180255] 
+[#481, switch from fmap to liftM when applying the Monad rules, since someone may be working with Monad m => ...
+Neil Mitchell**20111105175129] 
+[Version 1.8.17
+Neil Mitchell**20111001082841] 
+[Allow - as the filename to imply reading from stdin
+Neil Mitchell**20111001065215] 
+[Version 1.8.16
+Neil Mitchell**20110928044012] 
+[Remove a redundant import
+Neil Mitchell**20110928043747] 
+[#478, allow cpphs-1.13.1 which was just released
+Neil Mitchell**20110928042648] 
+[Never suggest view patterns, they aren't sufficiently better
+Neil Mitchell**20110904100347] 
+[Update changelog
+Neil Mitchell**20110904095730] 
+[Don't suggest use of Data.Ord.comparing, usually `on` is a better choice
+Neil Mitchell**20110904095650] 
+[Only suggest elem/notElem on 3 or more items
+Neil Mitchell**20110904095359] 
+[Update the --cpp-ansi help message, and fix the test suite
+Neil Mitchell**20110813163959] 
+[Version 1.8.15
+Neil Mitchell**20110813161915] 
+[Add --cpp-ansi
+Neil Mitchell**20110813161813] 
+[Version 1.8.14
+Neil Mitchell**20110812135702] 
+[Update the changelog
+Neil Mitchell**20110812133759] 
+[GHC 7.2 compatibility
+Neil Mitchell**20110812133650] 
+[Redo the hints, add a few more from Lennart
+Neil Mitchell**20110707130638] 
+[Lots of random hints from Lennart
+Neil Mitchell**20110707095351] 
+[Add two hints about pushing down if statements
+Neil Mitchell**20110707093139] 
+[Version 1.8.13
+Neil Mitchell**20110705141103] 
+[#302, add a backup fixity analysis if the HSE one fails, which never fails
+Neil Mitchell**20110705140535] 
+[Fix serious bug reported by Andy Gimblett, the notElem hint was accidentally || instead of &&
+Neil Mitchell**20110705071556] 
+[Version 1.8.12
+Neil Mitchell**20110703053850] 
+[Allow cpphs-1.12
+Neil Mitchell**20110703053541] 
+[Version 1.8.11
+Neil Mitchell**20110618095914] 
+[#440 and #439, any expression whose parent is a do does not need brackets round it
+Neil Mitchell**20110618095336] 
+[Version 1.8.10
+Neil Mitchell**20110612075044] 
+[Add some source-repository information
+Neil Mitchell**20110612075025] 
+[Upgrade to hscolour-1.19
+Neil Mitchell**20110612074106] 
+[Version 1.8.9
+Neil Mitchell**20110526074619] 
+[#436, add a hint about mapMaybe/map
+Neil Mitchell**20110526072827] 
+[Upgrade to haskell-src-exts-1.11.*, with a few fixity changes
+Neil Mitchell**20110525214312] 
+[Add an additional test
+Neil Mitchell**20110523183612] 
+[Add an additional test
+Neil Mitchell**20110523183548] 
+[A few changes suggested by hlint
+Neil Mitchell**20110523071057] 
+[Add a --cross flag, and make duplication hints cross module
+Neil Mitchell**20110523070628] 
+[Rename applyHintStr/applyHintFile properly
+Neil Mitchell**20110523060839] 
+[Add cross module hints, and make duplicates work cross module
+Neil Mitchell**20110519071310] 
+[Fix up some whitespace wibbles
+Neil Mitchell**20110519070808] 
+[Replace * with ! for single declaration hints
+Neil Mitchell**20110519070747] 
+[#428, don't suggest using String in an instance head
+Neil Mitchell**20110504063506] 
+[Version 1.8.8
+Neil Mitchell**20110403180621] 
+[Add the new file to the cabal list
+Neil Mitchell**20110403180610] 
+[#384, suggest collapsing multiple import/exports
+Neil Mitchell**20110329183507] 
+[#374, don't remove necessary brackets under an ExpTypeSig
+Neil Mitchell**20110329111443] 
+[#337, suggest Control.Exception.catch instead of Prelude.catch, and add a note that they aren't the same
+Neil Mitchell**20110329110703] 
+[#412, add 5 hints based around Control.Exception and bracket identities
+Neil Mitchell**20110329110422] 
+[#378, Suggest removing fromInteger/fromIntegral on literals
+Neil Mitchell**20110329104700] 
+[#369, add notes to hints, mark a few hints with obscure side conditions
+Neil Mitchell**20110329081806] 
+[#409, definitions should not suggest themselves
+Neil Mitchell**20110329070726] 
+[#410, support test as an ignored prefix in settings files
+Neil Mitchell**20110329064346] 
+[#414, add isLit* pattern, and a hint about ^^ to **
+Neil Mitchell**20110329063413] 
+[#420 - Make the hint to use let a warning, since sometimes you get more monomorphism that way, and it's not too critical
+Neil Mitchell**20110328204257] 
+[Add version numbers in the changelog
+Neil Mitchell**20110328204244] 
+[Modify the test suite to work on both GHC 6.12 and 7.0
+Neil Mitchell**20110328185519] 
+[Rework the matching for when/unless, so that they don't suggest on self definitions, and also eliminate some pointless brackets
+Neil Mitchell**20110328182413] 
+[Add duplicate code detector
+Neil Mitchell**20110328181018] 
+[Don't have showSrcLoc automatically put the : at the end
+Neil Mitchell**20110328064214] 
+[Don't show filepath with double \\ bits
+Neil Mitchell**20110328063843] 
+[If the user enters directories containing no files then warn them
+Neil Mitchell**20110328063057] 
+[Change the test output file, to match the GHC 7.0.2 output (test is a bit too fragile...)
+Neil Mitchell**20110322193601] 
+[Update the .ghci file with indentation that works with GHC 7.0.2
+Neil Mitchell**20110322193546] 
+[Allow more than onr trailing underscore and primes, such as __Bin__ and foo''
+Audrey Tang <audreyt@audreyt.org>**20110321142931
+ Ignore-this: 24830153db8475fbffc98b74a0213093
+] 
+[Manual fixes from Malcolm Wallace
+Neil Mitchell**20110219101231] 
+[Make suggesting curry/uncurry a warning rather than an error
+Neil Mitchell**20110217101245] 
+[Version 1.8.7
+Neil Mitchell**20110131165151] 
+[Relax the transformers dependency, works with all versions
+Neil Mitchell**20110131165122] 
+[Version 1.8.6
+Neil Mitchell**20110127175158] 
+[Add suggestionSeverity/Severity to the API
+Neil Mitchell**20110127175133] 
+[Rename Rank to Severity throughout
+Neil Mitchell**20110127174920] 
+[Fix a typo
+Neil Mitchell**20110127174427] 
+[Allow hint imports to be "hint" or "hlint"
+Neil Mitchell**20110127174241] 
+[Version 1.8.5
+Neil Mitchell**20110123161618] 
+[Update the copyright to 2011
+Neil Mitchell**20110123154131] 
+[Rewrite the encoding bits, support more encoding strings and give useful errors if they are wrong
+Neil Mitchell**20110123153634] 
+[#401, Rename the report template to report_template.html
+Neil Mitchell**20110123141626] 
+[Add a hint about replacing null (filter ...) with any
+Neil Mitchell**20110119094209] 
+[Version 1.8.4
+Neil Mitchell**20110112122536] 
+[#308, allow HSE 1.10.1, which has various unicode fixes
+Neil Mitchell**20110112121654] 
+[Fix for import qualified Char, now suggests import qualified Data.Char as Char
+Neil Mitchell**20110110080404] 
+[Delete some incorrect comments about the fields in ImportDecl, they have changed since
+Neil Mitchell**20110110075944] 
+[#393, fix import IO suggestions to include System.IO.Error and Control.Bracket
+Neil Mitchell**20110110075230] 
+[Add a limitation line into the manual
+Neil Mitchell**20101110183621] 
+[#376, take account of implied extensions when pointing out redundant extensions, and make sure they get enabled
+Neil Mitchell**20101110183416] 
+[Version 1.8.3
+Neil Mitchell**20101110164749] 
+[Allow uniplate-1.6
+Neil Mitchell**20101110163508] 
+[Switch from mtl to transformers
+Neil Mitchell**20101110163043] 
+[#373, require HSE 1.9.6
+Neil Mitchell**20101110162531] 
+[Update the changelog with GHC 7 fix
+Neil Mitchell**20101110162506] 
+[Add an additional type signature for GHC 7
+Neil Mitchell**20101110162436] 
+[Don't require HSE 1.9.4 in the .ghci file
+Neil Mitchell**20101110162415] 
+[Suggest [x | x <- y] ==> y
+Neil Mitchell**20101030064520] 
+[Version 1.8.2
+Neil Mitchell**20101023172326] 
+[#371, don't suggest redundant bracket on type annotations over lambdas, reported by Oliver Saunders
+Neil Mitchell**20101023170948] 
+[Add a hint about just (from Pierre Caillaud)
+Neil Mitchell**20101022125622] 
+[Version 1.8.1
+Neil Mitchell**20101016090606] 
+[Massively speed up files with large numbers of naming hints, used to have horrible complexity (~ 72 mins in some cases), now cached properly (~ 10 seconds for the same file)
+Neil Mitchell**20101015174518] 
+[#361, keep module names when suggesting infix
+Neil Mitchell**20101015070230] 
+[Add support for wildcard module matching
+Neil Mitchell**20101015070133] 
+[If you can't capture the output don't run the action, otherwise you overwealm the console output
+Neil Mitchell**20101015063633] 
+[#357, don't camel case suggest on FOO_A
+Neil Mitchell**20101015063527] 
+[#370, fix building with GHC 6.10
+Neil Mitchell**20101015062631] 
+[#313, upgrade to HSE 1.9.4
+Neil Mitchell**20101012110003] 
+[Eliminate the only overlapping patterns warning
+Neil Mitchell**20101006105029] 
+[Disable where hints until bug #358 is fixed
+Neil Mitchell**20100921163146] 
+[#355, make "--ignore=Parse error" work
+Neil Mitchell**20100920065834] 
+[Change the way .flags files are parsed by the tester
+Neil Mitchell**20100920064739] 
+[Add a flag --cpp-simple to run a simple C preprocessor
+Neil Mitchell**20100920063852] 
+[Promote the CPP options in to a proper structure
+Neil Mitchell**20100920062841] 
+[Improve the behaviour of running the test program if they throw an exception
+Neil Mitchell**20100920062250] 
+[Small tweaks to the manual, to improve the clarity of the section on ignoring hints
+Neil Mitchell**20100919075339] 
+[Add bracketing information for when the parent is a case
+Neil Mitchell**20100916061839] 
+[Add hints for intercalate
+Neil Mitchell**20100916061259] 
+[Improve the .ghci file - no need to use . as a src path
+Neil Mitchell**20100913061918] 
+[Version 1.8
+Neil Mitchell**20100911181838] 
+[Add an example of --test failing to typecheck a set of hints
+Neil Mitchell**20100911181132] 
+[Make --test --hint=file typecheck a single file
+Neil Mitchell**20100911181054] 
+[Add LINE pragmas when typechecking code (much better error messages)
+Neil Mitchell**20100911181006] 
+[Make the capture function also capture stderr
+Neil Mitchell**20100911180917] 
+[Add a few more qualified name hints
+Neil Mitchell**20100910210509] 
+[Add a test about --find
+Neil Mitchell**20100910180445] 
+[Improve the tester if the files only different by trailing newlines
+Neil Mitchell**20100910180415] 
+[Allow much better naming of input/output test pairs
+Neil Mitchell**20100910175011] 
+[yAdd missing pattern match to Structure
+Neil Mitchell**20100910173913] 
+[Delete the README, was inaccurate
+Neil Mitchell**20100910173101] 
+[Suggest the use of otherwise in pattern guards
+Neil Mitchell**20100909073101] 
+[Add hints about redundant where statements
+Neil Mitchell**20100909072508] 
+[Suggest removal of redundant guards
+Neil Mitchell**20100909072228] 
+[Make hints about guards work on patterns, infix matches, case alternatives etc
+Neil Mitchell**20100909071731] 
+[Add to/fromGuardedAlts, to perform the GuardedAlts/Rhs isomorphism
+Neil Mitchell**20100909071503] 
+[Add Data.Tuple.swap to Util
+Neil Mitchell**20100909071430] 
+[Rename useGuards to match - a more accurate name
+Neil Mitchell**20100909063953] 
+[Make finding guards look at child functions
+Neil Mitchell**20100909063753] 
+[Collapse functions of lambdas with the same argument names correctly
+Neil Mitchell**20100908172847] 
+[Suggest promoting patterns bound to lambdas to functions
+Neil Mitchell**20100908172058] 
+[#344, only suggest collapsing lambdas once, and allow collapsing lambdas with identical patterns
+Neil Mitchell**20100908171014] 
+[#300, add tests for the module name resolution stuff from the bug report
+Neil Mitchell**20100907215951] 
+[Add more tests of the new qualified name stuff
+Neil Mitchell**20100907213141] 
+[Add another qualified name hint, it should prefer as names rather than the real import
+Neil Mitchell**20100907212804] 
+[Fix a bug in possImport, you can still import qualified if you are imported qualified
+Neil Mitchell**20100907210407] 
+[Rewrite the nameQualify function properly
+Neil Mitchell**20100907205233] 
+[Add fromQual to Util
+Neil Mitchell**20100907203325] 
+[Switch to the new name matching
+Neil Mitchell**20100907190136] 
+[Fix a bug in possModules for when modules are qualified
+Neil Mitchell**20100907190016] 
+[Add isSpecial function
+Neil Mitchell**20100907185926] 
+[Flesh out possImport
+Neil Mitchell**20100907183929] 
+[Add fromModuleName
+Neil Mitchell**20100907072708] 
+[Add any implicit prelude imports back in
+Neil Mitchell**20100907071913] 
+[Move the name qualification logic in to NameMatch
+Neil Mitchell**20100907071150] 
+[Pass both scopes to nameMatch
+Neil Mitchell**20100907070531] 
+[Pass NameMatch around once more
+Neil Mitchell**20100907070127] 
+[When type checking, only include modules that have been brought in to scope, for better tests
+Neil Mitchell**20100907065047] 
+[Add the necessary imports to the hint files
+Neil Mitchell**20100907064937] 
+[Don't type check the hints in Test
+Neil Mitchell**20100907064905] 
+[Require "hint" annotations on hint file imports
+Neil Mitchell**20100907064805] 
+[Add concatM function to utilities
+Neil Mitchell**20100907064619] 
+[Require HSE 1.9.0, to make the .ghci script compatible in different versions
+Neil Mitchell**20100907064155] 
+[Pass a scope directly rather than a NameMatch
+Neil Mitchell**20100906190103] 
+[Switch the application to using a scope
+Neil Mitchell**20100906185615] 
+[Add comments and interfaces for the new NameMatch details
+Neil Mitchell**20100906185505] 
+[Collect a scope when reading a settings file
+Neil Mitchell**20100906184742] 
+[#335, redundant id should only generate one warning
+Neil Mitchell**20100905124711] 
+[Add a hint for using map (f &&& g)
+Neil Mitchell**20100905091704] 
+[Add a bunch of tests
+Neil Mitchell**20100815194810] 
+[#328, fix the name suggestions for foo'bar, now gives fooBar
+Neil Mitchell**20100815114328] 
+[#323, Detect redundant brackets in field declarations
+Neil Mitchell**20100815113458] 
+[#321, force a file before returning an error message to close the handle
+Neil Mitchell**20100815111339] 
+[Make --find more robust and remove a potential parse error
+Neil Mitchell**20100815110410] 
+[Change readFile' to use listM' (suggested by HLint)
+Neil Mitchell**20100815110316] 
+[Add some progress reporting to the test suite output
+Neil Mitchell**20100815104113] 
+[No need to run --help in the hpc bits, now it's properly tested
+Neil Mitchell**20100815104058] 
+[Add support for running tests in the tests/ directory to check input/output pairs
+Neil Mitchell**20100815103122] 
+[Add captureOutput and readFile' to Util
+Neil Mitchell**20100815103101] 
+[Rework the test suite - same tests, but a different framework
+Neil Mitchell**20100815093010] 
+[Version 1.7.3
+Neil Mitchell**20100725102311] 
+[Upgrade to hscolour-1.7.2
+Neil Mitchell**20100725060057] 
+[Version 1.7.2
+Neil Mitchell**20100725060046] 
+[Include Andy Stewart in the thanks list
+Neil Mitchell**20100611144840] 
+[Fix #318, see through (.) when matching
+Neil Mitchell**20100610070942] 
+[Fix #319, do not allow lambdas on the left of infix applications
+Neil Mitchell**20100610063950] 
+[Version 1.7.1
+Neil Mitchell**20100607200748] 
+[Add a --quiet flag
+Neil Mitchell**20100607062659] 
+[Put each console alternative on one line
+Neil Mitchell**20100607062631] 
+[Version 1.7
+Neil Mitchell**20100606104849] 
+[Add support for HLint.Builtin.All
+Neil Mitchell**20100606103243] 
+[Fix crash on (\x -> x)
+Neil Mitchell**20100606102502] 
+[Fix the commented code for running with strategies
+Neil Mitchell**20100605192658] 
+[Make the library correctly honour the data directory
+Neil Mitchell**20100605185042] 
+[Make the :docs target also call cabal configure
+Neil Mitchell**20100605162909] 
+[Improvements to the manual
+Neil Mitchell**20100603101701] 
+[Allow :self to take arguments
+Neil Mitchell**20100603071256] 
+[Fix up one hint that HLint gives
+Neil Mitchell**20100603071246] 
+[Add :docs target, to build the haddock information
+Neil Mitchell**20100603070231] 
+[Improve the library documentation
+Neil Mitchell**20100531162902] 
+[Fix bug in ListRec that could output _recursive_
+Neil Mitchell**20100531105850] 
+[Fix #315, spot list rec hints through $ and let
+Neil Mitchell**20100531105121] 
+[Add hints based around (f $) ==> f, and fix up ListRec hints
+Neil Mitchell**20100531102936] 
+[Rewrite the lamdba suggestions bit, usually more agressive, but in a few places a bit tamer
+Neil Mitchell**20100526064259] 
+[Fix the Show instance for Suggestion (previously it added a "Suggestion" around the display)
+Neil Mitchell**20100526064105] 
+[Modify isAtom on expressions to use isLexeme in the fallback case
+Neil Mitchell**20100526063826] 
+[Do not suggest importing modules from old-locale/old-time, when the alternative is haskell98
+Neil Mitchell**20100526063750] 
+[Minor refactoring, inline a definitino
+Neil Mitchell**20100526063635] 
+[Add a comment about how to use parallel strategies instead (not done as it is a bit slower)
+Neil Mitchell**20100526063521] 
+[Add isLexeme utility function
+Neil Mitchell**20100526063144] 
+[Add unsnoc utility function
+Neil Mitchell**20100526063133] 
+[Add tests and remove redundant code from the lambda reduction, thanks to hpc
+Neil Mitchell**20100520061603] 
+[Add memory profiling
+Neil Mitchell**20100519181915] 
+[Rewrite the .ghci script, adding in a :scope to integrate with threadscope
+Neil Mitchell**20100519175301] 
+[Remove redundant import
+Neil Mitchell**20100519114421] 
+[Change the API to return the list of suggestions
+Neil Mitchell**20100519104727] 
+[Make the API export everything in the HLint module
+Neil Mitchell**20100519104651] 
+[Add an Ord context on Idea
+Neil Mitchell**20100519104641] 
+[Enhance the :bench command to allow specifying the number of threads
+Neil Mitchell**20100519071416] 
+[Add comments/whitespace/reordering to the Util module
+Neil Mitchell**20100512072849] 
+[Minor manual rewording
+Neil Mitchell**20100512072002] 
+[Fix 278/279, allow enabling/disabling extensions from the command line, including -XNoCPP
+Neil Mitchell**20100512071827] 
+[Remove some redundant brackets in type replacements
+Neil Mitchell**20100511190759] 
+[Change the casing in the changelog to make it consistent
+Neil Mitchell**20100511190317] 
+[#286, remove redundant brackets in list hint
+Neil Mitchell**20100511190243] 
+[Redo the bracketing, removes a redundant bracket in one hint and some general refactorings
+Neil Mitchell**20100511185436] 
+[Update the changelog
+Neil Mitchell**20100511070413] 
+[Add bracket information - sections containing app's do not need bracket
+Neil Mitchell**20100511070255] 
+[Fix #299, make niceLambda more powerful and eliminate flip hint
+Neil Mitchell**20100511065818] 
+[Add some fromMaybe hints
+Neil Mitchell**20100511063556] 
+[Updates to the .ghci file
+Neil Mitchell**20100509171153] 
+[Rewrite :self to use the new --find feature
+Neil Mitchell**20100413070441] 
+[Fix bugs which meant hints might not always get names
+Neil Mitchell**20100413070304] 
+[Ignore a hint about using let
+Neil Mitchell**20100413064507] 
+[Fix #306, make --find use the hints if no files are specified
+Neil Mitchell**20100413064239] 
+[Add a notNull utility function
+Neil Mitchell**20100412073201] 
+[Refactor so that findSettings returns the settings
+Neil Mitchell**20100412072542] 
+[Move module Type to module Idea
+Neil Mitchell**20100412070446] 
+[Rename the module Hint to Apply
+Neil Mitchell**20100412065215] 
+[Move the Settings type in to a separate file
+Neil Mitchell**20100412064942] 
+[Move finding settings in to the Settings file
+Neil Mitchell**20100412063859] 
+[Fix some comments
+Neil Mitchell**20100412063028] 
+[Refactor Type, can now split Setting/Idea completely
+Neil Mitchell**20100412062508] 
+[Upgrade to HSE 1.9
+Neil Mitchell**20100411172259] 
+[Give a type signature to errorOn
+Neil Mitchell**20100408113917] 
+[Move classify from Settings to Hint
+Neil Mitchell**20100408111617] 
+[Some fixes suggested by HLint
+Neil Mitchell**20100408111118] 
+[No longer need to include the ltrim hint explicitly, --find picks it up
+Neil Mitchell**20100408110815] 
+[Remove the implies flag, can set the infixes instead
+Neil Mitchell**20100408065731] 
+[Whitespace only
+Neil Mitchell**20100408065334] 
+[Fix #303, allow fixies to be specified in hint files. Also restructure hints by introducing Hint.Type for the type of hints
+Neil Mitchell**20100408065150] 
+[Change the function infixes to splitInfix in Hint.Bracket, I want to reuse that name
+Neil Mitchell**20100408065005] 
+[Add getFixity helper, and use it to get the fixites
+Neil Mitchell**20100408064926] 
+[Version 1.6.21
+Neil Mitchell**20100407121508] 
+[#287, warn about Haskell 98 imports
+Neil Mitchell**20100407121138] 
+[Fix the hs-lint.el script when spaces are in the filename, fix from Daniel Leslie
+Neil Mitchell**20100407084538] 
+[Add a hint to use mplus, bug #297
+Neil Mitchell**20100406191259] 
+[#288, detect redundant brackets under a lambda
+Neil Mitchell**20100406190834] 
+[Fix #302, remove error about ambiguous fixities
+Neil Mitchell**20100406183632] 
+[Fix up a use of mapM, which should have been mapM_
+Neil Mitchell**20100406171336] 
+[#281, enhance redundant monad return warnings
+Neil Mitchell**20100406171227] 
+[Add a replaceBranches function
+Neil Mitchell**20100406171141] 
+[Start to fix #281, now detects through $
+Neil Mitchell**20100406164644] 
+[Fix #293, eliminate _noParen_ from the result
+Neil Mitchell**20100406151200] 
+[Rename :redir to :_redir, so :r still works
+Neil Mitchell**20100406151119] 
+[Fix #284, on several systems that part hit a compiler bug
+Neil Mitchell**20100406013107] 
+[Comment out the "use concat" hints, they pick up too much stuff
+Neil Mitchell**20100406012511] 
+[Fix #283, don't suggest removal of RecordWildCards if only using it in expressions
+Neil Mitchell**20100406011944] 
+[Rejig the concat/++ hints slightly
+Neil Mitchell**20100216221415] 
+[Default.hs: add rules using enumeration on when to use ++ and when to use concat
+gwern0@gmail.com**20100215212304
+ Ignore-this: 71dc1e571fbd24f411026d2268632729
+] 
+[Fix 273 and add a test, done by upgrading HSE
+Neil Mitchell**20100210190128] 
+[Version 1.6.20
+Neil Mitchell**20100210185347] 
+[Add some acknowledgements
+Neil Mitchell**20100210140303] 
+[Fix #254, remove the foldr1/map hint
+Neil Mitchell**20100210135511] 
+[Add hint to compress nested lambdas
+Neil Mitchell**20100210115959] 
+[Fix a minor bug on \x -> \x -> ..
+Neil Mitchell**20100210115543] 
+[Fix 274, add redundant bracket warning inside record update and construct
+Neil Mitchell**20100210105637] 
+[Fix #272, don't mess up sections of qualified names
+Neil Mitchell**20100210105302] 
+[Add some hints to suggest elem
+Neil Mitchell**20100210103822] 
+[Eliminate the module HSE.Eq, was no longer used
+Neil Mitchell**20100210103346] 
+[Add Paths_hlint to the .cabal file
+Neil Mitchell**20100209211809] 
+[Add tests for 271, rewriting the matching engine in terms of SYB fixed it
+Neil Mitchell**20100209205055] 
+[Rewrite unify using SYB and gzip
+Neil Mitchell**20100209193740] 
+[Add gzip to Util
+Neil Mitchell**20100209193614] 
+[Version 1.6.19
+Neil Mitchell**20100206084359] 
+[Have :self run --find first to collect hints
+Neil Mitchell**20100206083139] 
+[Fix some HLint generated hints
+Neil Mitchell**20100206083125] 
+[Eliminate some redundant brackets in found hints
+Neil Mitchell**20100206080253] 
+[Run --find before doing :self
+Neil Mitchell**20100206074355] 
+[Don't suggest hints based on lambdas with patterns
+Neil Mitchell**20100205191047] 
+[Add hint finding to the manual
+Neil Mitchell**20100205190728] 
+[Update the changelog for fix of #251
+Neil Mitchell**20100205190202] 
+[Add find hints support
+Neil Mitchell**20100205190101] 
+[Minor refactoring to use isDol, now it's introduced
+Neil Mitchell**20100205190045] 
+[Add isDot/isDol functions
+Neil Mitchell**20100205185945] 
+[Small suggestion from definition search hints
+Neil Mitchell**20100205185924] 
+[Refactor the driver so the hlint function decides when the arguments are useless
+Neil Mitchell**20100205182240] 
+[Only export the test function from Test
+Neil Mitchell**20100205181708] 
+[Add parseFile_, for parses that terminate on failure
+Neil Mitchell**20100205181652] 
+[Ignore toNamed hints in HSE.Util, since that would require module cycles
+Neil Mitchell**20100205105249] 
+[Rewrite dot expansion in rules, now done explicitly on the rules rather than as we do the match - simpler, more robust, fixes #268
+Neil Mitchell**20100205104738] 
+[Remove some brackets around 
+Neil Mitchell**20100205104700] 
+[Add utility functions for manipulating (.) chains
+Neil Mitchell**20100205104623] 
+[Rearrange and comment the Match code
+Neil Mitchell**20100205080113] 
+[Improve the comments in Match.hs
+Neil Mitchell**20100205074425] 
+[Delete the Structure hints to use if, since now captured in the rules - fixes #269
+Neil Mitchell**20100204143422] 
+[Make all the case -> if hints just warnings
+Neil Mitchell**20100204143406] 
+[Document the ANN pragma stuff
+Neil Mitchell**20100204142847] 
+[Require HSE 1.8.1 or above, fixes the ANN bug
+Neil Mitchell**20100204142754] 
+[Version 1.6.18
+Neil Mitchell**20100204142738] 
+[Remove a monad hint that didn't really improve things
+Neil Mitchell**20100202083147] 
+[Define trimBy and use it
+Neil Mitchell**20100202082805] 
+[Define and use ltrim in various places
+Neil Mitchell**20100202082556] 
+[Fix #263, give accurate parse errors on CPP files
+Neil Mitchell**20100202081929] 
+[Refactor Hint.hs
+Neil Mitchell**20100202075401] 
+[Upgrade to hscolour 1.16
+Neil Mitchell**20100202073656] 
+[Upgrade to cpphs 1.11
+Neil Mitchell**20100202073622] 
+[Remove debug droppings
+Neil Mitchell**20100202073238] 
+[Comment out of manual bit on ANN until it works
+Neil Mitchell**20100202073148] 
+[Change to using ANN rather than WARNING
+Neil Mitchell**20100202073006] 
+[Version 1.6.17
+Neil Mitchell**20100201214904] 
+[Force cpphs 1.10, since 1.11 breaks hlint
+Neil Mitchell**20100201214439] 
+[Normalise the spacing in the Default file
+Neil Mitchell**20100201084313] 
+[Make the hint to use product a warning
+Neil Mitchell**20100201083803] 
+[Make the concat hint a little more applicable
+Neil Mitchell**20100201083747] 
+[Update the changelog
+Neil Mitchell**20100201083706] 
+[Add some more Maybe hints
+Neil Mitchell**20100201082923] 
+[Add a hint for using mapMaybe
+Neil Mitchell**20100201081528] 
+[Eliminate the manual entry that line numbers after #include are incorrect
+Neil Mitchell**20100131135046] 
+[Add support for TupleSections, and any new extensions
+Neil Mitchell**20100131134928] 
+[Upgrade to HSE 1.8
+Neil Mitchell**20100131134729] 
+[Generate and consume line pragmas for Cpphs, starts to fix 263
+Neil Mitchell**20100130174950] 
+[Upgrade to cpphs 1.10
+Neil Mitchell**20100130173141] 
+[Fix #266, don't match definitions of hints
+Neil Mitchell**20100130154357] 
+[Change some tests from map to scanr (I want map for another test)
+Neil Mitchell**20100130154325] 
+[Remove the horrible mr annotations, and turns off the eveil monomorphism restriction
+Neil Mitchell**20100130154155] 
+[Add an unqual utility function
+Neil Mitchell**20100130154125] 
+[Fix hint suggested by HLint
+Neil Mitchell**20100129195008] 
+[Tone down the eta reduction hints, fix #249
+Neil Mitchell**20100129194952] 
+[Don't suggest flip unless the function is atomic
+Neil Mitchell**20100129193854] 
+[Fix some incorrect niceLambda transformations
+Neil Mitchell**20100129193834] 
+[Add allowRightSection/allowLeftSection functions
+Neil Mitchell**20100129193818] 
+[Add an extra rule to niceLambda
+Neil Mitchell**20100129183643] 
+[Move the utility parts of ListRec elsewhere
+Neil Mitchell**20100129183553] 
+[Move another test out of the code and in to the rules
+Neil Mitchell**20100129174929] 
+[Move the const hint into the hint list, rather than hardecoded
+Neil Mitchell**20100129173814] 
+[Push classify down in to applyHintStr, add support for pragmas in the file being analysed
+Neil Mitchell**20100129090709] 
+[Add support for reading WARNING pragmas
+Neil Mitchell**20100129090616] 
+[Replace (:[]) with return, I prefer it
+Neil Mitchell**20100128192812] 
+[Add more accurate position info in a few readSetting calls
+Neil Mitchell**20100128192440] 
+[Support ignoring hints on types
+Neil Mitchell**20100128190939] 
+[Rename defaultName to defaultHintName, much more descriptive
+Neil Mitchell**20100128190523] 
+[Give much better error messages on incorrect settings files
+Neil Mitchell**20100128190238] 
+[Add an exitMessage utility function
+Neil Mitchell**20100128190226] 
+[Don't crash with a pattern match error if a rank is incorrectly written
+Neil Mitchell**20100128190158] 
+[Simplify the ranking bit
+Neil Mitchell**20100128184400] 
+[Allow test files to import builtin hints
+Neil Mitchell**20100128183611] 
+[Reorder the manual, ignoring hints now comes before adding hints
+Neil Mitchell**20100128082358] 
+[No need to warn about #include incorrect line number twice
+Neil Mitchell**20100128082304] 
+[Reword the manual slightly
+Neil Mitchell**20100128082226] 
+[Add temporary HSE 1.5/1.6 compat
+Neil Mitchell**20100128080649] 
+[Add hints that suggest infix use of functions
+Neil Mitchell**20100127180302] 
+[Add brackets to rules that require it given where they are situated
+Neil Mitchell**20100127180126] 
+[Remove a stray space from the Default rule file
+Neil Mitchell**20100127180012] 
+[If your parent is a Paren you do not need brackets, add that rule in all 3 places
+Neil Mitchell**20100127175953] 
+[Add universeParentExp to HSE/Util
+Neil Mitchell**20100127175934] 
+[Simplify and make checkSide more regular
+Neil Mitchell**20100127163350] 
+[Fix #240, add notEq predicate and use it when short circuiting and
+Neil Mitchell**20100127161350] 
+[Upgrade to haskell-src-exts-1.7.*
+Neil Mitchell**20100127145437] 
+[Document the Unicode support
+Neil Mitchell**20100127140836] 
+[Add support for text encodings, fix bug 236
+Neil Mitchell**20100127140132] 
+[Reduce the number of line overlaps with --help
+Neil Mitchell**20100127140110] 
+[Fix in bug number for the suboptimal foldr
+Neil Mitchell**20100127104044] 
+[Add an ExactP annotation to bracket, allows turning on exact pretty printing
+Neil Mitchell**20100127103817] 
+[Generate nicer looking lambdas for (($) . f)
+Neil Mitchell**20100126184711] 
+[Add a hint about replacing $/. with just $
+Neil Mitchell**20100126184241] 
+[Remove redundant imports detected by GHC 6.12
+Neil Mitchell**20100125110856] 
+[Version 1.6.16
+Neil Mitchell**20100123143041] 
+[Add a note about further performance improvements
+Neil Mitchell**20100123134946] 
+[Push the fmap over the expr/lhs upwards, so it's only done once
+Neil Mitchell**20100123134903] 
+[Add -caf-all to the profiling flags
+Neil Mitchell**20100123134645] 
+[Upgrade to uniplate 1.5
+Neil Mitchell**20100123133128] 
+[Optimise the speed of matching, much faster now (App is the common case so that's dealt with specially)
+Neil Mitchell**20100122103600] 
+[Add a comment about eqExpShellSYB 
+Neil Mitchell**20100122103515] 
+[Add an equality based on SYB equality - performs equivalently but a bit more complex
+Neil Mitchell**20100122103343] 
+[Improve the shell eq test, now uses SYB to do the constructor equality test
+Neil Mitchell**20100122095107] 
+[Add a :bench to .ghci
+Neil Mitchell**20100122092216] 
+[Split eqExpShell out, and optimise it
+Neil Mitchell**20100122083618] 
+[Fix some HLint warnings
+Neil Mitchell**20100120135456] 
+[Add hints for excess brackets in types and patterns, fixes 245
+Neil Mitchell**20100120135124] 
+[Add Brackets instances for Type and Pat
+Neil Mitchell**20100120135111] 
+[Switch to view patterns for needBrackets
+Neil Mitchell**20100120135056] 
+[There is no need for brackets inside a tuple
+Neil Mitchell**20100120135042] 
+[Generalise the bracket function to work on any Brackets instance
+Neil Mitchell**20100120122819] 
+[Refactor Bracket hints further
+Neil Mitchell**20100120121927] 
+[Refactor the bracket hints further
+Neil Mitchell**20100120121749] 
+[Remove special treatment for [(x y)], was annoying and not overly helpful
+Neil Mitchell**20100120115432] 
+[Add a Brackets class, to abstract over brackets
+Neil Mitchell**20100120113709] 
+[Rewrite the bracketing hints, give errors for severe bracket warnings
+Neil Mitchell**20100120092754] 
+[Use err instead of idea Error in a few places
+Neil Mitchell**20100120092742] 
+[Add an err function
+Neil Mitchell**20100120092709] 
+[Add isList utility function
+Neil Mitchell**20100120092700] 
+[Add some more hints to the HLint hint set
+Neil Mitchell**20100120092645] 
+[Add another test for bracketing
+Neil Mitchell**20100120075822] 
+[Add warning annotations on some of the bracket tests
+Neil Mitchell**20100120075654] 
+[Fix bug, allow qualified names to be matched
+Neil Mitchell**20100120074714] 
+[Add a boring file
+Neil Mitchell**20100118072328] 
+[Add a level command to the profiling
+Neil Mitchell**20100118071953] 
+[reformat hlint.ghci for readability
+gwern0@gmail.com**20100114212833
+ Ignore-this: 9b15f813729150db1e9de1c293ff73b2
+] 
+[Add :prof command
+Neil Mitchell**20100114162251] 
+[Add UniplateDirect annotations to HSE/Type, to enable trying out Uniplate.Direct combinators (bug 255)
+Neil Mitchell**20100114103728] 
+[Refactorings, don't ever work on String's in HSE, always use Ident
+Neil Mitchell**20100114103709] 
+[Add a generator for Uniplate.Direct instances
+Neil Mitchell**20100114103314] 
+[Fix a suggestion, eta reduction
+Neil Mitchell**20100113183334] 
+[Add a :self command to self-apply
+Neil Mitchell**20100113183316] 
+[Simplify the .ghci file, use mkdir to create the directory
+Neil Mitchell**20100113182055] 
+[Have the :hpc command create .hpc if it doesn't exist
+Neil Mitchell**20100113180949] 
+[Remove redundant Data.Data import
+Neil Mitchell**20100113175946] 
+[Remove some Data contexts, replace them with Biplate
+Neil Mitchell**20100113175931] 
+[Restrict the Bracket functions
+Neil Mitchell**20100113175907] 
+[Remove some Data contexts 
+Neil Mitchell**20100113173946] 
+[Simplify the HSE/Type module
+Neil Mitchell**20100113173933] 
+[Change many of the Util functions to not be polymorphic in S
+Neil Mitchell**20100113173445] 
+[Remove another explicit Uniplate import
+Neil Mitchell**20100113173436] 
+[Remove dependency on SYB
+Neil Mitchell**20100113173421] 
+[Remove lots of explicit Uniplate/Data imports
+Neil Mitchell**20100113173207] 
+[Move HSE.Generics to HSE.Type
+Neil Mitchell**20100113172104] 
+[Fix #234, allow top-level splices for ignore
+Neil Mitchell**20100113165605] 
+[Add another test for warning levels
+Neil Mitchell**20100113164416] 
+[Improve the tests for ignore commands
+Neil Mitchell**20100113164304] 
+[Slight refactoring of the test matches
+Neil Mitchell**20100113163910] 
+[Add some basic tests for the ignoring facility
+Neil Mitchell**20100113163424] 
+[Augment the test suite to disgard ignored hints
+Neil Mitchell**20100113163229] 
+[Upgrade to 1.6.15
+Neil Mitchell**20100112135747] 
+[Upgrade to uniplate 1.4, to fix a performance bug
+Neil Mitchell**20100112135614] 
+[Fix a bug where eta reduction of infix operators didn't get position info
+Neil Mitchell**20100112124634] 
+[Move L.H.Lint to L.H.HLint, I think it's a better name
+Neil Mitchell**20100112124147] 
+[Move the API to Language.Haskell.Lint
+Neil Mitchell**20100112123925] 
+[Update teh version text with the new year
+Neil Mitchell**20100112123156] 
+[Don't need to specify -threaded in the library
+Neil Mitchell**20100112122916] 
+[Add a dependency on process (test now runs runhaskell)
+Neil Mitchell**20100112122856] 
+[Update the haddock doc comments so they parse
+Neil Mitchell**20100112122842] 
+[Update the changelog
+Neil Mitchell**20100112085740] 
+[Move returning the exit code upwards
+Neil Mitchell**20100112085421] 
+[Rename the HLint.main to HLint.hlint - it's no longer a main function
+Neil Mitchell**20100112085039] 
+[Move the command line arguments to the main
+Neil Mitchell**20100112084948] 
+[Add a --datadir flag, to allow changing the data dir
+Neil Mitchell**20100112084406] 
+[Remove a redundant extension
+Neil Mitchell**20100112084334] 
+[Eliminate the foldl/map rules, they were untrue
+Neil Mitchell**20100112082759] 
+[Update the changelog
+Neil Mitchell**20100112082312] 
+[Add a test that all the hints have identical types
+Neil Mitchell**20100112082232] 
+[Fix one of the hints in generalise
+Neil Mitchell**20100112082153] 
+[Add a notTypeSafe side condition
+Neil Mitchell**20100112080749] 
+[Fix the scanr rule - was using an undefined variable
+Neil Mitchell**20100112080419] 
+[Delete the warning about foldr1', it doesn't exist
+Neil Mitchell**20100112080223] 
+[Add testing for bad names to the test suite
+Neil Mitchell**20100112074850] 
+[Be more consistent about using the default name if there are no names available
+Neil Mitchell**20100112074825] 
+[Update the .ghci file
+Neil Mitchell**20100111230758] 
+[Change HLint from being an executable to a library
+Neil Mitchell**20100111211929] 
+[Don't turn off warnings in the .ghci file
+Neil Mitchell**20100111211859] 
+[Fix up a language pragma
+Neil Mitchell**20100111211808] 
+[Add a toNamed DeclHead function
+Neil Mitchell**20100111211735] 
+[Delete HSE.Operators, the functionality is now in HSE directly
+Neil Mitchell**20100111211711] 
+[Split the code of HLint into a separate module
+Neil Mitchell**20100111210537] 
+[Use fmap instead of liftM
+Neil Mitchell**20100111210121] 
+[Move concatZipWithM into Util
+Neil Mitchell**20100111210006] 
+[Delete nullSSI and use an in it's place
+Neil Mitchell**20100111205653] 
+[Complete the uniplate 1.3 upgrade
+Neil Mitchell**20100109232618] 
+[Upgrade to uniplate 1.3
+Neil Mitchell**20100109232537] 
+[Update the changelog
+Neil Mitchell**20100109232217] 
+[Upgrade to HSE 1.6
+Neil Mitchell**20100109232148] 
+[Update the changelog
+Neil Mitchell**20100109150935] 
+[Replace the batch files with a .ghci script
+Neil Mitchell**20100109150712] 
+[Add a section on GHCi integration
+Neil Mitchell**20100109150504] 
+[Move the hlint.ghci file, and include it in the data files
+Neil Mitchell**20100109143726] 
+[Fix up some hints given by HLint
+Neil Mitchell**20100109123406] 
+[Major rewrite, move to the Annotated HSE
+Neil Mitchell**20100109123130] 
+[Add more information on a test failure
+Neil Mitchell**20100109112223] 
+[Remove fromParseResult, use the HSE one now
+Neil Mitchell**20100108193914] 
+[Update the copyright in the GPL bit
+Neil Mitchell**20100108192930] 
+[Split Type.hs in to Type.hs and Hint.hs
+Neil Mitchell**20100108192906] 
+[Rewrite the fix for extensions with Template Haskell slightly better
+Neil Mitchell**20100108192133] 
+[Remove the last traces of lambda reduction for types - dead code removal
+Neil Mitchell**20100108185926] 
+[+ghci example
+gwern0@gmail.com**20100103223515
+ Ignore-this: c3769a1d0174c66f83ccba090ba7af1c
+ Defines a Unix .ghci, which allows one to type ':hlint' into the GHCi prompt,
+ and through hacks too horripilative to describe,
+ techniques positively mephitic, with rubose reliability,
+ it will run hlint on the loaded source file and report back.
+ Only tested under GHC 6.10.2.
+] 
+[Fix bug 247, matches should ignore source position info
+Neil Mitchell**20100106184745] 
+[Add a dropSrcLocs utility function
+Neil Mitchell**20100106184730] 
+[Add a missing <TEST> to the test hints, before they were not being run (eek)
+Neil Mitchell**20100106184701] 
+[Release 1.6.14
+Neil Mitchell**20100105103428] 
+[Update to HSE 1.5.*
+Neil Mitchell**20100105103404] 
+[Update the copyright year
+Neil Mitchell**20100105100926] 
+[Release 1.6.13
+Neil Mitchell**20100105100914] 
+[Update the changelog with bug numbers
+Neil Mitchell**20100105100101] 
+[Add an extra test for bracketing
+Neil Mitchell**20100104193037] 
+[Catch redundant brackets inside a list
+Neil Mitchell**20100104192922] 
+[Correct a bug in the foldl'/map fusion rule
+Neil Mitchell**20100104080759] 
+[Remove the restriction to haskell-src-exts-1.3.0 in the .bat file
+Neil Mitchell**20100104080603] 
+[Add fold/map fusion hints
+Neil Mitchell**20100104080456] 
+[Don't suggest naming hints if the name is already used
+Neil Mitchell**20091218185538] 
+[Change the type of DeclHint to also pass the module
+Neil Mitchell**20091218184905] 
+[Fix #239, add or/and suggestions on foldl as well as foldr
+Neil Mitchell**20091218183414] 
+[Add support for custom file .ext's when searching for files
+Neil Mitchell**20091218144136] 
+[Update the changelog
+Neil Mitchell**20091119174431] 
+[Only use the builtin modules if you see an appropriate builtin directive, allows supressing the builtin modules automatically
+Neil Mitchell**20091119174317] 
+[Add unzipEither function
+Neil Mitchell**20091119174304] 
+[Add a GPL statement to the Main.hs file
+Neil Mitchell**20091115181534] 
+[Fix bug, dot contraction should not be permitted under a lambda, or the matching goes wrong
+Neil Mitchell**20091112074701] 
+[Add an isLambda utility function
+Neil Mitchell**20091112074648] 
+[Add a hint suggesting the use of view patterns
+Neil Mitchell**20091111184649] 
+[Add declBind, utility function
+Neil Mitchell**20091111184638] 
+[Add a disjoint function
+Neil Mitchell**20091111184605] 
+[Release 1.6.12
+Neil Mitchell**20091111184533] 
+[Update the changelog
+Neil Mitchell**20091106151422] 
+[Only write the visible ideas to the report
+Neil Mitchell**20091106151224] 
+[Be more specific about the license
+Neil Mitchell**20091106073551] 
+[Follow change in HSE 1.3.0
+Neil Mitchell**20091105190423] 
+[Upgrade to HSE 1.3.*, add to the changelog and run script
+Neil Mitchell**20091105190400] 
+[Simple fix to upgrade to haskell-src-exts 1.3.x
+Niklas Broberg <niklas.broberg@chalmers.se>**20091104140622
+ Ignore-this: 24fbc12019cc0033312365e41c44a411
+] 
+[Add some more rules to HLint_Src, and an exception
+Neil Mitchell**20091102082542] 
+[Add a comment about the HLint_Src.hs file
+Neil Mitchell**20091102082026] 
+[Add some hints that apply to the HLint source code
+Neil Mitchell**20091102081956] 
+[Use toNamed in a few places
+Neil Mitchell**20091102081941] 
+[Use toNamed in a few places
+Neil Mitchell**20091102081632] 
+[Add a Named instance for QOp
+Neil Mitchell**20091102081616] 
+[Remove an unused View pattern
+Neil Mitchell**20091102080923] 
+[Test the extensions module more
+Neil Mitchell**20091102080033] 
+[Add more tests to hpc
+Neil Mitchell**20091102080023] 
+[Delete unneeded function
+Neil Mitchell**20091102073743] 
+[Fill in bug numbers in the changelog
+Neil Mitchell**20091031195356] 
+[Run more bits when generating HPC stats
+Neil Mitchell**20091031193525] 
+[Add groupSortFst and use it in 3 places
+Neil Mitchell**20091028183548] 
+[Fix hlint hints, use comparing
+Neil Mitchell**20091028182631] 
+[Remove the rule suggesting equating, obviously it never made it in to 6.10
+Neil Mitchell**20091028182234] 
+[#228, suggest let instead of <- return in do statements
+Neil Mitchell**20091028181319] 
+[Fix bug 229, suggest comparing
+Neil Mitchell**20091028175341] 
+[Add to the changelog
+Neil Mitchell**20091026082615] 
+[Add tests for the unqualification
+Neil Mitchell**20091026082416] 
+[Remove qualifications from output suggestions that are unnecessary
+Neil Mitchell**20091026081909] 
+[Qualify all non-prelude variables and update the tests
+Neil Mitchell**20091026080828] 
+[Fix the test to use fmap rather than liftM
+Neil Mitchell**20091026080542] 
+[Suggest fmap instead of liftM, since requires no additional imports
+Neil Mitchell**20091026080051] 
+[Fix #225, add a hint for reducing flip
+Neil Mitchell**20091026075816] 
+[Add ((+) x) ==> (x +)
+Neil Mitchell**20091026075106] 
+[Fix bug #223, TemplateHaskell making use of other extensions
+Neil Mitchell**20091026073542] 
+[Add to the changelog
+Neil Mitchell**20091022063525] 
+[Fix bug of incorrect suggestion in monads, reported by Andy Stewart
+Neil Mitchell**20091022063339] 
+[Add a preemptive test for bug 225
+Neil Mitchell**20091022063232] 
+[Simplify the flip hint, and add tests
+Neil Mitchell**20091022063144] 
+[Add an entry to the changelog
+Neil Mitchell**20091021172751] 
+[Add some hints about reducing id/const
+Neil Mitchell**20091021171827] 
+[Add a hint about using flip, from Nikolas Mayr
+Neil Mitchell**20091021171800] 
+[Never crash if you can't come up with a name, just say "Use alternative"
+Neil Mitchell**20091021171737] 
+[Release 1.6.11
+Neil Mitchell**20090913171204] 
+[Add to the changelog
+Neil Mitchell**20090913171044] 
+[Don't perform lambda reduction of types (fails if the type is a type alias itself)
+Neil Mitchell**20090913170854] 
+[Release 1.6.10
+Neil Mitchell**20090913153308] 
+[Fix a bug with eta reduction of chained operators
+Neil Mitchell**20090913153143] 
+[Version 1.6.9
+Neil Mitchell**20090912164909] 
+[Don't suggest eta reduction on - or +
+Neil Mitchell**20090912164728] 
+[Fix a bug with PatternGuards under case expressions
+Neil Mitchell**20090911085519] 
+[Change to version 1.6.8
+Neil Mitchell**20090907203412] 
+[Upgrade cpphs
+Neil Mitchell**20090907203334] 
+[Fix all the hlint suggestions on the hlint code base
+Neil Mitchell**20090906190532] 
+[Document the -threaded configure flag
+Neil Mitchell**20090906133855] 
+[Add lambda to operator section suggestion from Andy Stewart
+Neil Mitchell**20090906132506] 
+[Fix a bug in detecting when the TemplateHaskell extension is required
+Neil Mitchell**20090906124923] 
+[Simplify the extensions module
+Neil Mitchell**20090906124553] 
+[Add some more extension tests
+Neil Mitchell**20090906111729] 
+[Don't suggest {-# LANGUAGE #-} ever in extensions
+Neil Mitchell**20090906110732] 
+[Support having blank to results
+Neil Mitchell**20090906110639] 
+[Add some pragma tests
+Neil Mitchell**20090906103251] 
+[Change the syntax for multiline tests, makes it possible to do more pragma tests
+Neil Mitchell**20090905210028] 
+[Add lots of pragma tests, and extend the system to allow more to be written
+Neil Mitchell**20090905205404] 
+[Add lots of import test
+Neil Mitchell**20090905205356] 
+[Record the increase in hpc coverage in the changelog
+Neil Mitchell**20090905202707] 
+[Force the output, to get better HPC coverage
+Neil Mitchell**20090905202647] 
+[Fix a bug with imports
+Neil Mitchell**20090905202522] 
+[Rewrite the tests, now can match more things
+Neil Mitchell**20090905201113] 
+[Don't run over the main code by default, since there are no tests it's accurate
+Neil Mitchell**20090905182619] 
+[Add a script to automate HPC checking
+Neil Mitchell**20090905182123] 
+[Fix a bug reported with type eta reduction
+Neil Mitchell**20090905175941] 
+[Version 1.6.7
+Neil Mitchell**20090830211125] 
+[Refactor the extension checking code
+Neil Mitchell**20090830210832] 
+[Update the changelog
+Neil Mitchell**20090830194526] 
+[Add a threaded flag to allow building on arches without threading support
+Neil Mitchell**20090830193827] 
+[Put all cabal keywords in lower case
+Neil Mitchell**20090830192641] 
+[Fix bug 212, potential pattern match error
+Neil Mitchell**20090830192627] 
+[Add to the changelog
+Neil Mitchell**20090830170643] 
+[Fix template haskell detection, accidentally had && instead of ||
+Neil Mitchell**20090830170525] 
+[Version 1.6.6
+Neil Mitchell**20090829161739] 
+[Upgrade to hscolour 1.15, changes the API
+Neil Mitchell**20090829161409] 
+[Add to the changelog
+Neil Mitchell**20090819101802] 
+[Add a suggestion to use unless instead of if and return ()
+Neil Mitchell**20090819101613] 
+[Document the C preprocessor support
+Neil Mitchell**20090816153118] 
+[Update the changelog
+Neil Mitchell**20090810112008] 
+[Remove unused extensions from inside HLint
+Neil Mitchell**20090810111515] 
+[Tweak some of the extension rules
+Neil Mitchell**20090810111324] 
+[Add extension warnings, #211
+Neil Mitchell**20090810105415] 
+[Remove redundant parallel package
+Neil Mitchell**20090810100949] 
+[Add pragma hints
+Neil Mitchell**20090808163604] 
+[Update changes
+Neil Mitchell**20090808154407] 
+[Fix the settings file, had = instead of ==>
+Neil Mitchell**20090808151230] 
+[Add some Functor laws and a liftM identity
+Neil Mitchell**20090808145534] 
+[Add a caveat that #include makes line numbers go wrong
+Neil Mitchell**20090808143431] 
+[Update the changelog with cpp support
+Neil Mitchell**20090808143320] 
+[Refactor to have a flags in a record
+Neil Mitchell**20090808141242] 
+[Pass Cpphs options to the parsing code
+Neil Mitchell**20090808140114] 
+[Add basic cpphs support, starts to fix #137
+Neil Mitchell**20090808133736] 
+[Add a changelog entry about import hints
+Neil Mitchell**20090808133313] 
+[Finish implementing import reduction, bug #189
+Neil Mitchell**20090808130059] 
+[Don't demand HSE 1.0.0 in the ghci.bat script
+Neil Mitchell**20090808123613] 
+[Add missing file, Import.hs
+Neil Mitchell**20090807230408] 
+[Add support for hints that work at the module level, and add import hints
+Neil Mitchell**20090807083235] 
+[Upgrade to haskell-src-exts 1.1
+Neil Mitchell**20090807083221] 
+[Add a CHANGES file
+Neil Mitchell**20090806154513] 
+[Move the README.txt
+Neil Mitchell**20090806154233] 
+[Add explicit parse errors, fixes bug #206
+Neil Mitchell**20090802160731] 
+[Reorder the fields in Classify to be closer to MatchExp
+Neil Mitchell**20090802153943] 
+[Refactor, split the Idea and Setting data types
+Neil Mitchell**20090802153713] 
+[Bump the version number
+Neil Mitchell**20090802152526] 
+[Only add the special case of ==> fixity when reading settings files, fixes bug #208
+Neil Mitchell**20090802100309] 
+[Add a man page, from Joachim Breitner
+Neil Mitchell**20090722175826] 
+[Add a new section on HLint vs optimisation to the FAQ
+Neil Mitchell**20090719105832] 
+[Bump the version number to 1.6.4
+Neil Mitchell**20090714205219] 
+[Allow prop_ as a prefix, fixes bug 205
+Neil Mitchell**20090710080828] 
+[Disable the Arrows extension, fixes bug 204
+Neil Mitchell**20090710080457] 
+[Fix bug #203
+Neil Mitchell**20090702102152] 
+[Add Test.hs to the cabal file, fix #201
+Neil Mitchell**20090702102117] 
+[Bump the version
+Neil Mitchell**20090702102108] 
+[Add isVar to Util
+Neil Mitchell**20090702101205] 
+[Relax the version constraint on HSE, was too strict for new versions
+Neil Mitchell**20090701214815] 
+[Add a missing file to hlint
+Neil Mitchell**20090701185651] 
+[Add a fall through case for isSym, fixes bug #199
+Neil Mitchell**20090701184332] 
+[Make the when/unless hint fire more often, and abuse other stuff less
+Neil Mitchell**20090630141749] 
+[Add a notElem hint
+Neil Mitchell**20090630141739] 
+[Improve the css manipulation in the report, goes faster on Chrome
+Neil Mitchell**20090630124246] 
+[Add a manual section on parallel operation
+Neil Mitchell**20090630093727] 
+[Tweak the --help output
+Neil Mitchell**20090630091557] 
+[Tweaks to the manual
+Neil Mitchell**20090630090926] 
+[Turn on some warnings and fix the results
+Neil Mitchell**20090630090756] 
+[Bump for version 1.6
+Neil Mitchell**20090630090744] 
+[Make parse errors shorter by trimming redundant blank lines
+Neil Mitchell**20090630081847] 
+[Eliminate System.IO.Unsafe, restructure the parallel bits
+Neil Mitchell**20090630081559] 
+[Give a parse error message on failure
+Neil Mitchell**20090629182047] 
+[Add .hs- to the css properties
+Neil Mitchell**20090629182034] 
+[Skip CPP style lines
+Neil Mitchell**20090629174224] 
+[Make parse errors a hint, rather than a stdout message
+Neil Mitchell**20090629164910] 
+[Fix the comment, TransformListComp is not screwed up by HSE, it's screwed up by design
+Neil Mitchell**20090623084640] 
+[Change to using fixity resolution from haskell-src-exts
+Neil Mitchell**20090623081924] 
+[Use fromParseResult instead of fromParseOk
+Neil Mitchell**20090623081131] 
+[Move to haskell-src-exts-1.0.0
+Neil Mitchell**20090623080118] 
+[Upgrade to haskell-src-exts 0.5.6
+Neil Mitchell**20090621162008] 
+[Add a test for the qualified name matching
+Neil Mitchell**20090621150004] 
+[Make each <test> block be a separate module
+Neil Mitchell**20090621145935] 
+[Thread NameMatch through unify
+Neil Mitchell**20090621144821] 
+[Remove nullNameMatch, no longer used
+Neil Mitchell**20090621144805] 
+[Deal with NameMatch in the tests
+Neil Mitchell**20090621144747] 
+[Give backup names to things which have no interesting lexemes to name them with
+Neil Mitchell**20090621143840] 
+[Add the concept of name matching, not yet used anywhere
+Neil Mitchell**20090621132827] 
+[Give a non-zero exit code if there are any failures
+Neil Mitchell**20090621122407] 
+[Fix HLint warnings in HLint
+Neil Mitchell**20090621122354] 
+[Demand haskell-src-exts 0.4.8 for the moment
+Neil Mitchell**20090621122339] 
+[Add hints to use if instead of case, fixes bug #191
+Neil Mitchell**20090616162054] 
+[Don't give suggestions on mdo, fixes bug #180
+Neil Mitchell**20090607042531] 
+[Allow any version of hscolour > 1.10, and trust Malcolm not to break hlint - fixes #177
+Neil Mitchell**20090518135532] 
+[Add a hint about catMaybes to mapMaybe
+Neil Mitchell**20090512113025] 
+[Add eta reduction for lambdas, fixes bug #176
+Neil Mitchell**20090512110139] 
+[Push brackets down in infix applications, fixes bug #168
+Neil Mitchell**20090512105441] 
+[Add a test and fix for bug #154
+Neil Mitchell**20090512104314] 
+[Remove a couple of unneeded utility functions
+Neil Mitchell**20090512104302] 
+[Rewrite the HSE.Bracket functions to use pattern guards rather than is functions
+Neil Mitchell**20090512103916] 
+[Add rounded borders on Safari/Chrome
+Neil Mitchell**20090512091153] 
+[Fix a typo in the manual (spotted by ivanm)
+Neil Mitchell**20090504110812] 
+[Add support for running multiple hint testing in parallel
+Neil Mitchell**20090504110118] 
+[Fix some HSE parse errors in HLint
+Neil Mitchell**20090504103735] 
+[Bump hlint version
+Neil Mitchell**20090420075604] 
+[Relax the base requirement, necessary to install with GHC 6.10.2
+Neil Mitchell**20090420075413] 
+[Add a suggestion to use join from a do statement, issue #166
+Neil Mitchell**20090325224526
+ Ignore-this: 774217916b229b414f7bdae48bfbce5e
+] 
+[Fix a bug, the join hint had been added backwards
+Neil Mitchell**20090325223310
+ Ignore-this: 6604d7d147beb9f7b029edd68d457b2c
+] 
+[Change websites over
+Neil Mitchell**20090322073442
+ Ignore-this: 6308db778290efa65ef5d4d4023ae552
+] 
+[Mark enumerations as being atomic so they don't get brackets round them
+Neil Mitchell**20090319120207] 
+[Add a map/zip zipWith rule, suggested by Issue 163
+Neil Mitchell**20090319120139] 
+[Mention the effects of rank-2 types in the limitations of the manual
+Neil Mitchell**20090318114725] 
+[Allow eta reduction on left sections (suggsted by Martijn van Steenbergen)
+Neil Mitchell**20090318113119] 
+[Add -v and --version as flags (suggested by Martijn van Steenbergen)
+Neil Mitchell**20090318111904] 
+[Fix up the list of hint files to include in the .cabal file
+Neil Mitchell**20090318111850] 
+[Add some map/mapM hints
+Neil Mitchell**20090215103644] 
+[Add reporting for hints, fixes bug #126
+Neil Mitchell**20090210143031] 
+[Add a Named ModuleName instance
+Neil Mitchell**20090210142900] 
+[Add moduleImports to HSE.Util
+Neil Mitchell**20090210142847] 
+[Make the tests run over all .hs files in data, rather than hard-coded to Hints.hs
+Neil Mitchell**20090210142814] 
+[Add the notIn side condition and fix up a few functions, fixes bug #150
+Neil Mitchell**20090209160313] 
+[Update to the new hs-lint emacs thing
+Neil Mitchell**20090208193859] 
+[Add some errors about using hPutChar stdout instead of putChar etc
+Neil Mitchell**20090206114947] 
+[Another few bracketing checks in ListRec
+Neil Mitchell**20090205174816] 
+[Require that lambda simplifications are on atomic things
+Neil Mitchell**20090205174523] 
+[Simplify lambdas in slightly more cases
+Neil Mitchell**20090205174155] 
+[Fix a bug in foldr matching, if the recursive case was bracketed did not get spotted
+Neil Mitchell**20090205173742] 
+[Implement list recursion suggestions answering with foldM/foldM_ - bug #143
+Neil Mitchell**20090205170351] 
+[Add ~= support for ()
+Neil Mitchell**20090205170341] 
+[Add a few more monad identities, fixes bug #144
+Neil Mitchell**20090205162729] 
+[Add eta reduction for type synonyms, fixes bug #148
+Neil Mitchell**20090205161805] 
+[Remove leading blank lines from the printing of type/data declarations
+Neil Mitchell**20090205161727] 
+[Add a basic notes on how to develop HLint (for when I forget in future)
+Neil Mitchell**20090205160112] 
+[Add code for suggesting [Char] -> String, bug 142
+Neil Mitchell**20090120224522] 
+[Allow eta reduction for symbols as well
+Neil Mitchell**20090118180001] 
+[Test only dynamic hints in the dynamic thing
+Neil Mitchell**20090118172620] 
+[Split up the hints into static and dynamic
+Neil Mitchell**20090118172238] 
+[Add structure hints
+Neil Mitchell**20090118171931] 
+[Update the comment to track the changes to naming rules
+Neil Mitchell**20090118101925] 
+[Drop all leading underscores from a name
+Neil Mitchell**20090118101906] 
+[Be much more picky about what names are defined where
+Neil Mitchell**20090118100845] 
+[Don't suggest camelCase on symbols
+Neil Mitchell**20090118094620] 
+[Make tests starting with - negative
+Neil Mitchell**20090118094607] 
+[Add soem more tests to naming
+Neil Mitchell**20090117191127] 
+[Shorten the camelCase suggestions, or they get huge to say not much
+Neil Mitchell**20090117184353] 
+[Add a hint to suggest the use of camelCase
+Neil Mitchell**20090117180745] 
+[Beef up the tests, can now test changes to data types
+Neil Mitchell**20090117180732] 
+[Use the included partitionEithers instead of unzipEithers
+Neil Mitchell**20090117180707] 
+[Add declSrcLoc utility function
+Neil Mitchell**20090117180648] 
+[Fix a typo, && instead of &&&
+Neil Mitchell**20090117180626] 
+[Fix a HLint warning in the report
+Neil Mitchell**20090117170053] 
+[Remove a space leak, halves the memory require to run over darcs
+Neil Mitchell**20090117161446] 
+[Delete the command line example of showing things in colour, no longer required now it has a --colour flag
+Neil Mitchell**20090117150256] 
+[Add a --color flag to color the console output
+Neil Mitchell**20090117150219] 
+[Demand a specific version of hscolour, as the API is different in 1.9
+Neil Mitchell**20090117142129] 
+[Colour the output HTML using HsColour
+Neil Mitchell**20090117141801] 
+[Display the hint rank in the left bar
+Neil Mitchell**20090117140927] 
+[Make the javascript detector apply sooner for large documents
+Neil Mitchell**20090117140423] 
+[Add some stuff to the manual
+Neil Mitchell**20090117140302] 
+[Escape more HTML
+Neil Mitchell**20090117133510] 
+[Properly escape the HTML generated
+Neil Mitchell**20090117133430] 
+[Properly escape code samples
+Neil Mitchell**20090117133312] 
+[Remove support for v1 style reports
+Neil Mitchell**20090117132936] 
+[Delete the old report file
+Neil Mitchell**20090117132708] 
+[Implement the leftbar in the report
+Neil Mitchell**20090117132240] 
+[Reformat the report to make it look nicer and have whole-page scroll bars
+Neil Mitchell**20090117124504] 
+[Begin to revamp the report
+Neil Mitchell**20090117115754] 
+[Use record wildcards to make the show functions slightly nicer
+Neil Mitchell**20090117112500] 
+[hlint found an "error" in itself!
+Trent W. Buck <trentbuck@gmail.com>**20090117095756
+ Ignore-this: f5a971f751808d56702e93a8a700f812
+] 
+[Add comments for how the show/hide functionality will work
+Neil Mitchell**20090116171154] 
+[Add a very early report_2.html
+Neil Mitchell**20090116170808] 
+[Make the variable replacement in report more powerful
+Neil Mitchell**20090116165143] 
+[Refactor the report writing a bit
+Neil Mitchell**20090116164117] 
+[Delete toName and toQName
+Neil Mitchell**20090116155543] 
+[Delete the fromName function
+Neil Mitchell**20090116155429] 
+[Eliminate fromName
+Neil Mitchell**20090116155349] 
+[Eliminate toVar, use toNamed instead
+Neil Mitchell**20090116154847] 
+[Delete unused fromVar/isVar
+Neil Mitchell**20090116154638] 
+[Delete unused utility functions, fromPVar/isPVar
+Neil Mitchell**20090116154600] 
+[Modify the variable manipulation functions
+Neil Mitchell**20090116154504] 
+[Fix some bugs in the new named matcher
+Neil Mitchell**20090116154450] 
+[Move one of the tests from Hints to list, as it got in the wrong
+Neil Mitchell**20090116154425] 
+[Give slightly more information on a test failure
+Neil Mitchell**20090116154403] 
+[Refactor the Named matching a bit
+Neil Mitchell**20090116152329] 
+[Add a Named class to convert names to strings and back
+Neil Mitchell**20090116151512] 
+[Add an Infix view pattern, to avoid opExp matches
+Neil Mitchell**20090116151444] 
+[Make generics available everywhere
+Neil Mitchell**20090116151421] 
+[Add a Data.Generics file to export the import generics stuff
+Neil Mitchell**20090116151335] 
+[Change the `on` hint so it only applies for a small number of known operators
+Neil Mitchell**20090116145457] 
+[Add information about the hs-lint.el file
+Neil Mitchell**20090112180834] 
+[Fix up one of the tests, with new lambda shrinking
+Neil Mitchell**20090111220055] 
+[Bump the version number of hlint
+Neil Mitchell**20090111215521] 
+[Improve the generated lambdas a bit
+Neil Mitchell**20090109091212] 
+[Add evaluation of list literals
+Neil Mitchell**20090109090052] 
+[Upgrade to the latest HSE
+Neil Mitchell**20090109084814] 
+[Add code to eliminate invariant arguments from a match
+Neil Mitchell**20090108160214] 
+[Move to using transformAppsM
+Neil Mitchell**20090108142207] 
+[Add descendAppsM/transformAppsM
+Neil Mitchell**20090108142152] 
+[Remove the bit about invariant args, was in the wrong place
+Neil Mitchell**20090108140451] 
+[Add various apps stuff
+Neil Mitchell**20090108140441] 
+[Make foldl/foldr warnings rather than errors
+Neil Mitchell**20090108092612] 
+[Add a test for bug 129, which needs accurate operator precedence
+Neil Mitchell**20090108092238] 
+[Add res information to all tests that were missing it
+Neil Mitchell**20090107161351] 
+[Do not allow no res clause, always an error
+Neil Mitchell**20090107160843] 
+[Add a where res clause for the one missing hint
+Neil Mitchell**20090107160832] 
+[Add tests to ListRec
+Neil Mitchell**20090107160356] 
+[Add support for res being a string literal
+Neil Mitchell**20090107160344] 
+[Move utility functions around
+Neil Mitchell**20090107160140] 
+[Generate simpler lambdas if for nested lambdas
+Neil Mitchell**20090107155520] 
+[Fix a bug in the foldr, was lacking some brackets in the lambda
+Neil Mitchell**20090107155126] 
+[Rewrite much of the list matching code, now works
+Neil Mitchell**20090107152454] 
+[Bump the version number significantly to indicate the development version
+Neil Mitchell**20090107112835] 
+[Add a very early ListRec hint
+Neil Mitchell**20090106171348] 
+[Promote two of the arrow hints in to errors
+Neil Mitchell**20090106143321] 
+[Tweak fixities thanks to patch from Nicolas Pouillard
+Neil Mitchell**20090106131612] 
+[Refactor the match to use guard
+Neil Mitchell**20090106123445] 
+[Add a hint about unless, and use it in various places
+Neil Mitchell**20090106123428] 
+[Add another reason against repeated suggestions
+Neil Mitchell**20090106122518] 
+[Fix a bug with the sequence/map => mapM hints having as, not a, so not free variables
+Neil Mitchell**20090106122455] 
+[Remove the old ignore file from the .cabal listing
+Neil Mitchell**20090106121608] 
+[Move the hint a $ b ==> a b to Bracket, as the hint coniditons rely on the precise answer to needBracket
+Neil Mitchell**20090106121508] 
+[Take advantage of _noParen_ in the when a $ do case
+Neil Mitchell**20090106121314] 
+[Add support for the match meta-function _noParen_
+Neil Mitchell**20090106121214] 
+[Delete the old ignore file, no longer applicable
+Neil Mitchell**20090106121155] 
+[Add some additional bool hints
+Neil Mitchell**20090106121124] 
+[Don't crash on an Ambiguous infix expression, just continue along
+Neil Mitchell**20090106113755] 
+[Add all the fixities in the base library, and use them by default
+Neil Mitchell**20090106112426] 
+[Some tweaks to the user manual
+Neil Mitchell**20090106104008] 
+[Make the error message for inefficient monadic variants more standard, now "Use mapM_"
+Neil Mitchell**20090106103304] 
+[Add some more Ord/Eq based hints
+Neil Mitchell**20090106102132] 
+[Simplify some of the Test code slightly
+Neil Mitchell**20090106093530] 
+[Fix up a new hint, use forM
+Neil Mitchell**20090106093519] 
+[Add hints for using forM
+Neil Mitchell**20090106093512] 
+[Fix up the manual
+Neil Mitchell**20090105154256] 
+[Parse settings which correspond only to module names in ignore lines correctly
+Neil Mitchell**20090105152654] 
+[Add a Util module and move some functions out to it
+Neil Mitchell**20090105152049] 
+[Use isInfixOf directly, since I require GHC 6.10 anyway
+Neil Mitchell**20090105152031] 
+[Write out the error/warning status in teh reports
+Neil Mitchell**20090105151116] 
+[Rename fix->error, warn->warning, skip->ignore
+Neil Mitchell**20090105145702] 
+[Add support for the --skip flag
+Neil Mitchell**20090105143200] 
+[Make the user interface match the skip/show/warn better
+Neil Mitchell**20090105142721] 
+[Rewrite much of the command line infrastructure stuff
+Neil Mitchell**20090105140504] 
+[Bump the copyright year in the cabal file
+Neil Mitchell**20090105134146] 
+[Bump the copyright year
+Neil Mitchell**20090105134054] 
+[Simplify the interaction between classification and execution
+Neil Mitchell**20090105133230] 
+[Add rank to idea
+Neil Mitchell**20090105131856] 
+[Move isFreeVar into Type and rename to isUnifyVar
+Neil Mitchell**20090105131819] 
+[Tidy up various types for ideas, settings and matches
+Neil Mitchell**20090105121809] 
+[Add more support for idea hinting
+Neil Mitchell**20090105114542] 
+[Add a Show for classify
+Neil Mitchell**20090105114533] 
+[Add support for getNames returning "", if no names are given and it isn't a ==>
+Neil Mitchell**20090105114458] 
+[Move to using fix/warn for writing out hints
+Neil Mitchell**20090102163007] 
+[Delete a TODO comment, move in to bug 125
+Neil Mitchell**20090102161248] 
+[More consistent naming, most things are Use/Redundant at the start
+Neil Mitchell**20090102160227] 
+[Always generate the report LHS in alphabetical order
+Neil Mitchell**20090102155746] 
+[Don't suggest using >>= if brackets are involved
+Neil Mitchell**20090102154902] 
+[Make the excess bracket detection stuff use HSE.Bracket
+Neil Mitchell**20090102154134] 
+[Require brackets around operators, otherwise the interface is tricky
+Neil Mitchell**20090102145544] 
+[Change needBracket to return a boolean
+Neil Mitchell**20090102145518] 
+[Remove some dead code from HSE.Bracket
+Neil Mitchell**20090102111215] 
+[Add tests for the bugs in #108
+Neil Mitchell**20090102100400] 
+[Fix up the parentheses generated by evaluate
+Neil Mitchell**20090102095545] 
+[Don't insert a bracket for left-associative application
+Neil Mitchell**20090102095121] 
+[Add more test data to the list of hints
+Neil Mitchell**20090102094959] 
+[Revise the test implementation, make sure that res clauses are being honoured
+Neil Mitchell**20090102093633] 
+[Update various test options
+Neil Mitchell**20090102093619] 
+[Add a getEquations helper
+Neil Mitchell**20090102093600] 
+[Update the file stream parser to include the filename in error messages
+Neil Mitchell**20090102093539] 
+[Add a hint about using :[] instead of a lambda
+Neil Mitchell**20090102093526] 
+[Add more tests with where res clauses
+Neil Mitchell**20081231183147] 
+[Add tests for the where res clauses
+Neil Mitchell**20081231183129] 
+[Refactor the test code
+Neil Mitchell**20081231181649] 
+[Fix up the cabal file to match module changes
+Neil Mitchell**20081231142821] 
+[Split the tests into a separate file
+Neil Mitchell**20081231142559] 
+[Add test results to some questions
+Neil Mitchell**20081231141919] 
+[Fix all the HLint suggested chnages in HLint
+Neil Mitchell**20081231120927] 
+[Big rewrite, move to using a HS file for everything
+Neil Mitchell**20081231120617] 
+[Add some initial code for the settings file
+Neil Mitchell**20081231113356] 
+[Add test for redundant returns using do syntax
+Neil Mitchell**20081230183043] 
+[Bug fix, an app on the left of an InfixApp was being bracketed, due to a typo
+Neil Mitchell**20081230182227] 
+[Do multiple eta reductions as one "eta reduce" step
+Neil Mitchell**20081230180330] 
+[Sort the hints from a declaration, fixes 113
+Neil Mitchell**20081230175225] 
+[Allow wildcard patterns in hints to match anything
+Neil Mitchell**20081230172650] 
+[Remove a TODO that has since been done
+Neil Mitchell**20081230172513] 
+[Add hints with variable matching, fixes bug 119
+Neil Mitchell**20081230172344] 
+[Add a hint for reducing simplistic do statements
+Neil Mitchell**20081230122554] 
+[Make unify able to unify patterns in stmt's
+Neil Mitchell**20081230122538] 
+[Add fromPVar
+Neil Mitchell**20081230122530] 
+[Simplify fromVar
+Neil Mitchell**20081230122523] 
+[Add a concatZipWithM utility function
+Neil Mitchell**20081230121300] 
+[Simplification, direct match on Paren now it isn't horribly overloaded
+Neil Mitchell**20081230120555] 
+[Add the monad identity laws
+Neil Mitchell**20081230115415] 
+[Fix part of bug 123 and add some tests
+Neil Mitchell**20081230115120] 
+[Do not insert a bracket around foo $ do bar
+Neil Mitchell**20081230114325] 
+[Move the is* Exp functions into Util
+Neil Mitchell**20081230114305] 
+[Remove all XExpTag things, no longer necessary to use them as fake brackets
+Neil Mitchell**20081228162314] 
+[Remove add/rem Paren
+Neil Mitchell**20081228161004] 
+[Move to using ensureBracket1 instead of add/rem Paren
+Neil Mitchell**20081228160948] 
+[Tweak the needBracket to fix issue 108
+Neil Mitchell**20081228160640] 
+[Refactor the isAtom test
+Neil Mitchell**20081228160618] 
+[Rewrite the Match to use the new bracketing code, still needs lots of testing
+Neil Mitchell**20081228135449] 
+[Rework the bracketing item names and interfaces slightly
+Neil Mitchell**20081228105238] 
+[Add some new code to the bracketing
+Neil Mitchell**20081228104043] 
+[n `rem` 2 /= 0 finds odds not evens
+Dennis Griffith <dgriffi3@uiuc.edu>**20081227202730
+ Ignore-this: 524cbb842b12827557debffb4c5c3ae5
+] 
+[Add the missing files to the .cabal file
+Neil Mitchell**20081224123049] 
+[Rename isCharExp -> isChar, and add fromChar
+Neil Mitchell**20081224121133] 
+[Reorder the utility functions
+Neil Mitchell**20081224120918] 
+[Remove some limitations listed in the manual
+Neil Mitchell**20081224120316] 
+[Rename parseHsModule to parseFile
+Neil Mitchell**20081224115804] 
+[Shift code around so the operators and file reading is done in one place
+Neil Mitchell**20081224115441] 
+[Add an explicit export list to HSE.Operators
+Neil Mitchell**20081224114215] 
+[Delete unused declFixity/moduleFixities stuff
+Neil Mitchell**20081224114159] 
+[Add a test for bug #111
+Neil Mitchell**20081224113458] 
+[Remove brackets that had been inserted to make parsing work without operator precedences
+Neil Mitchell**20081224113156] 
+[Rewrite the fixities code entirely, now deals properly with everything
+Neil Mitchell**20081224113057] 
+[Be a bit stricter about the chain checking in the list hints
+Neil Mitchell**20081224112701] 
+[Add boolean hints from Lennart
+Neil Mitchell**20081224112449] 
+[Add an Eq instance for Module and fromParseOk
+Neil Mitchell**20081224111401] 
+[Fix isAtom, and note how things should really be done in future
+Neil Mitchell**20081224111325] 
+[Split up HSE.Util into separate parts
+Neil Mitchell**20081224094948] 
+[Add HSE.All, and move some users over to it
+Neil Mitchell**20081224094129] 
+[Rename Mode to CmdMode to avoid clash with HSE
+Neil Mitchell**20081224094114] 
+[Move Util into the HSE namespace
+Neil Mitchell**20081224093752] 
+[Add support for isAtom and add f $ x ==> x, where isAtom x, bug 117
+Neil Mitchell**20081223105104] 
+[Add a comment to move the evaluate hints away
+Neil Mitchell**20081223103714] 
+[Add support for the _eval_ directive in hints
+Neil Mitchell**20081223103413] 
+[Add a HSE evaluator
+Neil Mitchell**20081223103357] 
+[Add toName, toQName, and improve ~=
+Neil Mitchell**20081223103336] 
+[Add brackets around the (:) suggestion, fixes bug 118
+Neil Mitchell**20081223100715] 
+[Add some hints from George Pollard
+Neil Mitchell**20081223083351] 
+[Add notes about recursive suggestions
+Neil Mitchell**20081222145908] 
+[Add a clarification about what HLint will run over
+Neil Mitchell**20081222144619] 
+[Point at the bug tracker
+Neil Mitchell**20081222144504] 
+[Add a section about how to write a hint, with bracketing etc
+Neil Mitchell**20081222144335] 
+[Give a better message about how to invoke hlint
+Neil Mitchell**20081222143814] 
+[Require Cabal 1.6 for version wildcard syntax
+Neil Mitchell**20081222112255] 
+[Add (but comment out) the extensions in .cabal, since view patterns are not known by Cabal
+Neil Mitchell**20081222095408] 
+[Reformat the build-depends to make it clearer
+Neil Mitchell**20081222095356] 
+[Require Cabal 1.4, since version wildcards are not in 1.2 at least
+Neil Mitchell**20081222095343] 
+[Add a load more hints from Henk-Jan
+Neil Mitchell**20081222091334] 
+[Add ignore file in
+Neil Mitchell**20081220093706] 
+[Bump the version number, 1.0 :-)
+Neil Mitchell**20081220092749] 
+[print = putStrLn . show
+Trent W. Buck <trentbuck@gmail.com>**20081220073004] 
+[Add a hint about using when, from Gwern
+Neil Mitchell**20081219161503] 
+[Add the hlint manual
+Neil Mitchell**20081218145835] 
+[Fix up a few mistakes in the cabal file
+Neil Mitchell**20081218124248] 
+[Add a sample hint ignore file
+Neil Mitchell**20081218124149] 
+[Add support for ignoring files
+Neil Mitchell**20081218124113] 
+[Add a key to each type, to enable ignoring
+Neil Mitchell**20081218112919] 
+[Add some more HSE utility functions
+Neil Mitchell**20081218112906] 
+[Rename from DrHaskell to hlint
+Neil Mitchell**20081218103606] 
+[Add hints from Henk
+Neil Mitchell**20081217084057] 
+[Match infix applications in a more liberal way
+Neil Mitchell**20081217084046] 
+[Add a list of modules that DrHaskell users
+Neil Mitchell**20081216150848] 
+[Split the report out in to dist
+Neil Mitchell**20081216150829] 
+[Default to putting the report as report.html
+Neil Mitchell**20081216150146] 
+[Flesh out the report writing
+Neil Mitchell**20081215170609] 
+[Add support for reports, but no actual report code yet
+Neil Mitchell**20081215123011] 
+[Upgrade to 0.4.6 of HSE
+Neil Mitchell**20081215122955] 
+[Changes to match the HSE changes
+Neil Mitchell**20081207190220] 
+[More descriptive error on text parse failure
+Neil Mitchell**20081207190117] 
+[Upgrade to the latest version of HSE
+Neil Mitchell**20081206104649] 
+[Add a hint to use isPrefixOf instead of length and take
+Neil Mitchell**20081125184950] 
+[Add side condition checking
+Neil Mitchell**20081125184938] 
+[Move stripping of parens first, so that variable matches always have the fewest extra parens
+Neil Mitchell**20081125184912] 
+[Skip brackets introduced purely for the sake of ==>
+Neil Mitchell**20081125184850] 
+[Add a hint spotted by Dr Haskell
+Neil Mitchell**20081125183335] 
+[Add an extra test for long . pipelines
+Neil Mitchell**20081125183234] 
+[Change dotExpand and dotContract to work in more cases with longer dot pipelines
+Neil Mitchell**20081125182843] 
+[Don't rotate dollars in Lambda, now done globally
+Neil Mitchell**20081125182727] 
+[Add operator precedence translation
+Neil Mitchell**20081125182713] 
+[Add operator precedence translation to Util
+Neil Mitchell**20081125182651] 
+[Rewrite the InfixApp view in terms of opExp
+Neil Mitchell**20081125182633] 
+[Add opExp to Util
+Neil Mitchell**20081125182627] 
+[Add support for parsing side conditions
+Neil Mitchell**20081124191621] 
+[If readOne misses on a single funbind, then crash - don't infinite loop
+Neil Mitchell**20081124190631] 
+[Fix up some dr haskell suggestions
+Neil Mitchell**20081121152236] 
+[Add a TODO about using on functions, which is now done
+Neil Mitchell**20081121144848] 
+[Add suggestions to use `on`
+Neil Mitchell**20081121142410] 
+[Add App1 view pattern
+Neil Mitchell**20081121142401] 
+[Don't generate eta suggestions if it would look a bit ugly
+Neil Mitchell**20081121121904] 
+[Add a test for not eta reducing mr variables
+Neil Mitchell**20081121115739] 
+[A negative example just has to start with no
+Neil Mitchell**20081121115725] 
+[Only suggest reduction to const if it doesn't introduce more brackets
+Neil Mitchell**20081121115551] 
+[Delete the test file, since the tests are now stored closer to home
+Neil Mitchell**20081121115304] 
+[Move the TODO about RecMatch into Hints, before deleting Tests
+Neil Mitchell**20081121115216] 
+[Move the test code into individual hint files
+Neil Mitchell**20081121115107] 
+[Refactor the list of hints
+Neil Mitchell**20081121101819] 
+[Reformat to making the hints more modular in a list
+Neil Mitchell**20081121100736] 
+[Reformat the tests, remove some that are outdated
+Neil Mitchell**20081121094818] 
+[Add some TODO's for ways to improve it
+Neil Mitchell**20081116090344] 
+[Add the optional paren as an atom
+Neil Mitchell**20081116002400] 
+[Upgrade to the new version of haskell-src-exts
+Neil Mitchell**20081115130519] 
+[Don't warn about overlapping patterns, because view patterns are broken with this warning
+Neil Mitchell**20081115123915] 
+[Demand Uniplate > the bug fix for Ratio
+Neil Mitchell**20081115123858] 
+[Allow finding hints and tests from getFile
+Neil Mitchell**20081115121030] 
+[Move ifNull to the only use of it
+Neil Mitchell**20081115120803] 
+[Don't use ifNull, will be removed shortly
+Neil Mitchell**20081115120748] 
+[Move supplying the deafult for test files into CmdLine
+Neil Mitchell**20081115120156] 
+[Fix a couple of the tests, had minor bugs in
+Neil Mitchell**20081115115955] 
+[Add more specific version things in drhaskell
+Neil Mitchell**20081115115941] 
+[Ignore overlapping patterns, because view patterns are buggy
+Neil Mitchell**20081115115921] 
+[Start to add support for data files
+Neil Mitchell**20081114172115] 
+[Add a ghci wrapper for include paths
+Neil Mitchell**20081114171152] 
+[Add basic support for Paths_ as generated by Cabal
+Neil Mitchell**20081114171121] 
+[Move modules around and rename them
+Neil Mitchell**20081114170506] 
+[Move the hints and tests out to a different folder
+Neil Mitchell**20081114165618] 
+[Delete the Yhc version of drhaskell
+Neil Mitchell**20081114165557] 
+[Delete the make.bat, worked with the old yhc version
+Neil Mitchell**20081114165533] 
+[Add bracket hints
+Neil Mitchell**20081114165007] 
+[Remove the Maybe round the from/to pairs
+Neil Mitchell**20081114150842] 
+[Remove the readme, the information is duplicated in the .cabal file
+Neil Mitchell**20081114102128] 
+[Don't eta reduce a symbol name, as it looks ugly
+Neil Mitchell**20081113180719] 
+[Allow eta reduction in a few more cases
+Neil Mitchell**20081113175737] 
+[Tweaks the tests and add some more
+Neil Mitchell**20081113175240] 
+[Fix up the paren handling in matching
+Neil Mitchell**20081113175225] 
+[Fix the paren stuff to support the special parens
+Neil Mitchell**20081113175156] 
+[Limit the parse error messages
+Neil Mitchell**20081113175148] 
+[Add hints about lambdas
+Neil Mitchell**20081113173910] 
+[Add more paren utility functions
+Neil Mitchell**20081113173851] 
+[Add a simpler idea generator utility function
+Neil Mitchell**20081113173809] 
+[Redo the bracketing story, now inserts dummy brackets then removes the ones it can
+Neil Mitchell**20081113161718] 
+[Insert lots more brackets, to make sure the pretty printer displays things correctly
+Neil Mitchell**20081113154947] 
+[Rework the list support, now detects [a]++b better
+Neil Mitchell**20081113153231] 
+[Add a PatternGuards notation to Monad.hs
+Neil Mitchell**20081113144454] 
+[Add monad property checking
+Neil Mitchell**20081113143926] 
+[Tweak the fromVar and ~= functions
+Neil Mitchell**20081113143910] 
+[Rewrite the hint code and the matcher, now more general
+Neil Mitchell**20081113140827] 
+[Rewrite the test code a bit
+Neil Mitchell**20081113140812] 
+[Fix up the ~= operator a little bit more
+Neil Mitchell**20081113140722] 
+[Add isParen to Util
+Neil Mitchell**20081113140712] 
+[Implement a list hint
+Neil Mitchell**20081112172311] 
+[Add a rough active patterns thing in Util
+Neil Mitchell**20081112172255] 
+[Refactor the list to make it easier to add more tests
+Neil Mitchell**20081112165751] 
+[Convert list from DOS to UNIX file format
+Neil Mitchell**20081112145358] 
+[Add support for suggestions with hints
+Neil Mitchell**20081112145316] 
+[Add a first list hint
+Neil Mitchell**20081112141324] 
+[Add isCharExp to Hint.Util
+Neil Mitchell**20081112141308] 
+[Rework the command line handling for tests
+Neil Mitchell**20081112120827] 
+[Move utility code around, now more in Utils and less in Match
+Neil Mitchell**20081112115226] 
+[Fix up the dependencies in the Cabal file
+Neil Mitchell**20081112115212] 
+[Move to using more uniplate-like combinators
+Neil Mitchell**20081112113600] 
+[Move showSrcLoc and improve the error message in parsing a file
+Neil Mitchell**20081112113526] 
+[Reformat the --help script a little
+Neil Mitchell**20081112113152] 
+[Make a nullSrcLoc utility
+Neil Mitchell**20081110182103] 
+[Restrict the type signature of find ideas
+Neil Mitchell**20081110181730] 
+[Refactoring, don't build up a module to just tear it down
+Neil Mitchell**20081110181544] 
+[Move the match stuff out into a separate module
+Neil Mitchell**20081110181056] 
+[Add Hint.Utils
+Neil Mitchell**20081110175346] 
+[Rename Hint back to Idea, add Hint type
+Neil Mitchell**20081110174645] 
+[Change Idea to Hint and move it to a separate module
+Neil Mitchell**20081110173749] 
+[Change the name Hint to Match
+Neil Mitchell**20081110173518] 
+[Fix unnecessary traversal continuation in Uniplate
+Neil Mitchell**20081110172944] 
+[Refactor the command line handling, put it in a separate module
+Neil Mitchell**20081110172618] 
+[Move the test file
+Neil Mitchell**20081110171327] 
+[Fix the URL in the readme
+Neil Mitchell**20081110171201] 
+[Revise everything to build with Cabal
+Neil Mitchell**20081110165944] 
+[Remove the push.bat, now paper exists
+Neil Mitchell**20081110163956] 
+[Change to using unification to find matches, fixes the bad match
+Neil Mitchell**20080427155759] 
+[Strengthen the test so successful tests must match exactly one rule
+Neil Mitchell**20080427155742] 
+[Split up the tests for neq and eq, so there is exactly one match on each line
+Neil Mitchell**20080427155721] 
+[Add directory searching support
+Neil Mitchell**20080427150323] 
+[Redo the simplify bit - make it more regular and like the old version of Dr Haskell
+Neil Mitchell**20080426210517] 
+[Remove a bad test, and comment out the ones which are too advanced
+Neil Mitchell**20080426210413] 
+[Expand out $ symbols
+Neil Mitchell**20080426204417] 
+[Implement the tests mode
+Neil Mitchell**20080426204236] 
+[Rewrite the command line handling options
+Neil Mitchell**20080426195821] 
+[A few more fixes, only show hints once and match free variables
+Neil Mitchell**20080426193654] 
+[Add a few more bits to the matching engine
+Neil Mitchell**20080426192954] 
+[Add a new Main.hs hints file, based around Haskell Source Extensions
+Neil Mitchell**20080426161102] 
+[Comment out the more complicated hints
+Neil Mitchell**20080426161054] 
+[Remove the old Dr Haskell, to develop the new one
+Neil Mitchell**20080426142631] 
+[Add a push script
+Neil Mitchell**20070615213038] 
+[Move to the new traversal system
+Neil Mitchell**20070615212945] 
+[Slight fixes to get it building again
+Neil Mitchell**20070615212703] 
+[Fix up the make.bat file
+Neil Mitchell**20070615212247] 
+[Suggestion to use mapM_ if possible
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061114151250] 
+[Add hints relating to fromMaybe, fromJust etc
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061114150108] 
+[Add a few more restrictions, makes less hints get generated, but makes more correct ones be generated
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061113193052] 
+[Fix the definitions of fold, were slightly dubious
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061113191236] 
+[Add hints and tests for foldr
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061113184219] 
+[Fix a bug, zipping different length lists should fail (not succeed!)
+Neil Mitchell**20061111234149] 
+[Allow functions to be considered equal if they truely are identical
+Neil Mitchell**20061111223830] 
+[Remove positions from hints
+Neil Mitchell**20061111223742] 
+[Remove the position information from the getHints function
+Neil Mitchell**20061111223722] 
+[Add another simplification rule
+Neil Mitchell**20061111223706] 
+[Accomodation introduction of CoreFun
+Neil Mitchell**20061111223550] 
+[Make noPos a bit more general, so can be used in more places
+Neil Mitchell**20061111223525] 
+[Move to using CoreFun instead of CoreVar in the places Yhc has now changed to use it
+Neil Mitchell**20061111215510] 
+[Implement most of the recursive matching thing, doesn't quite work yet, but should do
+Neil Mitchell**20061111215119] 
+[Rewrite the hint application in prepration for adding function hinting
+Neil Mitchell**20061111214103] 
+[Load functions as hints
+Neil Mitchell**20061111212621] 
+[Load the hints in a more explicit way, in preparation for function hints
+Neil Mitchell**20061111210003] 
+[Add loadHaskellCore, which loads a .ycr file with basic dependancy analysis
+Neil Mitchell**20061111203827] 
+[Move various lines around to get better organisation
+Neil Mitchell**20061111201000] 
+[Add documentation and comments
+Neil Mitchell**20061111200151] 
+[Remove fromCoreVar, its now in Yhc.Core
+Neil Mitchell**20061111195110] 
+[Refactor the whole thing, give a better command line driver to it and better arguments management
+Neil Mitchell**20061111192349] 
+[Give stronger typing for Hint's, in preparation for function level hints
+Neil Mitchell**20061110230150] 
+[Change head_head to a more natural definition, now that the matcher can do the heavy lifting
+Neil Mitchell**20061110223338] 
+[Sort the alternatives, to get better matching
+Neil Mitchell**20061110223258] 
+[Expand out default cases if they are in a known data type
+Neil Mitchell**20061110223136] 
+[Add some tests and hints that are currently not working - needs a reworking of the matcher to get these through (are recursive items)
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061110195409] 
+[Add a head rule (inspired by Chris Brown)
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061110163333] 
+[Rewrite the matching for case's, so that different free variables are renamed to give a better change of matching inside alternatives (reported by Chris Brown)
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061110163156] 
+[Fix the makefile, to see the new location
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061108151252] 
+[Use -core, instead of -corep
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061108151239] 
+[Add a couple of hints suggested by Igloo, regarding useless strictness annotations
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061102134753] 
+[Remove tail_drop, the behaviour for tail [] vs drop 1 [] is different
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20061014175944] 
+[Add list comprehension hint into the database
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060929161613] 
+[Add a hint for liftM, by Matt (who refuses to use Dr Haskell)
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060927151215] 
+[Add the solutions to the hints
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060922175537] 
+[Add a very basic readme, pointing at the URL
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060922175301] 
+[Make file for Windows
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060922175135] 
+[Add || and && rules, plus rewrite the matching to bind variables, rather than just having _ for all known variables
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060920164120] 
+[Rewrite to allow for matching inside case statements - still not done properly
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060920141235] 
+[Fix bugs to allow Lambda's to match
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060920140005] 
+[Move to the new Core (again), and add more power for checking that LAMBDA's are equal (not finished yet)
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060920134619] 
+[Add some more hints, currently they can't fire
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919174925] 
+[Convert to UNIX newlines
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919173135] 
+[Move to using the new Yhc.Core API
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919173019] 
+[Desugar $'s, add two tests
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919135811] 
+[Rewrite simplify in a top down fasion, requires auxiliary Play function
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919135605] 
+[If there are no hints, tell them
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919125655] 
+[Display positions, where available
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919124837] 
+[Give better names, without the generated Yhc gunk
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919124250] 
+[Make the hint name a bit nicer
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919113047] 
+[Record the changes in the order they come (Yhc reverses them)_
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919112732] 
+[Add more general matching, allow integers as well
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060919112610] 
+[Add box_append, and appropriate hints
+Neil Mitchell**20060918160459] 
+[Resync to head of Yhc
+Neil Mitchell**20060918155610] 
+[Initial version
+Neil Mitchell <http://www.cs.york.ac.uk/~ndm/>**20060704100418] 
+Patch bundle hash:
+f6712cd614c0c3dafcdb136029fdba8d5a3f7344
