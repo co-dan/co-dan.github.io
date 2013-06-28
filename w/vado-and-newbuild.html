@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Vado and new build system</title>
+<!-- 2013-06-28 Fri 13:21 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Vado and new build system</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. New build system</a></li>
+<li><a href="#sec-2">2. Vado</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Vado intro</a></li>
+<li><a href="#sec-2-2">2.2. .vadosettings</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1. Example .vadosettings file</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. Vamount</a></li>
+<li><a href="#sec-2-4">2.4. Vado and ghc-mod</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Conclusion and future work</a></li>
+</ul>
+</div>
+</div>
+<p>
+In this post I would like to give you an update on the new GHCJS build
+system and vado - a piece of software for running programs on vagrant
+VMs (or any other ssh server, actually), both projects I've
+contributed briefly to.
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> New build system</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://parenz.wordpress.com/2013/06/12/ghcjs-build/">Old</a> <a href="http://github.com/ghcjs/ghcjs-build">build system</a> for ghcjs was a little bit messy. Basically, it was
+just one Puppet configuration file that contained a hardcoded shell
+script as a resource that was written to the home directory and
+executed. I decided to clean it up a notch and take more of a
+Puppet approach to the whole thing.
+</p>
+
+<p>
+And since the errors are now now output yielded onto the screen it's
+easy to see which stage the build is going through and if anything
+goes wrong you see an error trace for the current stage.
+</p>
+
+<p>
+You can find the new set of build script on the GitHub:
+<a href="https://github.com/ghcjs/ghcjs-build">https://github.com/ghcjs/ghcjs-build</a>
+</p>
+
+<p>
+The <a href="https://github.com/ghcjs/ghcjs-build/tree/prebuilt">prebuilt</a> version has also been updated by
+<a href="http://weblog.luite.com/wordpress/">Luite Stegeman</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Vado</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Vado intro</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Hamish Mackenzie and I have been working on <a href="https://github.com/hamishmack/vado">vado</a> - a quick way to run
+commands on a remote ssh server. Just mount the directory you want to
+run the command in using sshfs, in that directory (or its
+subdirectory) run vado like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">vado ls -l
+</pre>
+</div>
+
+<p>
+vado will run 'mount' to identify the user account, server name and the remote directory to run the command in. It will then run ssh to connect to the server and run the command.
+</p>
+
+<p>
+You can also pass ssh options like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">vado -t htop
+</pre>
+</div>
+
+<p>
+This tells vado to pass -t to ssh (forces pseudo-tty allocation and
+makes programs like vim and htop work nicely).
+</p>
+
+<p>
+Further I will explain how to set up vado for multiple remote
+servers/sshfs mount points and how to develop Haskell projects on a
+remote server/VM nicely using Emacs and ghc-mod.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> .vadosettings</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Vado is not tied to vagrant, but can be used with it and is faster
+than <code>vagrant ssh</code>. If the user and host detected in <code>mount</code> are
+specified in the <code>~/.vadosettings</code> file, then the specified key and
+port will be used. 
+</p>
+
+<p>
+The contents of the <code>~/.vadosettings</code> file is basically a Haskell
+list of <code>MountSettings</code> datastructures and we use standard <code>Read</code> and
+<code>Show</code> type-classes for serialization.
+</p>
+
+<p>
+<code>MountSettings</code> datastructure is defined as following:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-haskell"><span style="color: #b5bd68;">-- | Mount point settings</span>
+<span style="color: #b294bb;">data</span> <span style="color: #f0c674;">MountSettings</span> <span style="color: #cc6666;">=</span> <span style="color: #f0c674;">MountSettings</span> {
+    sshfsUser <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">Text</span>
+  , sshfsHost <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">Text</span>
+  , sshfsPort <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">Int</span>
+  , idFile <span style="color: #cc6666;">::</span> <span style="color: #f0c674;">FilePath</span>
+  } <span style="color: #b294bb;">deriving</span> (<span style="color: #f0c674;">Show</span>, <span style="color: #f0c674;">Read</span>)
+</pre>
+</div>
+
+<p>
+If the file is not present or incorrectly formatted
+then the default settings for vagrant will be used:
+</p>
+
+<ul class="org-ul">
+<li>User: vagrant
+</li>
+<li>Host: 127.0.0.1
+</li>
+<li>Port: 2222 
+</li>
+<li>Key file: <code>~/.vagrant.d/insecure_private_key</code>
+</li>
+</ul>
+</div>
+
+<div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Example .vadosettings file</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+An example settings file might look like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-haskell">[
+  <span style="color: #f0c674;">MountSettings</span> {
+    sshfsUser <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"vagrant"</span>
+  , sshfsHost <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"localhost"</span>
+  , sshfsPort <span style="color: #cc6666;">=</span> 2222
+  , idFile <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"/Users/dan/.vagrant.d/insecure_private_key"</span>
+  }, 
+  <span style="color: #f0c674;">MountSettings</span> {
+    sshfsUser <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"admin"</span>
+  , sshfsHost <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"server.local"</span>
+  , sshfsPort <span style="color: #cc6666;">=</span> 2233
+  , idFile <span style="color: #cc6666;">=</span> <span style="color: #b5bd68;">"/Users/dan/keys/local_server_key"</span>
+  }
+]
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Vamount</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Of course, using <code>vado</code> requires mounting the sshfs before hand. But
+it gets tedious typing out 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">sshfs vagrant@localhost:/home/vagrant ../vm/ -p2222
+-reconnect,defer_permissions,negative_vncache,<span style="color: #cc6666;">volname</span>=ghcjs,<span style="color: #cc6666;">IdentityFile</span>=~/.vagrant.d/insecure_private_key
+</pre>
+</div>
+
+<p>
+every time. A little tool called <code>vamount</code> which is bundled together
+with <code>vado</code> can be used for mounting remote filesystems based on
+<code>~/.vadosettings</code> file.
+</p>
+
+<p>
+You can use it like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">vamount [ssh options] remote_path [profile <span style="color: #969896;">#</span><span style="color: #969896;">]</span>
+</pre>
+</div>
+
+<p>
+The <code>remote_path</code> from the remote server specified in the
+~/.vadosettings file under number [profile #] will be mounted in the
+current directory using sshfs.
+</p>
+
+<p>
+The profile number count starts from 1. If the [profile #] is absent
+or is 0 then the default (vagrant) configuration will be used.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Vado and ghc-mod</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+<a href="http://www.mew.org/~kazu/proj/ghc-mod/en/">ghc-mod</a> is a backend designed command to enrich Haskell programming on
+editors like Emacs and Vim and it also features a front-end for Emacs
+as a set of elisp scripts. It's a really cool piece of software and if
+you have not tried it yet I highly recommend you to invest into
+installing and using it.
+</p>
+
+<p>
+What we would like, however, is to edit files on the mounted
+filesystem using Emacs on the host machine, but run ghc-mod inside
+the VM. Well, firstly, for that we need to install ghc-mod both on
+our host machine and on the VM. 
+</p>
+
+<p>
+While installing ghc-mod on the host machine running the latest
+haskell-platform is pretty straightforward it is harder to do so on
+the VM running GHC 7.7 due to the fact that many libraries are not
+ready for GHC 7.7 and base 4.7 yet. We have to resort to installing
+most of the things from source.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896;"># </span><span style="color: #969896;">run this on the guest machine</span>
+mkdir ghcmod &amp;&amp; <span style="color: #D0D0FF;">cd</span> ghcmod
+
+<span style="color: #969896;"># </span><span style="color: #969896;">patching and installing hlint</span>
+darcs get http://community.haskell.org/~ndm/darcs/hlint/
+<span style="color: #D0D0FF;">cd</span> hlint
+wget http://co-dan.github.io/patched/making-hlint-work-with-base-4_7.dpatch
+darcs apply making-hlint-work-with-base-4_7.dpatch
+cabal install
+<span style="color: #D0D0FF;">cd</span> ..
+
+<span style="color: #969896;"># </span><span style="color: #969896;">patching installing convertible</span>
+cabal unpack convertible
+<span style="color: #D0D0FF;">cd</span> convertible*
+wget http://co-dan.github.io/patched/convertible.patch
+patch -p1 Data/Convertible/Utils.hs convertible.patch
+cabal install
+<span style="color: #D0D0FF;">cd</span> ..
+
+<span style="color: #969896;"># </span><span style="color: #969896;">installing ghc-syb-utils</span>
+git clone https://github.com/co-dan/ghc-syb.git
+<span style="color: #D0D0FF;">cd</span> ghc-syb/utils/
+cabal install
+<span style="color: #D0D0FF;">cd</span> ..
+
+<span style="color: #969896;"># </span><span style="color: #969896;">finally getting and installing ghc-mod</span>
+git clone https://github.com/co-dan/ghc-mod.git
+<span style="color: #D0D0FF;">cd</span> ghc-mod
+cabal install
+</pre>
+</div>
+
+<p>
+Ghc-mode itself uses GHC Api extensively so it's no surprise we have
+to change at least some code. Now that we have installed ghc-mod on
+the guest VM we need to set up our host's Emacs configuration to
+communicate properly with the VM. First of all put this in your Emacs
+config:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp"><span style="color: #7f7f7f;">(</span>setq load-path <span style="color: #7f7f7f;">(</span>cons <span style="color: #b5bd68;">"~/Library/Haskell/ghc-7.6.3/lib/ghc-mod-2.0.3/share"</span> load-path<span style="color: #7f7f7f;">))</span>
+<span style="color: #7f7f7f;">(</span>autoload 'ghc-init <span style="color: #b5bd68;">"ghc"</span> nil t<span style="color: #7f7f7f;">)</span>
+<span style="color: #7f7f7f;">(</span>add-hook 'haskell-mode-hook <span style="color: #7f7f7f;">(</span><span style="color: #b294bb;">lambda</span> <span style="color: #7f7f7f;">()</span> <span style="color: #7f7f7f;">(</span>ghc-init<span style="color: #7f7f7f;">)))</span>
+<span style="color: #969896;">;; </span><span style="color: #969896;">(setq ghc-module-command "ghc-mod")</span>
+<span style="color: #7f7f7f;">(</span>setq ghc-module-command <span style="color: #b5bd68;">"~/vado-ghc-mod.sh"</span><span style="color: #7f7f7f;">)</span>
+</pre>
+</div>
+
+<p>
+<code>~/vado-ghc-mod.sh</code> should contain the following:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896;">#</span><span style="color: #969896;">!/bin/</span><span style="color: #b294bb;">bash</span>
+<span style="color: #cc6666;">VADO</span>=/Users/dan/Library/Haskell/bin/vado
+<span style="color: #cc6666;">LOCAL_PATH</span>=/Users/dan/projects/ghcjs/mnt/
+<span style="color: #cc6666;">REMOTE_PATH</span>=/home/vagrant/
+<span style="color: #D0D0FF;">cd</span> $<span style="color: #cc6666;">LOCAL_PATH</span>
+$<span style="color: #cc6666;">VADO</span> -t ghc-mod ${<span style="color: #cc6666;">@</span>//$<span style="color: #cc6666;">LOCAL_PATH</span>/$<span style="color: #cc6666;">REMOTE_PATH</span>} | sed <span style="color: #b5bd68;">"s,$REMOTE_PATH,$LOCAL_PATH,g"</span>
+</pre>
+</div>
+
+<p>
+I know that it's a hack, but it does work and I guess that's what
+shell scripts are for ;)
+</p>
+
+<p>
+Now go to <code>~/.bashrc</code> on the <i>guest machine</i> and make sure that the
+<code>PATH</code> variable is <a href="http://stackoverflow.com/questions/820517/bashrc-at-ssh-login">set correctly</a>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #cc6666;">PATH</span>=/home/vagrant/ghcjs/bin:/home/vagrant/.cabal/bin:/home/vagrant/ghc/bin:/home/vagrant/jsshell:/home/vagrant/node-v0.10.10-linux-x86/bin:$<span style="color: #cc6666;">PATH</span>
+
+<span style="color: #969896;"># </span><span style="color: #969896;">PATH is set *before* this line:</span>
+[ -z <span style="color: #b5bd68;">"$PS1"</span> ] &amp;&amp; <span style="color: #b294bb;">return</span>
+
+<span style="color: #969896;"># </span><span style="color: #969896;">&lt;snip&gt;</span>
+</pre>
+</div>
+
+<p>
+And that's it, you should be done!
+</p>
+
+<p>
+Before: <img  src="./ghcmod-before.png" alt="ghcmod-before.png" />
+After: <img  src="./ghcmod-after.png" alt="ghcmod-after.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Conclusion and future work</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+We've seen how a small but useful tool <code>vado</code> can make our life easier if
+we want to develop Haskell projects on a remote server or on a
+virtual machine. You can get Vado from GitHub: <a href="https://github.com/hamishmack/vado">https://github.com/hamishmack/vado</a>
+</p>
+
+<p>
+Next week we are planning on realeasing our first version of
+interactive-diagrams pastesite (not going to be very interactive
+though) and writing out its security model.
+</p>
+
+<p>
+Meanwhile check Luite's <a href="http://weblog.luite.com/wordpress/?p=127">post</a> on using Sodium FRP library for creating
+Functional Reactive Web interfaces. It's astonishing how easily you
+can just get a FRP library, compile to JavaScript and make nifty web
+apps with it.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">[2013-06-28 Fri]</span></span></p>
+<p class="author">Author: Daniil Frumin &lt;difrumin@gmail.com&gt;</p>
+<p class="date">Created: 2013-06-28 Fri 13:21</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 23.3.50.1 (<a href="http://orgmode.org">Org</a> mode 8.0.2)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
