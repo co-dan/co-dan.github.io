@@ -273,7 +273,7 @@ to the module's usages.
 <a name="line-55"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>              <span class='hs-comment'>-- Normal foreign import</span>
 <a name="line-56"></a>      <span class='hs-varid'>checkCg</span> <span class='hs-varid'>checkCOrAsmOrLlvmOrInterp</span>
 <a name="line-57"></a>      <span class='hs-varid'>cconv'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>checkCConv</span> <span class='hs-varid'>cconv</span>
-<a name="line-58"></a>      <span class='hs-varid'>checkCTarget</span> <span class='hs-varid'>target</span>
+<a name="line-58"></a>      <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>cconv</span> <span class='hs-varop'>/=</span> <span class='hs-conid'>JavaScriptCallConv</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>checkCTarget</span> <span class='hs-varid'>target</span><span class='hs-layout'>)</span>
 <a name="line-59"></a>      <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getDynFlags</span>
 <a name="line-60"></a>      <span class='hs-varid'>checkForeignArgs</span> <span class='hs-layout'>(</span><span class='hs-varid'>isFFIArgumentTy</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>safety</span><span class='hs-layout'>)</span> <span class='hs-varid'>arg_tys</span>
 <a name="line-61"></a>      <span class='hs-varid'>checkForeignRes</span> <span class='hs-varid'>nonIOok</span> <span class='hs-varid'>checkSafe</span> <span class='hs-layout'>(</span><span class='hs-varid'>isFFIImportResultTy</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varid'>res_ty</span>
@@ -353,17 +353,18 @@ to the module's usages.
 \begin{code}
 <pre><a name="line-1"></a><a name="tcCheckFEType"></a><span class='hs-definition'>tcCheckFEType</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Type</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ForeignExport</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>ForeignExport</span>
 <a name="line-2"></a><span class='hs-definition'>tcCheckFEType</span> <span class='hs-varid'>sig_ty</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExport</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExportStatic</span> <span class='hs-varid'>str</span> <span class='hs-varid'>cconv</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-3"></a>    <span class='hs-varid'>checkCg</span> <span class='hs-varid'>checkCOrAsmOrLlvm</span>
-<a name="line-4"></a>    <span class='hs-varid'>check</span> <span class='hs-layout'>(</span><span class='hs-varid'>isCLabelString</span> <span class='hs-varid'>str</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>badCName</span> <span class='hs-varid'>str</span><span class='hs-layout'>)</span>
-<a name="line-5"></a>    <span class='hs-varid'>cconv'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>checkCConv</span> <span class='hs-varid'>cconv</span>
-<a name="line-6"></a>    <span class='hs-varid'>checkForeignArgs</span> <span class='hs-varid'>isFFIExternalTy</span> <span class='hs-varid'>arg_tys</span>
-<a name="line-7"></a>    <span class='hs-varid'>checkForeignRes</span> <span class='hs-varid'>nonIOok</span> <span class='hs-varid'>noCheckSafe</span> <span class='hs-varid'>isFFIExportResultTy</span> <span class='hs-varid'>res_ty</span>
-<a name="line-8"></a>    <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExport</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExportStatic</span> <span class='hs-varid'>str</span> <span class='hs-varid'>cconv'</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-9"></a>  <span class='hs-keyword'>where</span>
-<a name="line-10"></a>      <span class='hs-comment'>-- Drop the foralls before inspecting n</span>
-<a name="line-11"></a>      <span class='hs-comment'>-- the structure of the foreign type.</span>
-<a name="line-12"></a>    <span class='hs-layout'>(</span><span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>t_ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcSplitForAllTys</span> <span class='hs-varid'>sig_ty</span>
-<a name="line-13"></a>    <span class='hs-layout'>(</span><span class='hs-varid'>arg_tys</span><span class='hs-layout'>,</span> <span class='hs-varid'>res_ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcSplitFunTys</span> <span class='hs-varid'>t_ty</span>
+<a name="line-3"></a>    <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>cconv</span> <span class='hs-varop'>/=</span> <span class='hs-conid'>JavaScriptCallConv</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
+<a name="line-4"></a>        <span class='hs-varid'>checkCg</span> <span class='hs-varid'>checkCOrAsmOrLlvm</span>
+<a name="line-5"></a>        <span class='hs-varid'>check</span> <span class='hs-layout'>(</span><span class='hs-varid'>isCLabelString</span> <span class='hs-varid'>str</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>badCName</span> <span class='hs-varid'>str</span><span class='hs-layout'>)</span>
+<a name="line-6"></a>    <span class='hs-varid'>cconv'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>checkCConv</span> <span class='hs-varid'>cconv</span>
+<a name="line-7"></a>    <span class='hs-varid'>checkForeignArgs</span> <span class='hs-varid'>isFFIExternalTy</span> <span class='hs-varid'>arg_tys</span>
+<a name="line-8"></a>    <span class='hs-varid'>checkForeignRes</span> <span class='hs-varid'>nonIOok</span> <span class='hs-varid'>noCheckSafe</span> <span class='hs-varid'>isFFIExportResultTy</span> <span class='hs-varid'>res_ty</span>
+<a name="line-9"></a>    <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExport</span> <span class='hs-layout'>(</span><span class='hs-conid'>CExportStatic</span> <span class='hs-varid'>str</span> <span class='hs-varid'>cconv'</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-10"></a>  <span class='hs-keyword'>where</span>
+<a name="line-11"></a>      <span class='hs-comment'>-- Drop the foralls before inspecting n</span>
+<a name="line-12"></a>      <span class='hs-comment'>-- the structure of the foreign type.</span>
+<a name="line-13"></a>    <span class='hs-layout'>(</span><span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>t_ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcSplitForAllTys</span> <span class='hs-varid'>sig_ty</span>
+<a name="line-14"></a>    <span class='hs-layout'>(</span><span class='hs-varid'>arg_tys</span><span class='hs-layout'>,</span> <span class='hs-varid'>res_ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcSplitFunTys</span> <span class='hs-varid'>t_ty</span>
 </pre>\end{code}
 
 
@@ -472,6 +473,11 @@ Calling conventions
 <a name="line-11"></a>                                         <span class='hs-varid'>return</span> <span class='hs-conid'>CCallConv</span>
 <a name="line-12"></a><span class='hs-definition'>checkCConv</span> <span class='hs-conid'>PrimCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>addErrTc</span> <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-str'>"The `prim' calling convention can only be used with `foreign import'"</span><span class='hs-layout'>)</span>
 <a name="line-13"></a>                             <span class='hs-varid'>return</span> <span class='hs-conid'>PrimCallConv</span>
+<a name="line-14"></a><span class='hs-definition'>checkCConv</span> <span class='hs-conid'>JavaScriptCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getDynFlags</span>
+<a name="line-15"></a>                                   <span class='hs-keyword'>if</span> <span class='hs-varid'>platformArch</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>ArchJavaScript</span>
+<a name="line-16"></a>                                       <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-conid'>JavaScriptCallConv</span>
+<a name="line-17"></a>                                       <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>addErrTc</span> <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-str'>"The `javascript' calling convention is unsupported on this platform"</span><span class='hs-layout'>)</span>
+<a name="line-18"></a>                                               <span class='hs-varid'>return</span> <span class='hs-conid'>JavaScriptCallConv</span>
 </pre>\end{code}
 
 Warnings

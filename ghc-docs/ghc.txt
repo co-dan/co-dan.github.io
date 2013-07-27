@@ -10,7 +10,7 @@
 --   dynamically in a GHCi-like manner. For this reason, a lot of GHC's
 --   functionality is made available through this package.
 @package ghc
-@version 7.7.20130625
+@version 7.7.20130722
 
 module SPARC.Cond
 
@@ -1477,6 +1477,7 @@ armABI :: Arch -> ArmABI
 ArchAlpha :: Arch
 ArchMipseb :: Arch
 ArchMipsel :: Arch
+ArchJavaScript :: Arch
 
 -- | Operating systems that the native code generator knows about. Having
 --   OSUnknown should produce a sensible default, but no promises.
@@ -1876,6 +1877,8 @@ instance Outputable Word
 instance Outputable Word32
 instance Outputable Word16
 instance Outputable Int
+instance Outputable Int64
+instance Outputable Int32
 instance Outputable Bool
 instance Outputable Char
 
@@ -2863,6 +2866,7 @@ dphParPackageId :: PackageId
 --   program.
 mainPackageId :: PackageId
 thisGhcPackageId :: PackageId
+ghcjsPrimPackageId :: PackageId
 
 -- | A Module is a pair of a <a>PackageId</a> and a <a>ModuleName</a>.
 data Module
@@ -3097,6 +3101,7 @@ CCallConv :: CCallConv
 CApiConv :: CCallConv
 StdCallConv :: CCallConv
 PrimCallConv :: CCallConv
+JavaScriptCallConv :: CCallConv
 defaultCCallConv :: CCallConv
 ccallConvToInt :: CCallConv -> Int
 ccallConvAttribute :: CCallConv -> SDoc
@@ -3889,6 +3894,7 @@ Opt_UnliftedFFITypes :: ExtensionFlag
 Opt_InterruptibleFFI :: ExtensionFlag
 Opt_CApiFFI :: ExtensionFlag
 Opt_GHCForeignImportPrim :: ExtensionFlag
+Opt_JavaScriptFFI :: ExtensionFlag
 Opt_ParallelArrays :: ExtensionFlag
 Opt_Arrows :: ExtensionFlag
 Opt_TemplateHaskell :: ExtensionFlag
@@ -4454,6 +4460,7 @@ mkTablesNextToCode :: Bool -> Bool
 printOutputForUser :: DynFlags -> PrintUnqualified -> SDoc -> IO ()
 printInfoForUser :: DynFlags -> PrintUnqualified -> SDoc -> IO ()
 data Way
+WayCustom :: String -> Way
 WayThreaded :: Way
 WayDebug :: Way
 WayProf :: Way
@@ -4506,7 +4513,7 @@ safeImplicitImpsReq :: DynFlags -> Bool
 --   to test if the flag is on * function to turn the flag off
 unsafeFlags :: [(String, DynFlags -> SrcSpan, DynFlags -> Bool, DynFlags -> DynFlags)]
 data Settings
-Settings :: Platform -> FilePath -> FilePath -> FilePath -> String -> [(String, String)] -> [String] -> FilePath -> Bool -> Bool -> Bool -> Bool -> String -> (String, [Option]) -> String -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> String -> String -> String -> (String, [Option]) -> (String, [Option]) -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> PlatformConstants -> Settings
+Settings :: Platform -> FilePath -> FilePath -> FilePath -> String -> [(String, String)] -> [String] -> FilePath -> Bool -> Bool -> Bool -> Bool -> String -> (String, [Option]) -> String -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> (String, [Option]) -> String -> String -> String -> (String, [Option]) -> (String, [Option]) -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> PlatformConstants -> Maybe ModIface -> Settings
 sTargetPlatform :: Settings -> Platform
 sGhcUsagePath :: Settings -> FilePath
 sGhciUsagePath :: Settings -> FilePath
@@ -4542,6 +4549,7 @@ sOpt_windres :: Settings -> [String]
 sOpt_lo :: Settings -> [String]
 sOpt_lc :: Settings -> [String]
 sPlatformConstants :: Settings -> PlatformConstants
+sOverridePrimIface :: Settings -> Maybe ModIface
 targetPlatform :: DynFlags -> Platform
 ghcUsagePath :: DynFlags -> FilePath
 ghciUsagePath :: DynFlags -> FilePath
@@ -5918,6 +5926,7 @@ basicKnownKeyNames :: [Name]
 genericTyConNames :: [Name]
 pRELUDE :: Module
 gHC_PRIM :: Module
+gHCJS_PRIM :: Module
 gHC_IP :: Module
 gHC_TYPELITS :: Module
 cONTROL_EXCEPTION_BASE :: Module
@@ -5984,6 +5993,7 @@ mkPrimModule :: FastString -> Module
 mkIntegerModule :: FastString -> Module
 mkBaseModule :: FastString -> Module
 mkBaseModule_ :: ModuleName -> Module
+mkGhcjsPrimModule :: FastString -> Module
 mkThisGhcModule :: FastString -> Module
 mkThisGhcModule_ :: ModuleName -> Module
 mkMainModule :: FastString -> Module
@@ -6339,6 +6349,7 @@ typeNatMulTyFamName :: Name
 typeNatAddTyFamName :: Name
 typeNatLeqClassName :: Name
 ipClassName :: Name
+jsrefTyConName :: Name
 objectTyConName :: Name
 unmarshalObjectName :: Name
 checkDotnetResName :: Name
@@ -6465,6 +6476,7 @@ ioTyConKey :: Unique
 mutVarPrimTyConKey :: Unique
 stableNameTyConKey :: Unique
 stableNamePrimTyConKey :: Unique
+jsrefTyConKey :: Unique
 parrTyConKey :: Unique
 objectTyConKey :: Unique
 eitherTyConKey :: Unique
@@ -11836,6 +11848,10 @@ PopCnt16Op :: PrimOp
 PopCnt32Op :: PrimOp
 PopCnt64Op :: PrimOp
 PopCntOp :: PrimOp
+BSwap16Op :: PrimOp
+BSwap32Op :: PrimOp
+BSwap64Op :: PrimOp
+BSwapOp :: PrimOp
 Narrow8IntOp :: PrimOp
 Narrow16IntOp :: PrimOp
 Narrow32IntOp :: PrimOp
@@ -12074,6 +12090,8 @@ TakeMVarOp :: PrimOp
 TryTakeMVarOp :: PrimOp
 PutMVarOp :: PrimOp
 TryPutMVarOp :: PrimOp
+ReadMVarOp :: PrimOp
+TryReadMVarOp :: PrimOp
 SameMVarOp :: PrimOp
 IsEmptyMVarOp :: PrimOp
 DelayOp :: PrimOp
@@ -13050,6 +13068,12 @@ isTypeFamilyDecl :: TyClDecl name -> Bool
 
 -- | data family declaration
 isDataFamilyDecl :: TyClDecl name -> Bool
+
+-- | open type family info
+isOpenTypeFamilyInfo :: FamilyInfo name -> Bool
+
+-- | closed type family info
+isClosedTypeFamilyInfo :: FamilyInfo name -> Bool
 tyFamInstDeclName :: OutputableBndr name => TyFamInstDecl name -> name
 tyFamInstDeclLName :: OutputableBndr name => TyFamInstDecl name -> Located name
 countTyClDecls :: [TyClDecl name] -> (Int, Int, Int, Int, Int)
@@ -13994,7 +14018,14 @@ addConDocFirst :: [LConDecl a] -> Maybe LHsDocString -> [LConDecl a]
 module Llvm.Types
 
 -- | A global mutable variable. Maybe defined or external
-type LMGlobal = (LlvmVar, Maybe LlvmStatic)
+data LMGlobal
+LMGlobal :: LlvmVar -> Maybe LlvmStatic -> LMGlobal
+
+-- | Returns the variable of the <a>LMGlobal</a>
+getGlobalVar :: LMGlobal -> LlvmVar
+
+-- | Return the value of the <a>LMGlobal</a>
+getGlobalValue :: LMGlobal -> Maybe LlvmStatic
 
 -- | A String in LLVM
 type LMString = FastString
@@ -14041,40 +14072,27 @@ LMStruct :: [LlvmType] -> LlvmType
 -- | A type alias
 LMAlias :: LlvmAlias -> LlvmType
 
+-- | LLVM Metadata
+LMMetadata :: LlvmType
+
 -- | Function type, used to create pointers to functions
 LMFunction :: LlvmFunctionDecl -> LlvmType
-
--- | LLVM metadata values. Used for representing debug and optimization
---   information.
-data LlvmMetaVal
-
--- | Metadata string
-MetaStr :: LMString -> LlvmMetaVal
-
--- | Metadata node
-MetaNode :: LlvmMetaUnamed -> LlvmMetaVal
-
--- | Normal value type as metadata
-MetaVar :: LlvmVar -> LlvmMetaVal
-
--- | LLVM metadata nodes.
-data LlvmMeta
-
--- | Unamed metadata
-MetaUnamed :: LlvmMetaUnamed -> [LlvmMetaVal] -> LlvmMeta
-
--- | Named metadata
-MetaNamed :: LMString -> [LlvmMetaUnamed] -> LlvmMeta
-
--- | Unamed metadata variable.
-newtype LlvmMetaUnamed
-LMMetaUnamed :: Int -> LlvmMetaUnamed
+ppParams :: LlvmParameterListType -> [LlvmParameter] -> SDoc
 
 -- | An LLVM section definition. If Nothing then let LLVM decide the
 --   section
 type LMSection = Maybe LMString
 type LMAlign = Maybe Int
-type LMConst = Bool
+data LMConst
+
+-- | Mutable global variable
+Global :: LMConst
+
+-- | Constant global variable
+Constant :: LMConst
+
+-- | Alias of another variable
+Alias :: LMConst
 
 -- | LLVM Variables
 data LlvmVar
@@ -14149,20 +14167,18 @@ LMAdd :: LlvmStatic -> LlvmStatic -> LlvmStatic
 
 -- | Constant subtraction operation
 LMSub :: LlvmStatic -> LlvmStatic -> LlvmStatic
-
--- | Concatenate an array together, separated by commas
-commaCat :: Show a => [a] -> String
+pprStaticArith :: LlvmStatic -> LlvmStatic -> LitString -> LitString -> String -> SDoc
 
 -- | Return the variable name or value of the <a>LlvmVar</a> in Llvm IR
 --   textual representation (e.g. <tt>@x</tt>, <tt>%y</tt> or <tt>42</tt>).
-getName :: LlvmVar -> String
+ppName :: LlvmVar -> SDoc
 
 -- | Return the variable name or value of the <a>LlvmVar</a> in a plain
 --   textual representation (e.g. <tt>x</tt>, <tt>y</tt> or <tt>42</tt>).
-getPlainName :: LlvmVar -> String
+ppPlainName :: LlvmVar -> SDoc
 
 -- | Print a literal value. No type.
-getLit :: LlvmLit -> String
+ppLit :: LlvmLit -> SDoc
 
 -- | Return the <a>LlvmType</a> of the <a>LlvmVar</a>
 getVarType :: LlvmVar -> LlvmType
@@ -14172,12 +14188,6 @@ getLitType :: LlvmLit -> LlvmType
 
 -- | Return the <a>LlvmType</a> of the <a>LlvmStatic</a>
 getStatType :: LlvmStatic -> LlvmType
-
--- | Return the <a>LlvmType</a> of the <a>LMGlobal</a>
-getGlobalType :: LMGlobal -> LlvmType
-
--- | Return the <a>LlvmVar</a> part of a <a>LMGlobal</a>
-getGlobalVar :: LMGlobal -> LlvmVar
 
 -- | Return the <a>LlvmLinkageType</a> for a <a>LlvmVar</a>
 getLink :: LlvmVar -> LlvmLinkageType
@@ -14496,6 +14506,10 @@ ExternallyVisible :: LlvmLinkageType
 --   LLVM assembly.
 External :: LlvmLinkageType
 
+-- | Symbol is private to the module and should not appear in the symbol
+--   table
+Private :: LlvmLinkageType
+
 -- | Llvm binary operators machine operations.
 data LlvmMachOp
 
@@ -14649,12 +14663,16 @@ LM_Bitcast :: LlvmCastOp
 --   format, regardless of underlying architecture.
 --   
 --   See Note [LLVM Float Types].
-dToStr :: Double -> String
+ppDouble :: Double -> SDoc
 narrowFp :: Double -> Float
 widenFp :: Float -> Double
+ppFloat :: Float -> SDoc
 
 -- | Reverse or leave byte data alone to fix endianness on this target.
 fixEndian :: [a] -> [a]
+ppCommaJoin :: Outputable a => [a] -> SDoc
+ppSpaceJoin :: Outputable a => [a] -> SDoc
+instance Eq LMConst
 instance Eq LlvmParamAttr
 instance Eq LlvmFuncAttr
 instance Eq LlvmCallType
@@ -14667,27 +14685,49 @@ instance Eq LlvmFunctionDecl
 instance Eq LlvmType
 instance Eq LlvmLit
 instance Eq LlvmVar
-instance Eq LlvmMetaVal
-instance Eq LlvmMeta
 instance Eq LlvmMachOp
 instance Eq LlvmCmpOp
 instance Eq LlvmCastOp
-instance Show LlvmCastOp
-instance Show LlvmCmpOp
-instance Show LlvmMachOp
-instance Show LlvmLinkageType
-instance Show LlvmCallConvention
-instance Show LlvmFuncAttr
-instance Show LlvmParamAttr
-instance Show LlvmFunctionDecl
-instance Show LlvmStatic
-instance Show LlvmLit
-instance Show LlvmVar
-instance Show LlvmMeta
-instance Show LlvmMetaUnamed
-instance Show LlvmMetaVal
-instance Eq LlvmMetaUnamed
-instance Show LlvmType
+instance Outputable LlvmCastOp
+instance Outputable LlvmCmpOp
+instance Outputable LlvmMachOp
+instance Outputable LlvmLinkageType
+instance Outputable LlvmCallConvention
+instance Outputable LlvmFuncAttr
+instance Outputable LlvmParamAttr
+instance Outputable LlvmFunctionDecl
+instance Outputable LlvmStatic
+instance Outputable LlvmLit
+instance Outputable LlvmVar
+instance Outputable LlvmType
+
+module Llvm.MetaData
+
+-- | LLVM metadata expressions
+data MetaExpr
+MetaStr :: LMString -> MetaExpr
+MetaNode :: Int -> MetaExpr
+MetaVar :: LlvmVar -> MetaExpr
+MetaStruct :: [MetaExpr] -> MetaExpr
+
+-- | Associates some metadata with a specific label for attaching to an
+--   instruction.
+data MetaAnnot
+MetaAnnot :: LMString -> MetaExpr -> MetaAnnot
+
+-- | Metadata declarations. Metadata can only be declared in global scope.
+data MetaDecl
+
+-- | Named metadata. Only used for communicating module information to
+--   LLVM. ('!name = !{ [!<a>n</a>] }' form).
+MetaNamed :: LMString -> [Int] -> MetaDecl
+
+-- | Metadata node declaration. ('!0 = metadata !{ <a>expression</a> }'
+--   form).
+MetaUnamed :: Int -> MetaExpr -> MetaDecl
+instance Eq MetaExpr
+instance Eq MetaAnnot
+instance Outputable MetaExpr
 
 
 -- | The LLVM abstract syntax.
@@ -14710,7 +14750,7 @@ type LlvmBlocks = [LlvmBlock]
 
 -- | An LLVM Module. This is a top level container in LLVM.
 data LlvmModule
-LlvmModule :: [LMString] -> [LlvmAlias] -> [LlvmMeta] -> [LMGlobal] -> LlvmFunctionDecls -> LlvmFunctions -> LlvmModule
+LlvmModule :: [LMString] -> [LlvmAlias] -> [MetaDecl] -> [LMGlobal] -> LlvmFunctionDecls -> LlvmFunctions -> LlvmModule
 
 -- | Comments to include at the start of the module.
 modComments :: LlvmModule -> [LMString]
@@ -14719,7 +14759,7 @@ modComments :: LlvmModule -> [LMString]
 modAliases :: LlvmModule -> [LlvmAlias]
 
 -- | LLVM meta data.
-modMeta :: LlvmModule -> [LlvmMeta]
+modMeta :: LlvmModule -> [MetaDecl]
 
 -- | Global variables to include in the module.
 modGlobals :: LlvmModule -> [LMGlobal]
@@ -14826,8 +14866,7 @@ Expr :: LlvmExpression -> LlvmStatement
 Nop :: LlvmStatement
 
 -- | A LLVM statement with metadata attached to it.
-MetaStmt :: [MetaData] -> LlvmStatement -> LlvmStatement
-type MetaData = (LMString, LlvmMetaUnamed)
+MetaStmt :: [MetaAnnot] -> LlvmStatement -> LlvmStatement
 
 -- | Llvm Expressions
 data LlvmExpression
@@ -14878,6 +14917,15 @@ Cast :: LlvmCastOp -> LlvmVar -> LlvmType -> LlvmExpression
 --   here.
 Call :: LlvmCallType -> LlvmVar -> [LlvmVar] -> [LlvmFuncAttr] -> LlvmExpression
 
+-- | Call a function as above but potentially taking metadata as arguments.
+--   * tailJumps: CallType to signal if the function should be tail called
+--   * fnptrval: An LLVM value containing a pointer to a function to be
+--   invoked. Can be indirect. Should be LMFunction type. * args: Arguments
+--   that may include metadata. * attrs: A list of function attributes for
+--   the call. Only NoReturn, NoUnwind, ReadOnly and ReadNone are valid
+--   here.
+CallM :: LlvmCallType -> LlvmVar -> [MetaExpr] -> [LlvmFuncAttr] -> LlvmExpression
+
 -- | Merge variables from different basic blocks which are predecessors of
 --   this basic block in a new variable of type tp. * tp: type of the
 --   merged variable, must match the types of the predecessor variables. *
@@ -14895,12 +14943,10 @@ Phi :: LlvmType -> [(LlvmVar, LlvmVar)] -> LlvmExpression
 Asm :: LMString -> LMString -> LlvmType -> [LlvmVar] -> Bool -> Bool -> LlvmExpression
 
 -- | A LLVM expression with metadata attached to it.
-MetaExpr :: [MetaData] -> LlvmExpression -> LlvmExpression
+MExpr :: [MetaAnnot] -> LlvmExpression -> LlvmExpression
 instance Show LlvmSyncOrdering
 instance Eq LlvmSyncOrdering
-instance Show LlvmExpression
 instance Eq LlvmExpression
-instance Show LlvmStatement
 instance Eq LlvmStatement
 
 
@@ -14929,10 +14975,10 @@ ppLlvmAliases :: [LlvmAlias] -> SDoc
 ppLlvmAlias :: LlvmAlias -> SDoc
 
 -- | Print out a list of LLVM metadata.
-ppLlvmMetas :: [LlvmMeta] -> SDoc
+ppLlvmMetas :: [MetaDecl] -> SDoc
 
 -- | Print out an LLVM metadata definition.
-ppLlvmMeta :: LlvmMeta -> SDoc
+ppLlvmMeta :: MetaDecl -> SDoc
 
 -- | Print out a list of function declaration.
 ppLlvmFunctionDecls :: LlvmFunctionDecls -> SDoc
@@ -14961,7 +15007,7 @@ module Llvm
 
 -- | An LLVM Module. This is a top level container in LLVM.
 data LlvmModule
-LlvmModule :: [LMString] -> [LlvmAlias] -> [LlvmMeta] -> [LMGlobal] -> LlvmFunctionDecls -> LlvmFunctions -> LlvmModule
+LlvmModule :: [LMString] -> [LlvmAlias] -> [MetaDecl] -> [LMGlobal] -> LlvmFunctionDecls -> LlvmFunctions -> LlvmModule
 
 -- | Comments to include at the start of the module.
 modComments :: LlvmModule -> [LMString]
@@ -14970,7 +15016,7 @@ modComments :: LlvmModule -> [LMString]
 modAliases :: LlvmModule -> [LlvmAlias]
 
 -- | LLVM meta data.
-modMeta :: LlvmModule -> [LlvmMeta]
+modMeta :: LlvmModule -> [MetaDecl]
 
 -- | Global variables to include in the module.
 modGlobals :: LlvmModule -> [LMGlobal]
@@ -15081,7 +15127,7 @@ Expr :: LlvmExpression -> LlvmStatement
 Nop :: LlvmStatement
 
 -- | A LLVM statement with metadata attached to it.
-MetaStmt :: [MetaData] -> LlvmStatement -> LlvmStatement
+MetaStmt :: [MetaAnnot] -> LlvmStatement -> LlvmStatement
 
 -- | Llvm Expressions
 data LlvmExpression
@@ -15132,6 +15178,15 @@ Cast :: LlvmCastOp -> LlvmVar -> LlvmType -> LlvmExpression
 --   here.
 Call :: LlvmCallType -> LlvmVar -> [LlvmVar] -> [LlvmFuncAttr] -> LlvmExpression
 
+-- | Call a function as above but potentially taking metadata as arguments.
+--   * tailJumps: CallType to signal if the function should be tail called
+--   * fnptrval: An LLVM value containing a pointer to a function to be
+--   invoked. Can be indirect. Should be LMFunction type. * args: Arguments
+--   that may include metadata. * attrs: A list of function attributes for
+--   the call. Only NoReturn, NoUnwind, ReadOnly and ReadNone are valid
+--   here.
+CallM :: LlvmCallType -> LlvmVar -> [MetaExpr] -> [LlvmFuncAttr] -> LlvmExpression
+
 -- | Merge variables from different basic blocks which are predecessors of
 --   this basic block in a new variable of type tp. * tp: type of the
 --   merged variable, must match the types of the predecessor variables. *
@@ -15149,7 +15204,7 @@ Phi :: LlvmType -> [(LlvmVar, LlvmVar)] -> LlvmExpression
 Asm :: LMString -> LMString -> LlvmType -> [LlvmVar] -> Bool -> Bool -> LlvmExpression
 
 -- | A LLVM expression with metadata attached to it.
-MetaExpr :: [MetaData] -> LlvmExpression -> LlvmExpression
+MExpr :: [MetaAnnot] -> LlvmExpression -> LlvmExpression
 type LlvmBlocks = [LlvmBlock]
 
 -- | A block of LLVM code.
@@ -15336,6 +15391,10 @@ ExternallyVisible :: LlvmLinkageType
 -- | Alias for <a>ExternallyVisible</a> but with explicit textual form in
 --   LLVM assembly.
 External :: LlvmLinkageType
+
+-- | Symbol is private to the module and should not appear in the symbol
+--   table
+Private :: LlvmLinkageType
 
 -- | Llvm Function Attributes.
 --   
@@ -15692,6 +15751,9 @@ LMStruct :: [LlvmType] -> LlvmType
 -- | A type alias
 LMAlias :: LlvmAlias -> LlvmType
 
+-- | LLVM Metadata
+LMMetadata :: LlvmType
+
 -- | Function type, used to create pointers to functions
 LMFunction :: LlvmFunctionDecl -> LlvmType
 
@@ -15699,7 +15761,14 @@ LMFunction :: LlvmFunctionDecl -> LlvmType
 type LlvmAlias = (LMString, LlvmType)
 
 -- | A global mutable variable. Maybe defined or external
-type LMGlobal = (LlvmVar, Maybe LlvmStatic)
+data LMGlobal
+LMGlobal :: LlvmVar -> Maybe LlvmStatic -> LMGlobal
+
+-- | Returns the variable of the <a>LMGlobal</a>
+getGlobalVar :: LMGlobal -> LlvmVar
+
+-- | Return the value of the <a>LMGlobal</a>
+getGlobalValue :: LMGlobal -> Maybe LlvmStatic
 
 -- | A String in LLVM
 type LMString = FastString
@@ -15708,6 +15777,16 @@ type LMString = FastString
 --   section
 type LMSection = Maybe LMString
 type LMAlign = Maybe Int
+data LMConst
+
+-- | Mutable global variable
+Global :: LMConst
+
+-- | Constant global variable
+Constant :: LMConst
+
+-- | Alias of another variable
+Alias :: LMConst
 i64 :: LlvmType
 i32 :: LlvmType
 i16 :: LlvmType
@@ -15721,49 +15800,34 @@ llvmWord :: DynFlags -> LlvmType
 -- | The target architectures word size
 llvmWordPtr :: DynFlags -> LlvmType
 
--- | LLVM metadata values. Used for representing debug and optimization
---   information.
-data LlvmMetaVal
+-- | LLVM metadata expressions
+data MetaExpr
+MetaStr :: LMString -> MetaExpr
+MetaNode :: Int -> MetaExpr
+MetaVar :: LlvmVar -> MetaExpr
+MetaStruct :: [MetaExpr] -> MetaExpr
 
--- | Metadata string
-MetaStr :: LMString -> LlvmMetaVal
+-- | Associates some metadata with a specific label for attaching to an
+--   instruction.
+data MetaAnnot
+MetaAnnot :: LMString -> MetaExpr -> MetaAnnot
 
--- | Metadata node
-MetaNode :: LlvmMetaUnamed -> LlvmMetaVal
+-- | Metadata declarations. Metadata can only be declared in global scope.
+data MetaDecl
 
--- | Normal value type as metadata
-MetaVar :: LlvmVar -> LlvmMetaVal
+-- | Named metadata. Only used for communicating module information to
+--   LLVM. ('!name = !{ [!<a>n</a>] }' form).
+MetaNamed :: LMString -> [Int] -> MetaDecl
 
--- | Unamed metadata variable.
-newtype LlvmMetaUnamed
-LMMetaUnamed :: Int -> LlvmMetaUnamed
-
--- | LLVM metadata nodes.
-data LlvmMeta
-
--- | Unamed metadata
-MetaUnamed :: LlvmMetaUnamed -> [LlvmMetaVal] -> LlvmMeta
-
--- | Named metadata
-MetaNamed :: LMString -> [LlvmMetaUnamed] -> LlvmMeta
-type MetaData = (LMString, LlvmMetaUnamed)
+-- | Metadata node declaration. ('!0 = metadata !{ <a>expression</a> }'
+--   form).
+MetaUnamed :: Int -> MetaExpr -> MetaDecl
 
 -- | Test if a <a>LlvmVar</a> is global.
 isGlobal :: LlvmVar -> Bool
 
 -- | Return the <a>LlvmType</a> of a <a>LlvmLit</a>
 getLitType :: LlvmLit -> LlvmType
-
--- | Print a literal value. No type.
-getLit :: LlvmLit -> String
-
--- | Return the variable name or value of the <a>LlvmVar</a> in Llvm IR
---   textual representation (e.g. <tt>@x</tt>, <tt>%y</tt> or <tt>42</tt>).
-getName :: LlvmVar -> String
-
--- | Return the variable name or value of the <a>LlvmVar</a> in a plain
---   textual representation (e.g. <tt>x</tt>, <tt>y</tt> or <tt>42</tt>).
-getPlainName :: LlvmVar -> String
 
 -- | Return the <a>LlvmType</a> of the <a>LlvmVar</a>
 getVarType :: LlvmVar -> LlvmType
@@ -15773,12 +15837,6 @@ getLink :: LlvmVar -> LlvmLinkageType
 
 -- | Return the <a>LlvmType</a> of the <a>LlvmStatic</a>
 getStatType :: LlvmStatic -> LlvmType
-
--- | Return the <a>LlvmVar</a> part of a <a>LMGlobal</a>
-getGlobalVar :: LMGlobal -> LlvmVar
-
--- | Return the <a>LlvmType</a> of the <a>LMGlobal</a>
-getGlobalType :: LMGlobal -> LlvmType
 
 -- | Lower a variable of <a>LMPointer</a> type.
 pVarLift :: LlvmVar -> LlvmVar
@@ -15808,6 +15866,17 @@ isVector :: LlvmType -> Bool
 
 -- | Width in bits of an <a>LlvmType</a>, returns 0 if not applicable
 llvmWidthInBits :: DynFlags -> LlvmType -> Int
+
+-- | Print a literal value. No type.
+ppLit :: LlvmLit -> SDoc
+
+-- | Return the variable name or value of the <a>LlvmVar</a> in Llvm IR
+--   textual representation (e.g. <tt>@x</tt>, <tt>%y</tt> or <tt>42</tt>).
+ppName :: LlvmVar -> SDoc
+
+-- | Return the variable name or value of the <a>LlvmVar</a> in a plain
+--   textual representation (e.g. <tt>x</tt>, <tt>y</tt> or <tt>42</tt>).
+ppPlainName :: LlvmVar -> SDoc
 
 -- | Print out a whole LLVM module.
 ppLlvmModule :: LlvmModule -> SDoc
@@ -15844,10 +15913,10 @@ ppLlvmAlias :: LlvmAlias -> SDoc
 ppLlvmAliases :: [LlvmAlias] -> SDoc
 
 -- | Print out a list of LLVM metadata.
-ppLlvmMetas :: [LlvmMeta] -> SDoc
+ppLlvmMetas :: [MetaDecl] -> SDoc
 
 -- | Print out an LLVM metadata definition.
-ppLlvmMeta :: LlvmMeta -> SDoc
+ppLlvmMeta :: MetaDecl -> SDoc
 
 module CmmType
 data CmmType
@@ -16105,6 +16174,7 @@ MO_Memcpy :: CallishMachOp
 MO_Memset :: CallishMachOp
 MO_Memmove :: CallishMachOp
 MO_PopCnt :: Width -> CallishMachOp
+MO_BSwap :: Width -> CallishMachOp
 callishMachOpHints :: CallishMachOp -> ([ForeignHint], [ForeignHint])
 pprCallishMachOp :: CallishMachOp -> SDoc
 instance Eq MachOp
@@ -16116,6 +16186,7 @@ instance Show CallishMachOp
 -- | Generating C symbol names emitted by the compiler.
 module CPrim
 popCntLabel :: Width -> String
+bSwapLabel :: Width -> String
 word2FloatLabel :: Width -> String
 
 module Lexer
@@ -16157,6 +16228,7 @@ ITstdcallconv :: Token
 ITccallconv :: Token
 ITcapiconv :: Token
 ITprimcallconv :: Token
+ITjavascriptcallconv :: Token
 ITmdo :: Token
 ITfamily :: Token
 ITgroup :: Token
@@ -17246,32 +17318,29 @@ lmGlobalRegVar :: DynFlags -> GlobalReg -> LlvmVar
 -- | A list of STG Registers that should always be considered alive
 alwaysLive :: [GlobalReg]
 
--- | STG Type Based Alias Analysis metadata
-stgTBAA :: [LlvmMeta]
+-- | STG Type Based Alias Analysis hierarchy
+stgTBAA :: [(Unique, LMString, Maybe Unique)]
 
--- | The various TBAA types
-top :: MetaData
+-- | Id values
+baseN :: Unique
 
--- | The various TBAA types
-base :: MetaData
+-- | Id values
+stackN :: Unique
 
--- | The various TBAA types
-stack :: MetaData
+-- | Id values
+heapN :: Unique
 
--- | The various TBAA types
-heap :: MetaData
+-- | Id values
+rxN :: Unique
 
--- | The various TBAA types
-rx :: MetaData
-
--- | The various TBAA types
-other :: MetaData
+-- | Id values
+otherN :: Unique
 
 -- | The TBAA metadata identifier
 tbaa :: LMString
 
 -- | Get the correct TBAA metadata information for this register type
-getTBAA :: GlobalReg -> MetaData
+getTBAA :: GlobalReg -> Unique
 
 module CmmLex
 data CmmToken
@@ -17744,44 +17813,81 @@ type LlvmVersion = Int
 defaultLlvmVersion :: LlvmVersion
 minSupportLlvmVersion :: LlvmVersion
 maxSupportLlvmVersion :: LlvmVersion
-data LlvmEnv
+
+-- | The Llvm monad. Wraps <tt>LlvmEnv</tt> state as well as the
+--   <tt>IO</tt> monad
+data LlvmM a
 
 -- | Get initial Llvm environment.
-initLlvmEnv :: DynFlags -> LlvmEnv
+runLlvm :: DynFlags -> LlvmVersion -> BufHandle -> UniqSupply -> LlvmM () -> IO ()
 
--- | Clear variables from the environment.
-clearVars :: LlvmEnv -> LlvmEnv
+-- | Lift a stream into the LlvmM monad
+liftStream :: Stream IO a x -> Stream LlvmM a x
 
--- | Lookup local variables in the environment.
-varLookup :: Uniquable key => key -> LlvmEnv -> Maybe LlvmType
+-- | Clear variables from the environment for a subcomputation
+withClearVars :: LlvmM a -> LlvmM a
 
--- | Insert local variables into the environment.
-varInsert :: Uniquable key => key -> LlvmType -> LlvmEnv -> LlvmEnv
+-- | Lookup variables or functions in the environment.
+varLookup :: Uniquable key => key -> LlvmM (Maybe LlvmType)
 
--- | Lookup functions in the environment.
-funLookup :: Uniquable key => key -> LlvmEnv -> Maybe LlvmType
+-- | Insert variables or functions into the environment.
+varInsert :: Uniquable key => key -> LlvmType -> LlvmM ()
 
--- | Insert functions into the environment.
-funInsert :: Uniquable key => key -> LlvmType -> LlvmEnv -> LlvmEnv
+-- | Set a register as allocated on the stack
+markStackReg :: GlobalReg -> LlvmM ()
+
+-- | Check whether a register is allocated on the stack
+checkStackReg :: GlobalReg -> LlvmM Bool
+
+-- | Lookup variables or functions in the environment.
+funLookup :: Uniquable key => key -> LlvmM (Maybe LlvmType)
+
+-- | Insert variables or functions into the environment.
+funInsert :: Uniquable key => key -> LlvmType -> LlvmM ()
 
 -- | Get the LLVM version we are generating code for
-getLlvmVer :: LlvmEnv -> LlvmVersion
-
--- | Set the LLVM version we are generating code for
-setLlvmVer :: LlvmVersion -> LlvmEnv -> LlvmEnv
+getLlvmVer :: LlvmM LlvmVersion
+getDynFlags :: HasDynFlags m => m DynFlags
 
 -- | Get the platform we are generating code for
-getLlvmPlatform :: LlvmEnv -> Platform
+getDynFlag :: (DynFlags -> a) -> LlvmM a
 
--- | Get the DynFlags for this compilation pass
-getDflags :: LlvmEnv -> DynFlags
+-- | Get the platform we are generating code for
+getLlvmPlatform :: LlvmM Platform
+
+-- | Dumps the document if the corresponding flag has been set by the user
+dumpIfSetLlvm :: DumpFlag -> String -> SDoc -> LlvmM ()
+
+-- | Prints the given contents to the output handle
+renderLlvm :: SDoc -> LlvmM ()
+
+-- | Run a <tt>UniqSM</tt> action with our unique supply
+runUs :: UniqSM a -> LlvmM a
+
+-- | Marks a variable as <a>used</a>
+markUsedVar :: LlvmVar -> LlvmM ()
+
+-- | Return all variables marked as <a>used</a> so far
+getUsedVars :: LlvmM [LlvmVar]
 
 -- | Here we pre-initialise some functions that are used internally by GHC
 --   so as to make sure they have the most general type in the case that
 --   user code also uses these functions but with a different type than GHC
 --   internally. (Main offender is treating return type as <tt>void</tt>
---   instead of 'void *'. Fixes trac #5486.
-ghcInternalFunctions :: DynFlags -> [(LMString, LlvmFunctionDecl)]
+--   instead of 'void *'). Fixes trac #5486.
+ghcInternalFunctions :: LlvmM ()
+
+-- | Allocate a new global unnamed metadata identifier
+getMetaUniqueId :: LlvmM Int
+
+-- | Sets metadata node for a given unique
+setUniqMeta :: Unique -> Int -> LlvmM ()
+
+-- | Gets metadata node for given unique
+getUniqMeta :: Unique -> LlvmM (Maybe Int)
+
+-- | Returns a fresh section ID
+freshSectionId :: LlvmM Int
 
 -- | Translate a basic CmmType to an LlvmType.
 cmmToLlvmType :: CmmType -> LlvmType
@@ -17793,10 +17899,10 @@ widthToLlvmFloat :: Width -> LlvmType
 widthToLlvmInt :: Width -> LlvmType
 
 -- | Llvm Function type for Cmm function
-llvmFunTy :: DynFlags -> LiveGlobalRegs -> LlvmType
+llvmFunTy :: LiveGlobalRegs -> LlvmM LlvmType
 
 -- | Llvm Function signature
-llvmFunSig :: LlvmEnv -> LiveGlobalRegs -> CLabel -> LlvmLinkageType -> LlvmFunctionDecl
+llvmFunSig :: LiveGlobalRegs -> CLabel -> LlvmLinkageType -> LlvmM LlvmFunctionDecl
 
 -- | Llvm standard fun attributes
 llvmStdFunAttrs :: [LlvmFuncAttr]
@@ -17811,36 +17917,38 @@ llvmInfAlign :: DynFlags -> LMAlign
 llvmPtrBits :: DynFlags -> Int
 
 -- | Create a Haskell function in LLVM.
-mkLlvmFunc :: LlvmEnv -> LiveGlobalRegs -> CLabel -> LlvmLinkageType -> LMSection -> LlvmBlocks -> LlvmFunction
+mkLlvmFunc :: LiveGlobalRegs -> CLabel -> LlvmLinkageType -> LMSection -> LlvmBlocks -> LlvmM LlvmFunction
 
 -- | Convert a list of types to a list of function parameters (each with no
 --   parameter attributes)
 tysToParams :: [LlvmType] -> [LlvmParameter]
 
 -- | Pretty print a <a>CLabel</a>.
-strCLabel_llvm :: LlvmEnv -> CLabel -> LMString
+strCLabel_llvm :: CLabel -> LlvmM LMString
+strDisplayName_llvm :: CLabel -> LlvmM LMString
+strProcedureName_llvm :: CLabel -> LlvmM LMString
 
--- | Create an external definition for a <a>CLabel</a> defined in another
---   module.
-genCmmLabelRef :: LlvmEnv -> CLabel -> LMGlobal
+-- | Create/get a pointer to a global value. Might return an alias if the
+--   value in question hasn't been defined yet. We especially make no
+--   guarantees on the type of the returned pointer.
+getGlobalPtr :: LMString -> LlvmM LlvmVar
 
--- | As above (<a>genCmmLabelRef</a>) but taking a <a>LMString</a>, not
---   <a>CLabel</a>.
-genStringLabelRef :: DynFlags -> LMString -> LMGlobal
+-- | Generate definitions for aliases forward-referenced by
+--   <tt>getGlobalPtr</tt>.
+--   
+--   Must be called at a point where we are sure that no new global
+--   definitions will be generated anymore!
+generateAliases :: LlvmM ([LMGlobal], [LlvmType])
+instance HasDynFlags LlvmM
+instance Functor LlvmM
+instance Monad LlvmM
 
 
 -- | Handle conversion of CmmData to LLVM code.
 module LlvmCodeGen.Data
 
--- | Pass a CmmStatic section to an equivalent Llvm code. Can't complete
---   this completely though as we need to pass all CmmStatic sections
---   before all references can be resolved. This last step is done by
---   <a>resolveLlvmData</a>.
-genLlvmData :: LlvmEnv -> (Section, CmmStatics) -> LlvmUnresData
-resolveLlvmDatas :: LlvmEnv -> [LlvmUnresData] -> (LlvmEnv, [LlvmData])
-
--- | Fix up CLabel references now that we should have passed all CmmData.
-resolveLlvmData :: LlvmEnv -> LlvmUnresData -> (LlvmEnv, LlvmData)
+-- | Pass a CmmStatic section to an equivalent Llvm code.
+genLlvmData :: (Section, CmmStatics) -> LlvmM LlvmData
 
 
 -- | Pretty print helpers for the LLVM Code generator.
@@ -17850,7 +17958,7 @@ module LlvmCodeGen.Ppr
 pprLlvmHeader :: SDoc
 
 -- | Pretty print LLVM code
-pprLlvmCmmDecl :: LlvmEnv -> Int -> LlvmCmmDecl -> (SDoc, [LlvmVar])
+pprLlvmCmmDecl :: Int -> LlvmCmmDecl -> LlvmM (SDoc, [LlvmVar])
 
 -- | Pretty print LLVM data code
 pprLlvmData :: LlvmData -> SDoc
@@ -18038,14 +18146,14 @@ instance Outputable CmmStackInfo
 module LlvmCodeGen.CodeGen
 
 -- | Top-level of the LLVM proc Code generator
-genLlvmProc :: LlvmEnv -> RawCmmDecl -> UniqSM (LlvmEnv, [LlvmCmmDecl])
+genLlvmProc :: RawCmmDecl -> LlvmM [LlvmCmmDecl]
 
 
 -- | This is the top-level module in the LLVM code generator.
 module LlvmCodeGen
 
 -- | Top-level of the LLVM Code generator
-llvmCodeGen :: DynFlags -> Handle -> UniqSupply -> [RawCmmGroup] -> IO ()
+llvmCodeGen :: DynFlags -> Handle -> UniqSupply -> Stream IO RawCmmGroup () -> IO ()
 
 -- | Read in assembly file and process
 llvmFixupAsm :: DynFlags -> FilePath -> FilePath -> IO ()
@@ -20201,12 +20309,12 @@ handleFlagWarnings :: DynFlags -> [Located String] -> IO ()
 -- | Given a bag of warnings, turn them into an exception if -Werror is
 --   enabled, or print them out otherwise.
 printOrThrowWarnings :: DynFlags -> Bag WarnMsg -> IO ()
-instance Typeable * SourceError
 instance Typeable * GhcApiError
-instance Eq TargetId
-instance Eq Warnings
-instance Eq Dependencies
+instance Typeable * SourceError
 instance Eq Usage
+instance Eq Dependencies
+instance Eq Warnings
+instance Eq TargetId
 instance Outputable Unlinked
 instance Outputable Linkable
 instance Outputable IfaceTrustInfo
@@ -21283,7 +21391,6 @@ newFlexiTyVarTys :: Int -> Kind -> TcM [TcType]
 newPolyFlexiTyVarTy :: TcM TcType
 newMetaKindVar :: TcM TcKind
 newMetaKindVars :: Int -> TcM [TcKind]
-mkKindSigVar :: Name -> KindVar
 mkTcTyVarName :: Unique -> FastString -> Name
 cloneMetaTyVar :: TcTyVar -> TcM TcTyVar
 newMetaTyVar :: MetaInfo -> Kind -> TcM TcTyVar
@@ -23650,13 +23757,8 @@ isFilledMetaTyVar_maybe :: TcTyVar -> TcS (Maybe Type)
 zonkTyVarsAndFV :: TcTyVarSet -> TcS TcTyVarSet
 getDefaultInfo :: TcS ([Type], (Bool, Bool))
 getDynFlags :: HasDynFlags m => m DynFlags
-matchClass :: Class -> [Type] -> TcS (MatchInstResult (DFunId, [Maybe TcType]))
 matchFam :: TyCon -> [Type] -> TcS (Maybe (TcCoercion, TcType))
 matchOpenFam :: TyCon -> [Type] -> TcS (Maybe FamInstMatch)
-data MatchInstResult mi
-MatchInstNo :: MatchInstResult mi
-MatchInstSingle :: mi -> MatchInstResult mi
-MatchInstMany :: MatchInstResult mi
 checkWellStagedDFun :: PredType -> DFunId -> CtLoc -> TcS ()
 pprEq :: TcType -> TcType -> SDoc
 instance HasDynFlags TcS
@@ -23760,7 +23862,13 @@ tcTyClTyVars :: Name -> LHsTyVarBndrs Name -> ([TyVar] -> Kind -> TcM a) -> TcM 
 tcHsConArgType :: NewOrData -> LHsType Name -> TcM Type
 tcDataKindSig :: Kind -> TcM [TyVar]
 tcClassSigType :: LHsType Name -> TcM Type
-kcHsTyVarBndrs :: Bool -> LHsTyVarBndrs Name -> ([TcKind] -> TcM r) -> TcM r
+data KindCheckingStrategy
+ParametricKinds :: KindCheckingStrategy
+NonParametricKinds :: KindCheckingStrategy
+FullKindSignature :: KindCheckingStrategy
+kcStrategy :: TyClDecl Name -> KindCheckingStrategy
+kcStrategyFamDecl :: FamilyDecl Name -> KindCheckingStrategy
+kcHsTyVarBndrs :: KindCheckingStrategy -> LHsTyVarBndrs Name -> TcM (Kind, r) -> TcM (Kind, r)
 tcHsTyVarBndrs :: LHsTyVarBndrs Name -> ([TcTyVar] -> TcM r) -> TcM r
 tcHsLiftedType :: LHsType Name -> TcM TcType
 tcHsOpenType :: LHsType Name -> TcM TcType
@@ -25306,6 +25414,7 @@ OR :: Size -> Operand -> Operand -> Instr
 XOR :: Size -> Operand -> Operand -> Instr
 NOT :: Size -> Operand -> Instr
 NEGI :: Size -> Operand -> Instr
+BSWAP :: Size -> Reg -> Instr
 SHL :: Size -> Operand -> Operand -> Instr
 SAR :: Size -> Operand -> Operand -> Instr
 SHR :: Size -> Operand -> Operand -> Instr

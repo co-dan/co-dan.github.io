@@ -35,7 +35,7 @@
 <a name="line-17"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DataCon</span>
 <a name="line-18"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Id</span>
 <a name="line-19"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoreUtils</span>	<span class='hs-layout'>(</span> <span class='hs-varid'>exprIsHNF</span><span class='hs-layout'>,</span> <span class='hs-varid'>exprType</span><span class='hs-layout'>,</span> <span class='hs-varid'>exprIsTrivial</span> <span class='hs-layout'>)</span>
-<a name="line-20"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>PprCore</span>	
+<a name="line-20"></a><span class='hs-comment'>-- import PprCore	</span>
 <a name="line-21"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TyCon</span>
 <a name="line-22"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Type</span>		<span class='hs-layout'>(</span> <span class='hs-varid'>eqType</span> <span class='hs-layout'>)</span>
 <a name="line-23"></a><span class='hs-comment'>-- import Pair</span>
@@ -544,13 +544,13 @@ argument, and pass an Int to $wfoo!
 <a name="line-30"></a>		<span class='hs-comment'>-- is the result of processing the RHSs with the *previous* </span>
 <a name="line-31"></a>		<span class='hs-comment'>-- iteration of sigs.</span>
 <a name="line-32"></a>
-<a name="line-33"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>n</span> <span class='hs-varop'>&gt;=</span> <span class='hs-num'>10</span>  
-<a name="line-34"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>pprTrace</span> <span class='hs-str'>"dmdFix loop"</span> <span class='hs-layout'>(</span><span class='hs-varid'>ppr</span> <span class='hs-varid'>n</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-layout'>(</span><span class='hs-varid'>vcat</span> 
-<a name="line-35"></a>			<span class='hs-keyglyph'>[</span> <span class='hs-varid'>text</span> <span class='hs-str'>"Sigs:"</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ppr</span> <span class='hs-keyglyph'>[</span> <span class='hs-layout'>(</span><span class='hs-varid'>id</span><span class='hs-layout'>,</span><span class='hs-varid'>lookupVarEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>sigEnv</span> <span class='hs-varid'>env</span><span class='hs-layout'>)</span> <span class='hs-varid'>id</span><span class='hs-layout'>,</span> 
-<a name="line-36"></a>                                                     <span class='hs-varid'>lookupVarEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>sigEnv</span> <span class='hs-varid'>env'</span><span class='hs-layout'>)</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> 
-<a name="line-37"></a>                                               <span class='hs-keyglyph'>|</span> <span class='hs-layout'>(</span><span class='hs-varid'>id</span><span class='hs-layout'>,</span><span class='hs-keyword'>_</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>pairs</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-38"></a>			  <span class='hs-varid'>text</span> <span class='hs-str'>"env:"</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>env</span><span class='hs-layout'>,</span>
-<a name="line-39"></a>			  <span class='hs-varid'>text</span> <span class='hs-str'>"binds:"</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprCoreBinding</span> <span class='hs-layout'>(</span><span class='hs-conid'>Rec</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-33"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>n</span> <span class='hs-varop'>&gt;=</span> <span class='hs-num'>10</span>
+<a name="line-34"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-comment'>-- pprTrace "dmdFix loop" (ppr n &lt;+&gt; (vcat </span>
+<a name="line-35"></a>        <span class='hs-comment'>--                 [ text "Sigs:" &lt;+&gt; ppr [ (id,lookupVarEnv (sigEnv env) id, </span>
+<a name="line-36"></a>        <span class='hs-comment'>--                                              lookupVarEnv (sigEnv env') id) </span>
+<a name="line-37"></a>        <span class='hs-comment'>--                                          | (id,_) &lt;- pairs],</span>
+<a name="line-38"></a>        <span class='hs-comment'>--                   text "env:" &lt;+&gt; ppr env,</span>
+<a name="line-39"></a>        <span class='hs-comment'>--                   text "binds:" &lt;+&gt; pprCoreBinding (Rec pairs)]))</span>
 <a name="line-40"></a>	<span class='hs-layout'>(</span><span class='hs-varid'>env</span><span class='hs-layout'>,</span> <span class='hs-varid'>lazy_fv</span><span class='hs-layout'>,</span> <span class='hs-varid'>orig_pairs</span><span class='hs-layout'>)</span>	<span class='hs-comment'>-- Safe output</span>
 <a name="line-41"></a>		<span class='hs-comment'>-- The lazy_fv part is really important!  orig_pairs has no strictness</span>
 <a name="line-42"></a>		<span class='hs-comment'>-- info, including nothing about free vars.  But if we have</span>

@@ -1387,7 +1387,7 @@
 <a name="line-1378"></a>        <span class='hs-comment'>-- passes only, so if the user is passing us extra options we assume</span>
 <a name="line-1379"></a>        <span class='hs-comment'>-- they know what they are doing and don't get in the way.</span>
 <a name="line-1380"></a>        <span class='hs-varid'>optFlag</span>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>null</span> <span class='hs-layout'>(</span><span class='hs-varid'>getOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>opt_lo</span><span class='hs-layout'>)</span>
-<a name="line-1381"></a>                       <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-layout'>(</span><span class='hs-varid'>llvmOpts</span> <span class='hs-varop'>!!</span> <span class='hs-varid'>opt_lvl</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>
+<a name="line-1381"></a>                       <span class='hs-keyword'>then</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varop'>$</span> <span class='hs-varid'>words</span> <span class='hs-layout'>(</span><span class='hs-varid'>llvmOpts</span> <span class='hs-varop'>!!</span> <span class='hs-varid'>opt_lvl</span><span class='hs-layout'>)</span>
 <a name="line-1382"></a>                       <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span>
 <a name="line-1383"></a>        <span class='hs-varid'>tbaa</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>ver</span> <span class='hs-varop'>&lt;</span> <span class='hs-num'>29</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-str'>""</span> <span class='hs-comment'>-- no tbaa in 2.8 and earlier</span>
 <a name="line-1384"></a>             <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_LlvmTBAA</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"--enable-tbaa=true"</span>
@@ -1407,7 +1407,7 @@
 <a name="line-1398"></a>  <span class='hs-keyword'>where</span> 
 <a name="line-1399"></a>        <span class='hs-comment'>-- we always (unless -optlo specified) run Opt since we rely on it to</span>
 <a name="line-1400"></a>        <span class='hs-comment'>-- fix up some pretty big deficiencies in the code we generate</span>
-<a name="line-1401"></a>        <span class='hs-varid'>llvmOpts</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-mem2reg"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-O1"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-O2"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1401"></a>        <span class='hs-varid'>llvmOpts</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-mem2reg -globalopt"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-O1"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-O2"</span><span class='hs-keyglyph'>]</span>
 <a name="line-1402"></a>
 <a name="line-1403"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
 <a name="line-1404"></a><span class='hs-comment'>-- LlvmLlc phase</span>
@@ -1649,508 +1649,518 @@
 <a name="line-1640"></a>                                   <span class='hs-varid'>text</span> <span class='hs-varid'>elfSectionNote</span><span class='hs-layout'>,</span>
 <a name="line-1641"></a>                                   <span class='hs-varid'>text</span> <span class='hs-str'>"\n"</span><span class='hs-layout'>,</span>
 <a name="line-1642"></a>
-<a name="line-1643"></a>          <span class='hs-varid'>text</span> <span class='hs-str'>"\t.ascii \""</span><span class='hs-layout'>,</span> <span class='hs-varid'>info'</span><span class='hs-layout'>,</span> <span class='hs-varid'>text</span> <span class='hs-str'>"\"\n"</span> <span class='hs-keyglyph'>]</span>
-<a name="line-1644"></a>          <span class='hs-keyword'>where</span>
-<a name="line-1645"></a>            <span class='hs-varid'>info'</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>text</span> <span class='hs-varop'>$</span> <span class='hs-varid'>escape</span> <span class='hs-varid'>info</span>
-<a name="line-1646"></a>
-<a name="line-1647"></a>            <span class='hs-varid'>escape</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span>
-<a name="line-1648"></a>            <span class='hs-varid'>escape</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>concatMap</span> <span class='hs-layout'>(</span><span class='hs-varid'>charToC</span><span class='hs-varop'>.</span><span class='hs-varid'>fromIntegral</span><span class='hs-varop'>.</span><span class='hs-varid'>ord</span><span class='hs-layout'>)</span>
-<a name="line-1649"></a>
-<a name="line-1650"></a>            <span class='hs-varid'>elfSectionNote</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
-<a name="line-1651"></a>            <span class='hs-varid'>elfSectionNote</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformArch</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
-<a name="line-1652"></a>                               <span class='hs-conid'>ArchARM</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"%note"</span>
-<a name="line-1653"></a>                               <span class='hs-keyword'>_</span>             <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"@note"</span>
-<a name="line-1654"></a>
-<a name="line-1655"></a><a name="getLinkInfo"></a><span class='hs-comment'>-- The "link info" is a string representing the parameters of the</span>
-<a name="line-1656"></a><span class='hs-comment'>-- link.  We save this information in the binary, and the next time we</span>
-<a name="line-1657"></a><span class='hs-comment'>-- link, if nothing else has changed, we use the link info stored in</span>
-<a name="line-1658"></a><span class='hs-comment'>-- the existing binary to decide whether to re-link or not.</span>
-<a name="line-1659"></a><span class='hs-definition'>getLinkInfo</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>String</span>
-<a name="line-1660"></a><span class='hs-definition'>getLinkInfo</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-1661"></a>   <span class='hs-varid'>package_link_opts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageLinkOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1662"></a>   <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
-<a name="line-1663"></a>                     <span class='hs-keyword'>then</span> <span class='hs-varid'>getPackageFrameworks</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1664"></a>                     <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1665"></a>   <span class='hs-keyword'>let</span> <span class='hs-varid'>extra_ld_inputs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ldInputs</span> <span class='hs-varid'>dflags</span>
-<a name="line-1666"></a>   <span class='hs-keyword'>let</span>
-<a name="line-1667"></a>      <span class='hs-varid'>link_info</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>package_link_opts</span><span class='hs-layout'>,</span>
-<a name="line-1668"></a>                   <span class='hs-varid'>pkg_frameworks</span><span class='hs-layout'>,</span>
-<a name="line-1669"></a>                   <span class='hs-varid'>rtsOpts</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
-<a name="line-1670"></a>                   <span class='hs-varid'>rtsOptsEnabled</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
-<a name="line-1671"></a>                   <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_NoHsMain</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
-<a name="line-1672"></a>                   <span class='hs-varid'>map</span> <span class='hs-varid'>showOpt</span> <span class='hs-varid'>extra_ld_inputs</span><span class='hs-layout'>,</span>
-<a name="line-1673"></a>                   <span class='hs-varid'>getOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>opt_l</span><span class='hs-layout'>)</span>
-<a name="line-1674"></a>   <span class='hs-comment'>--</span>
-<a name="line-1675"></a>   <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>show</span> <span class='hs-varid'>link_info</span><span class='hs-layout'>)</span>
-<a name="line-1676"></a>
-<a name="line-1677"></a><a name="mk_pvm_wrapper_script"></a><span class='hs-comment'>-- generates a Perl skript starting a parallel prg under PVM</span>
-<a name="line-1678"></a><span class='hs-definition'>mk_pvm_wrapper_script</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span>
-<a name="line-1679"></a><span class='hs-definition'>mk_pvm_wrapper_script</span> <span class='hs-varid'>pvm_executable</span> <span class='hs-varid'>pvm_executable_base</span> <span class='hs-varid'>sysMan</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unlines</span> <span class='hs-varop'>$</span>
-<a name="line-1680"></a> <span class='hs-keyglyph'>[</span>
-<a name="line-1681"></a>  <span class='hs-str'>"eval 'exec perl -S $0 ${1+\"$@\"}'"</span><span class='hs-layout'>,</span>
-<a name="line-1682"></a>  <span class='hs-str'>"  if $running_under_some_shell;"</span><span class='hs-layout'>,</span>
-<a name="line-1683"></a>  <span class='hs-str'>"# =!=!=!=!=!=!=!=!=!=!=!"</span><span class='hs-layout'>,</span>
-<a name="line-1684"></a>  <span class='hs-str'>"# This script is automatically generated: DO NOT EDIT!!!"</span><span class='hs-layout'>,</span>
-<a name="line-1685"></a>  <span class='hs-str'>"# Generated by Glasgow Haskell Compiler"</span><span class='hs-layout'>,</span>
-<a name="line-1686"></a>  <span class='hs-str'>"# ngoqvam choHbogh vaj' vIHoHnISbej !!!!"</span><span class='hs-layout'>,</span>
-<a name="line-1687"></a>  <span class='hs-str'>"#"</span><span class='hs-layout'>,</span>
-<a name="line-1688"></a>  <span class='hs-str'>"$pvm_executable      = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pvm_executable</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
-<a name="line-1689"></a>  <span class='hs-str'>"$pvm_executable_base = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pvm_executable_base</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
-<a name="line-1690"></a>  <span class='hs-str'>"$SysMan = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>sysMan</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
-<a name="line-1691"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
-<a name="line-1692"></a>  <span class='hs-comment'>{- ToDo: add the magical shortcuts again iff we actually use them -- HWL
-<a name="line-1693"></a>  "# first, some magical shortcuts to run "commands" on the binary",
-<a name="line-1694"></a>  "# (which is hidden)",
-<a name="line-1695"></a>  "if ($#ARGV == 1 &amp;&amp; $ARGV[0] eq '+RTS' &amp;&amp; $ARGV[1] =~ /^--((size|file|strip|rm|nm).*)/ ) {",
-<a name="line-1696"></a>  "    local($cmd) = $1;",
-<a name="line-1697"></a>  "    system("$cmd $pvm_executable");",
-<a name="line-1698"></a>  "    exit(0); # all done",
-<a name="line-1699"></a>  "}", -}</span>
-<a name="line-1700"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
-<a name="line-1701"></a>  <span class='hs-str'>"# Now, run the real binary; process the args first"</span><span class='hs-layout'>,</span>
-<a name="line-1702"></a>  <span class='hs-str'>"$ENV{'PE'} = $pvm_executable_base;"</span><span class='hs-layout'>,</span> <span class='hs-comment'>--  ++ pvm_executable_base,</span>
-<a name="line-1703"></a>  <span class='hs-str'>"$debug = '';"</span><span class='hs-layout'>,</span>
-<a name="line-1704"></a>  <span class='hs-str'>"$nprocessors = 0; # the default: as many PEs as machines in PVM config"</span><span class='hs-layout'>,</span>
-<a name="line-1705"></a>  <span class='hs-str'>"@nonPVM_args = ();"</span><span class='hs-layout'>,</span>
-<a name="line-1706"></a>  <span class='hs-str'>"$in_RTS_args = 0;"</span><span class='hs-layout'>,</span>
-<a name="line-1707"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
-<a name="line-1708"></a>  <span class='hs-str'>"args: while ($a = shift(@ARGV)) {"</span><span class='hs-layout'>,</span>
-<a name="line-1709"></a>  <span class='hs-str'>"    if ( $a eq '+RTS' ) {"</span><span class='hs-layout'>,</span>
-<a name="line-1710"></a>  <span class='hs-str'>"        $in_RTS_args = 1;"</span><span class='hs-layout'>,</span>
-<a name="line-1711"></a>  <span class='hs-str'>"    } elsif ( $a eq '-RTS' ) {"</span><span class='hs-layout'>,</span>
-<a name="line-1712"></a>  <span class='hs-str'>"        $in_RTS_args = 0;"</span><span class='hs-layout'>,</span>
-<a name="line-1713"></a>  <span class='hs-str'>"    }"</span><span class='hs-layout'>,</span>
-<a name="line-1714"></a>  <span class='hs-str'>"    if ( $a eq '-d' &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
-<a name="line-1715"></a>  <span class='hs-str'>"        $debug = '-';"</span><span class='hs-layout'>,</span>
-<a name="line-1716"></a>  <span class='hs-str'>"    } elsif ( $a =~ /^-qN(\\d+)/ &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
-<a name="line-1717"></a>  <span class='hs-str'>"        $nprocessors = $1;"</span><span class='hs-layout'>,</span>
-<a name="line-1718"></a>  <span class='hs-str'>"    } elsif ( $a =~ /^-qp(\\d+)/ &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
-<a name="line-1719"></a>  <span class='hs-str'>"        $nprocessors = $1;"</span><span class='hs-layout'>,</span>
-<a name="line-1720"></a>  <span class='hs-str'>"    } else {"</span><span class='hs-layout'>,</span>
-<a name="line-1721"></a>  <span class='hs-str'>"        push(@nonPVM_args, $a);"</span><span class='hs-layout'>,</span>
-<a name="line-1722"></a>  <span class='hs-str'>"    }"</span><span class='hs-layout'>,</span>
-<a name="line-1723"></a>  <span class='hs-str'>"}"</span><span class='hs-layout'>,</span>
-<a name="line-1724"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
-<a name="line-1725"></a>  <span class='hs-str'>"local($return_val) = 0;"</span><span class='hs-layout'>,</span>
-<a name="line-1726"></a>  <span class='hs-str'>"# Start the parallel execution by calling SysMan"</span><span class='hs-layout'>,</span>
-<a name="line-1727"></a>  <span class='hs-str'>"system(\"$SysMan $debug $pvm_executable $nprocessors @nonPVM_args\");"</span><span class='hs-layout'>,</span>
-<a name="line-1728"></a>  <span class='hs-str'>"$return_val = $?;"</span><span class='hs-layout'>,</span>
-<a name="line-1729"></a>  <span class='hs-str'>"# ToDo: fix race condition moving files and flushing them!!"</span><span class='hs-layout'>,</span>
-<a name="line-1730"></a>  <span class='hs-str'>"system(\"cp $ENV{'HOME'}/$pvm_executable_base.???.gr .\") if -f \"$ENV{'HOME'}/$pvm_executable_base.002.gr\";"</span><span class='hs-layout'>,</span>
-<a name="line-1731"></a>  <span class='hs-str'>"exit($return_val);"</span>
-<a name="line-1732"></a> <span class='hs-keyglyph'>]</span>
-<a name="line-1733"></a>
-<a name="line-1734"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
-<a name="line-1735"></a><span class='hs-comment'>-- Look for the /* GHC_PACKAGES ... */ comment at the top of a .hc file</span>
-<a name="line-1736"></a>
-<a name="line-1737"></a><a name="getHCFilePackages"></a><span class='hs-definition'>getHCFilePackages</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span>
-<a name="line-1738"></a><span class='hs-definition'>getHCFilePackages</span> <span class='hs-varid'>filename</span> <span class='hs-keyglyph'>=</span>
-<a name="line-1739"></a>  <span class='hs-conid'>Exception</span><span class='hs-varop'>.</span><span class='hs-varid'>bracket</span> <span class='hs-layout'>(</span><span class='hs-varid'>openFile</span> <span class='hs-varid'>filename</span> <span class='hs-conid'>ReadMode</span><span class='hs-layout'>)</span> <span class='hs-varid'>hClose</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>h</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
-<a name="line-1740"></a>    <span class='hs-varid'>l</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>hGetLine</span> <span class='hs-varid'>h</span>
-<a name="line-1741"></a>    <span class='hs-keyword'>case</span> <span class='hs-varid'>l</span> <span class='hs-keyword'>of</span>
-<a name="line-1742"></a>      <span class='hs-chr'>'/'</span><span class='hs-conop'>:</span><span class='hs-chr'>'*'</span><span class='hs-conop'>:</span><span class='hs-chr'>' '</span><span class='hs-conop'>:</span><span class='hs-chr'>'G'</span><span class='hs-conop'>:</span><span class='hs-chr'>'H'</span><span class='hs-conop'>:</span><span class='hs-chr'>'C'</span><span class='hs-conop'>:</span><span class='hs-chr'>'_'</span><span class='hs-conop'>:</span><span class='hs-chr'>'P'</span><span class='hs-conop'>:</span><span class='hs-chr'>'A'</span><span class='hs-conop'>:</span><span class='hs-chr'>'C'</span><span class='hs-conop'>:</span><span class='hs-chr'>'K'</span><span class='hs-conop'>:</span><span class='hs-chr'>'A'</span><span class='hs-conop'>:</span><span class='hs-chr'>'G'</span><span class='hs-conop'>:</span><span class='hs-chr'>'E'</span><span class='hs-conop'>:</span><span class='hs-chr'>'S'</span><span class='hs-conop'>:</span><span class='hs-varid'>rest</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-1743"></a>          <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>map</span> <span class='hs-varid'>stringToPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>words</span> <span class='hs-varid'>rest</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-1744"></a>      <span class='hs-sel'>_other</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-1745"></a>          <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1643"></a>          <span class='hs-varid'>text</span> <span class='hs-str'>"\t.ascii \""</span><span class='hs-layout'>,</span> <span class='hs-varid'>info'</span><span class='hs-layout'>,</span> <span class='hs-varid'>text</span> <span class='hs-str'>"\"\n"</span><span class='hs-layout'>,</span>
+<a name="line-1644"></a>
+<a name="line-1645"></a>          <span class='hs-comment'>-- ALL generated assembly must have this section to disable</span>
+<a name="line-1646"></a>          <span class='hs-comment'>-- executable stacks.  See also</span>
+<a name="line-1647"></a>          <span class='hs-comment'>-- compiler/nativeGen/AsmCodeGen.lhs for another instance</span>
+<a name="line-1648"></a>          <span class='hs-comment'>-- where we need to do this.</span>
+<a name="line-1649"></a>          <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformHasGnuNonexecStack</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
+<a name="line-1650"></a>           <span class='hs-keyword'>then</span> <span class='hs-varid'>text</span> <span class='hs-str'>".section .note.GNU-stack,\"\",@progbits\n"</span>
+<a name="line-1651"></a>           <span class='hs-keyword'>else</span> <span class='hs-varid'>empty</span><span class='hs-layout'>)</span>
+<a name="line-1652"></a>
+<a name="line-1653"></a>           <span class='hs-keyglyph'>]</span>
+<a name="line-1654"></a>          <span class='hs-keyword'>where</span>
+<a name="line-1655"></a>            <span class='hs-varid'>info'</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>text</span> <span class='hs-varop'>$</span> <span class='hs-varid'>escape</span> <span class='hs-varid'>info</span>
+<a name="line-1656"></a>
+<a name="line-1657"></a>            <span class='hs-varid'>escape</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span>
+<a name="line-1658"></a>            <span class='hs-varid'>escape</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>concatMap</span> <span class='hs-layout'>(</span><span class='hs-varid'>charToC</span><span class='hs-varop'>.</span><span class='hs-varid'>fromIntegral</span><span class='hs-varop'>.</span><span class='hs-varid'>ord</span><span class='hs-layout'>)</span>
+<a name="line-1659"></a>
+<a name="line-1660"></a>            <span class='hs-varid'>elfSectionNote</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
+<a name="line-1661"></a>            <span class='hs-varid'>elfSectionNote</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformArch</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
+<a name="line-1662"></a>                               <span class='hs-conid'>ArchARM</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"%note"</span>
+<a name="line-1663"></a>                               <span class='hs-keyword'>_</span>             <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"@note"</span>
+<a name="line-1664"></a>
+<a name="line-1665"></a><a name="getLinkInfo"></a><span class='hs-comment'>-- The "link info" is a string representing the parameters of the</span>
+<a name="line-1666"></a><span class='hs-comment'>-- link.  We save this information in the binary, and the next time we</span>
+<a name="line-1667"></a><span class='hs-comment'>-- link, if nothing else has changed, we use the link info stored in</span>
+<a name="line-1668"></a><span class='hs-comment'>-- the existing binary to decide whether to re-link or not.</span>
+<a name="line-1669"></a><span class='hs-definition'>getLinkInfo</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>String</span>
+<a name="line-1670"></a><span class='hs-definition'>getLinkInfo</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-1671"></a>   <span class='hs-varid'>package_link_opts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageLinkOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1672"></a>   <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
+<a name="line-1673"></a>                     <span class='hs-keyword'>then</span> <span class='hs-varid'>getPackageFrameworks</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1674"></a>                     <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1675"></a>   <span class='hs-keyword'>let</span> <span class='hs-varid'>extra_ld_inputs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ldInputs</span> <span class='hs-varid'>dflags</span>
+<a name="line-1676"></a>   <span class='hs-keyword'>let</span>
+<a name="line-1677"></a>      <span class='hs-varid'>link_info</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>package_link_opts</span><span class='hs-layout'>,</span>
+<a name="line-1678"></a>                   <span class='hs-varid'>pkg_frameworks</span><span class='hs-layout'>,</span>
+<a name="line-1679"></a>                   <span class='hs-varid'>rtsOpts</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
+<a name="line-1680"></a>                   <span class='hs-varid'>rtsOptsEnabled</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
+<a name="line-1681"></a>                   <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_NoHsMain</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>
+<a name="line-1682"></a>                   <span class='hs-varid'>map</span> <span class='hs-varid'>showOpt</span> <span class='hs-varid'>extra_ld_inputs</span><span class='hs-layout'>,</span>
+<a name="line-1683"></a>                   <span class='hs-varid'>getOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>opt_l</span><span class='hs-layout'>)</span>
+<a name="line-1684"></a>   <span class='hs-comment'>--</span>
+<a name="line-1685"></a>   <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>show</span> <span class='hs-varid'>link_info</span><span class='hs-layout'>)</span>
+<a name="line-1686"></a>
+<a name="line-1687"></a><a name="mk_pvm_wrapper_script"></a><span class='hs-comment'>-- generates a Perl skript starting a parallel prg under PVM</span>
+<a name="line-1688"></a><span class='hs-definition'>mk_pvm_wrapper_script</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>String</span>
+<a name="line-1689"></a><span class='hs-definition'>mk_pvm_wrapper_script</span> <span class='hs-varid'>pvm_executable</span> <span class='hs-varid'>pvm_executable_base</span> <span class='hs-varid'>sysMan</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unlines</span> <span class='hs-varop'>$</span>
+<a name="line-1690"></a> <span class='hs-keyglyph'>[</span>
+<a name="line-1691"></a>  <span class='hs-str'>"eval 'exec perl -S $0 ${1+\"$@\"}'"</span><span class='hs-layout'>,</span>
+<a name="line-1692"></a>  <span class='hs-str'>"  if $running_under_some_shell;"</span><span class='hs-layout'>,</span>
+<a name="line-1693"></a>  <span class='hs-str'>"# =!=!=!=!=!=!=!=!=!=!=!"</span><span class='hs-layout'>,</span>
+<a name="line-1694"></a>  <span class='hs-str'>"# This script is automatically generated: DO NOT EDIT!!!"</span><span class='hs-layout'>,</span>
+<a name="line-1695"></a>  <span class='hs-str'>"# Generated by Glasgow Haskell Compiler"</span><span class='hs-layout'>,</span>
+<a name="line-1696"></a>  <span class='hs-str'>"# ngoqvam choHbogh vaj' vIHoHnISbej !!!!"</span><span class='hs-layout'>,</span>
+<a name="line-1697"></a>  <span class='hs-str'>"#"</span><span class='hs-layout'>,</span>
+<a name="line-1698"></a>  <span class='hs-str'>"$pvm_executable      = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pvm_executable</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
+<a name="line-1699"></a>  <span class='hs-str'>"$pvm_executable_base = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pvm_executable_base</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
+<a name="line-1700"></a>  <span class='hs-str'>"$SysMan = '"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>sysMan</span> <span class='hs-varop'>++</span> <span class='hs-str'>"';"</span><span class='hs-layout'>,</span>
+<a name="line-1701"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
+<a name="line-1702"></a>  <span class='hs-comment'>{- ToDo: add the magical shortcuts again iff we actually use them -- HWL
+<a name="line-1703"></a>  "# first, some magical shortcuts to run "commands" on the binary",
+<a name="line-1704"></a>  "# (which is hidden)",
+<a name="line-1705"></a>  "if ($#ARGV == 1 &amp;&amp; $ARGV[0] eq '+RTS' &amp;&amp; $ARGV[1] =~ /^--((size|file|strip|rm|nm).*)/ ) {",
+<a name="line-1706"></a>  "    local($cmd) = $1;",
+<a name="line-1707"></a>  "    system("$cmd $pvm_executable");",
+<a name="line-1708"></a>  "    exit(0); # all done",
+<a name="line-1709"></a>  "}", -}</span>
+<a name="line-1710"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
+<a name="line-1711"></a>  <span class='hs-str'>"# Now, run the real binary; process the args first"</span><span class='hs-layout'>,</span>
+<a name="line-1712"></a>  <span class='hs-str'>"$ENV{'PE'} = $pvm_executable_base;"</span><span class='hs-layout'>,</span> <span class='hs-comment'>--  ++ pvm_executable_base,</span>
+<a name="line-1713"></a>  <span class='hs-str'>"$debug = '';"</span><span class='hs-layout'>,</span>
+<a name="line-1714"></a>  <span class='hs-str'>"$nprocessors = 0; # the default: as many PEs as machines in PVM config"</span><span class='hs-layout'>,</span>
+<a name="line-1715"></a>  <span class='hs-str'>"@nonPVM_args = ();"</span><span class='hs-layout'>,</span>
+<a name="line-1716"></a>  <span class='hs-str'>"$in_RTS_args = 0;"</span><span class='hs-layout'>,</span>
+<a name="line-1717"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
+<a name="line-1718"></a>  <span class='hs-str'>"args: while ($a = shift(@ARGV)) {"</span><span class='hs-layout'>,</span>
+<a name="line-1719"></a>  <span class='hs-str'>"    if ( $a eq '+RTS' ) {"</span><span class='hs-layout'>,</span>
+<a name="line-1720"></a>  <span class='hs-str'>"        $in_RTS_args = 1;"</span><span class='hs-layout'>,</span>
+<a name="line-1721"></a>  <span class='hs-str'>"    } elsif ( $a eq '-RTS' ) {"</span><span class='hs-layout'>,</span>
+<a name="line-1722"></a>  <span class='hs-str'>"        $in_RTS_args = 0;"</span><span class='hs-layout'>,</span>
+<a name="line-1723"></a>  <span class='hs-str'>"    }"</span><span class='hs-layout'>,</span>
+<a name="line-1724"></a>  <span class='hs-str'>"    if ( $a eq '-d' &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
+<a name="line-1725"></a>  <span class='hs-str'>"        $debug = '-';"</span><span class='hs-layout'>,</span>
+<a name="line-1726"></a>  <span class='hs-str'>"    } elsif ( $a =~ /^-qN(\\d+)/ &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
+<a name="line-1727"></a>  <span class='hs-str'>"        $nprocessors = $1;"</span><span class='hs-layout'>,</span>
+<a name="line-1728"></a>  <span class='hs-str'>"    } elsif ( $a =~ /^-qp(\\d+)/ &amp;&amp; $in_RTS_args ) {"</span><span class='hs-layout'>,</span>
+<a name="line-1729"></a>  <span class='hs-str'>"        $nprocessors = $1;"</span><span class='hs-layout'>,</span>
+<a name="line-1730"></a>  <span class='hs-str'>"    } else {"</span><span class='hs-layout'>,</span>
+<a name="line-1731"></a>  <span class='hs-str'>"        push(@nonPVM_args, $a);"</span><span class='hs-layout'>,</span>
+<a name="line-1732"></a>  <span class='hs-str'>"    }"</span><span class='hs-layout'>,</span>
+<a name="line-1733"></a>  <span class='hs-str'>"}"</span><span class='hs-layout'>,</span>
+<a name="line-1734"></a>  <span class='hs-str'>""</span><span class='hs-layout'>,</span>
+<a name="line-1735"></a>  <span class='hs-str'>"local($return_val) = 0;"</span><span class='hs-layout'>,</span>
+<a name="line-1736"></a>  <span class='hs-str'>"# Start the parallel execution by calling SysMan"</span><span class='hs-layout'>,</span>
+<a name="line-1737"></a>  <span class='hs-str'>"system(\"$SysMan $debug $pvm_executable $nprocessors @nonPVM_args\");"</span><span class='hs-layout'>,</span>
+<a name="line-1738"></a>  <span class='hs-str'>"$return_val = $?;"</span><span class='hs-layout'>,</span>
+<a name="line-1739"></a>  <span class='hs-str'>"# ToDo: fix race condition moving files and flushing them!!"</span><span class='hs-layout'>,</span>
+<a name="line-1740"></a>  <span class='hs-str'>"system(\"cp $ENV{'HOME'}/$pvm_executable_base.???.gr .\") if -f \"$ENV{'HOME'}/$pvm_executable_base.002.gr\";"</span><span class='hs-layout'>,</span>
+<a name="line-1741"></a>  <span class='hs-str'>"exit($return_val);"</span>
+<a name="line-1742"></a> <span class='hs-keyglyph'>]</span>
+<a name="line-1743"></a>
+<a name="line-1744"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
+<a name="line-1745"></a><span class='hs-comment'>-- Look for the /* GHC_PACKAGES ... */ comment at the top of a .hc file</span>
 <a name="line-1746"></a>
-<a name="line-1747"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
-<a name="line-1748"></a><span class='hs-comment'>-- Static linking, of .o files</span>
-<a name="line-1749"></a>
-<a name="line-1750"></a><span class='hs-comment'>-- The list of packages passed to link is the list of packages on</span>
-<a name="line-1751"></a><span class='hs-comment'>-- which this program depends, as discovered by the compilation</span>
-<a name="line-1752"></a><span class='hs-comment'>-- manager.  It is combined with the list of packages that the user</span>
-<a name="line-1753"></a><span class='hs-comment'>-- specifies on the command line with -package flags.</span>
-<a name="line-1754"></a><span class='hs-comment'>--</span>
-<a name="line-1755"></a><span class='hs-comment'>-- In one-shot linking mode, we can't discover the package</span>
-<a name="line-1756"></a><span class='hs-comment'>-- dependencies (because we haven't actually done any compilation or</span>
-<a name="line-1757"></a><span class='hs-comment'>-- read any interface files), so the user must explicitly specify all</span>
-<a name="line-1758"></a><span class='hs-comment'>-- the packages.</span>
+<a name="line-1747"></a><a name="getHCFilePackages"></a><span class='hs-definition'>getHCFilePackages</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span>
+<a name="line-1748"></a><span class='hs-definition'>getHCFilePackages</span> <span class='hs-varid'>filename</span> <span class='hs-keyglyph'>=</span>
+<a name="line-1749"></a>  <span class='hs-conid'>Exception</span><span class='hs-varop'>.</span><span class='hs-varid'>bracket</span> <span class='hs-layout'>(</span><span class='hs-varid'>openFile</span> <span class='hs-varid'>filename</span> <span class='hs-conid'>ReadMode</span><span class='hs-layout'>)</span> <span class='hs-varid'>hClose</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>h</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-1750"></a>    <span class='hs-varid'>l</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>hGetLine</span> <span class='hs-varid'>h</span>
+<a name="line-1751"></a>    <span class='hs-keyword'>case</span> <span class='hs-varid'>l</span> <span class='hs-keyword'>of</span>
+<a name="line-1752"></a>      <span class='hs-chr'>'/'</span><span class='hs-conop'>:</span><span class='hs-chr'>'*'</span><span class='hs-conop'>:</span><span class='hs-chr'>' '</span><span class='hs-conop'>:</span><span class='hs-chr'>'G'</span><span class='hs-conop'>:</span><span class='hs-chr'>'H'</span><span class='hs-conop'>:</span><span class='hs-chr'>'C'</span><span class='hs-conop'>:</span><span class='hs-chr'>'_'</span><span class='hs-conop'>:</span><span class='hs-chr'>'P'</span><span class='hs-conop'>:</span><span class='hs-chr'>'A'</span><span class='hs-conop'>:</span><span class='hs-chr'>'C'</span><span class='hs-conop'>:</span><span class='hs-chr'>'K'</span><span class='hs-conop'>:</span><span class='hs-chr'>'A'</span><span class='hs-conop'>:</span><span class='hs-chr'>'G'</span><span class='hs-conop'>:</span><span class='hs-chr'>'E'</span><span class='hs-conop'>:</span><span class='hs-chr'>'S'</span><span class='hs-conop'>:</span><span class='hs-varid'>rest</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-1753"></a>          <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>map</span> <span class='hs-varid'>stringToPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>words</span> <span class='hs-varid'>rest</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-1754"></a>      <span class='hs-sel'>_other</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-1755"></a>          <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1756"></a>
+<a name="line-1757"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
+<a name="line-1758"></a><span class='hs-comment'>-- Static linking, of .o files</span>
 <a name="line-1759"></a>
-<a name="line-1760"></a><a name="linkBinary"></a><span class='hs-definition'>linkBinary</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-1761"></a><span class='hs-definition'>linkBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-1762"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>platform</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span>
-<a name="line-1763"></a>        <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>settings</span> <span class='hs-varid'>dflags</span>
-<a name="line-1764"></a>        <span class='hs-varid'>verbFlags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>getVerbFlags</span> <span class='hs-varid'>dflags</span>
-<a name="line-1765"></a>        <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exeFileName</span> <span class='hs-varid'>dflags</span>
-<a name="line-1766"></a>
-<a name="line-1767"></a>    <span class='hs-comment'>-- get the full list of packages to link with, by combining the</span>
-<a name="line-1768"></a>    <span class='hs-comment'>-- explicit packages with the auto packages and all of their</span>
-<a name="line-1769"></a>    <span class='hs-comment'>-- dependencies, and eliminating duplicates.</span>
-<a name="line-1770"></a>
-<a name="line-1771"></a>    <span class='hs-varid'>full_output_fn</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>isAbsolute</span> <span class='hs-varid'>output_fn</span>
-<a name="line-1772"></a>                      <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-varid'>output_fn</span>
-<a name="line-1773"></a>                      <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>d</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getCurrentDirectory</span>
-<a name="line-1774"></a>                              <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>normalise</span> <span class='hs-layout'>(</span><span class='hs-varid'>d</span> <span class='hs-varop'>&lt;/&gt;</span> <span class='hs-varid'>output_fn</span><span class='hs-layout'>)</span>
-<a name="line-1775"></a>    <span class='hs-varid'>pkg_lib_paths</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageLibraryPath</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1776"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>pkg_lib_path_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>concatMap</span> <span class='hs-varid'>get_pkg_lib_path_opts</span> <span class='hs-varid'>pkg_lib_paths</span>
-<a name="line-1777"></a>        <span class='hs-varid'>get_pkg_lib_path_opts</span> <span class='hs-varid'>l</span>
-<a name="line-1778"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>osElfTarget</span> <span class='hs-layout'>(</span><span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span><span class='hs-layout'>)</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1779"></a>           <span class='hs-varid'>dynLibLoader</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>==</span> <span class='hs-conid'>SystemDependent</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1780"></a>           <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_Static</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
-<a name="line-1781"></a>            <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>libpath</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_RelativeDynlibPaths</span> <span class='hs-varid'>dflags</span>
-<a name="line-1782"></a>                            <span class='hs-keyword'>then</span> <span class='hs-str'>"$ORIGIN"</span> <span class='hs-varop'>&lt;/&gt;</span>
-<a name="line-1783"></a>                                 <span class='hs-layout'>(</span><span class='hs-varid'>l</span> <span class='hs-varop'>`makeRelativeTo`</span> <span class='hs-varid'>full_output_fn</span><span class='hs-layout'>)</span>
-<a name="line-1784"></a>                            <span class='hs-keyword'>else</span> <span class='hs-varid'>l</span>
-<a name="line-1785"></a>                  <span class='hs-varid'>rpath</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_RPath</span> <span class='hs-varid'>dflags</span>
-<a name="line-1786"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-rpath"</span><span class='hs-layout'>,</span>      <span class='hs-str'>"-Wl,"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>libpath</span><span class='hs-keyglyph'>]</span>
-<a name="line-1787"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span>
-<a name="line-1788"></a>                  <span class='hs-comment'>-- Solaris 11's linker does not support -rpath-link option. It silently</span>
-<a name="line-1789"></a>                  <span class='hs-comment'>-- ignores it and then complains about next option which is -l&lt;some</span>
-<a name="line-1790"></a>                  <span class='hs-comment'>-- dir&gt; as being a directory and not expected object file, E.g</span>
-<a name="line-1791"></a>                  <span class='hs-comment'>-- ld: elf error: file</span>
-<a name="line-1792"></a>                  <span class='hs-comment'>-- /tmp/ghc-src/libraries/base/dist-install/build:</span>
-<a name="line-1793"></a>                  <span class='hs-comment'>-- elf_begin: I/O error: region read: Is a directory</span>
-<a name="line-1794"></a>                  <span class='hs-varid'>rpathlink</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-layout'>(</span><span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSSolaris2</span>
-<a name="line-1795"></a>                              <span class='hs-keyword'>then</span> <span class='hs-conid'>[]</span>
-<a name="line-1796"></a>                              <span class='hs-keyword'>else</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-rpath-link"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-Wl,"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span>
-<a name="line-1797"></a>              <span class='hs-keyword'>in</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-L"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span> <span class='hs-varid'>rpathlink</span> <span class='hs-varop'>++</span> <span class='hs-varid'>rpath</span>
-<a name="line-1798"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-L"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span>
-<a name="line-1799"></a>
-<a name="line-1800"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>lib_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>libraryPaths</span> <span class='hs-varid'>dflags</span>
-<a name="line-1801"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>lib_path_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-L"</span><span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>lib_paths</span>
-<a name="line-1802"></a>
-<a name="line-1803"></a>    <span class='hs-varid'>extraLinkObj</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkExtraObjToLinkIntoBinary</span> <span class='hs-varid'>dflags</span>
-<a name="line-1804"></a>    <span class='hs-varid'>noteLinkObjs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkNoteObjsToLinkIntoBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1805"></a>
-<a name="line-1806"></a>    <span class='hs-varid'>pkg_link_opts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>platformBinariesAreStaticLibs</span> <span class='hs-varid'>platform</span>
-<a name="line-1807"></a>                     <span class='hs-keyword'>then</span> <span class='hs-comment'>-- If building an executable really means</span>
-<a name="line-1808"></a>                          <span class='hs-comment'>-- making a static library (e.g. iOS), then</span>
-<a name="line-1809"></a>                          <span class='hs-comment'>-- we don't want the options (like -lm)</span>
-<a name="line-1810"></a>                          <span class='hs-comment'>-- that getPackageLinkOpts gives us. #7720</span>
-<a name="line-1811"></a>                          <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1812"></a>                     <span class='hs-keyword'>else</span> <span class='hs-varid'>getPackageLinkOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1813"></a>
-<a name="line-1814"></a>    <span class='hs-varid'>pkg_framework_path_opts</span> <span class='hs-keyglyph'>&lt;-</span>
-<a name="line-1815"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
-<a name="line-1816"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>pkg_framework_paths</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageFrameworkPath</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1817"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-F"</span> <span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>pkg_framework_paths</span>
-<a name="line-1818"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1819"></a>
-<a name="line-1820"></a>    <span class='hs-varid'>framework_path_opts</span> <span class='hs-keyglyph'>&lt;-</span>
-<a name="line-1821"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
-<a name="line-1822"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>framework_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>frameworkPaths</span> <span class='hs-varid'>dflags</span>
-<a name="line-1823"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-F"</span> <span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>framework_paths</span>
-<a name="line-1824"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1825"></a>
-<a name="line-1826"></a>    <span class='hs-varid'>pkg_framework_opts</span> <span class='hs-keyglyph'>&lt;-</span>
-<a name="line-1827"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
-<a name="line-1828"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageFrameworks</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1829"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>concat</span> <span class='hs-keyglyph'>[</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-framework"</span><span class='hs-layout'>,</span> <span class='hs-varid'>fw</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>fw</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>]</span>
-<a name="line-1830"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1831"></a>
-<a name="line-1832"></a>    <span class='hs-varid'>framework_opts</span> <span class='hs-keyglyph'>&lt;-</span>
-<a name="line-1833"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
-<a name="line-1834"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>frameworks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>cmdlineFrameworks</span> <span class='hs-varid'>dflags</span>
-<a name="line-1835"></a>                <span class='hs-comment'>-- reverse because they're added in reverse order from</span>
-<a name="line-1836"></a>                <span class='hs-comment'>-- the cmd line:</span>
-<a name="line-1837"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>concat</span> <span class='hs-keyglyph'>[</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-framework"</span><span class='hs-layout'>,</span> <span class='hs-varid'>fw</span><span class='hs-keyglyph'>]</span>
-<a name="line-1838"></a>                                <span class='hs-keyglyph'>|</span> <span class='hs-varid'>fw</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>reverse</span> <span class='hs-varid'>frameworks</span> <span class='hs-keyglyph'>]</span>
-<a name="line-1839"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1840"></a>
-<a name="line-1841"></a>        <span class='hs-comment'>-- probably _stub.o files</span>
-<a name="line-1842"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>extra_ld_inputs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ldInputs</span> <span class='hs-varid'>dflags</span>
-<a name="line-1843"></a>
-<a name="line-1844"></a>    <span class='hs-comment'>-- Here are some libs that need to be linked at the *end* of</span>
-<a name="line-1845"></a>    <span class='hs-comment'>-- the command line, because they contain symbols that are referred to</span>
-<a name="line-1846"></a>    <span class='hs-comment'>-- by the RTS.  We can't therefore use the ordinary way opts for these.</span>
-<a name="line-1847"></a>    <span class='hs-keyword'>let</span>
-<a name="line-1848"></a>        <span class='hs-varid'>debug_opts</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>WayDebug</span> <span class='hs-varop'>`elem`</span> <span class='hs-varid'>ways</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span>
-<a name="line-1849"></a><span class='hs-cpp'>#if defined(HAVE_LIBBFD)</span>
-<a name="line-1850"></a>                        <span class='hs-str'>"-lbfd"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-liberty"</span>
-<a name="line-1851"></a><span class='hs-cpp'>#endif</span>
-<a name="line-1852"></a>                         <span class='hs-keyglyph'>]</span>
-<a name="line-1853"></a>                   <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>            <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
-<a name="line-1854"></a>
-<a name="line-1855"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>thread_opts</span>
-<a name="line-1856"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-conid'>WayThreaded</span> <span class='hs-varop'>`elem`</span> <span class='hs-varid'>ways</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
-<a name="line-1857"></a>            <span class='hs-keyword'>let</span> <span class='hs-varid'>os</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
-<a name="line-1858"></a>            <span class='hs-keyword'>in</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>os</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSOsf3</span> <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-lpthread"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-lexc"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1859"></a>               <span class='hs-keyword'>else</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>os</span> <span class='hs-varop'>`elem`</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>OSMinGW32</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSFreeBSD</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSOpenBSD</span><span class='hs-layout'>,</span>
-<a name="line-1860"></a>                                  <span class='hs-conid'>OSNetBSD</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSHaiku</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSQNXNTO</span><span class='hs-keyglyph'>]</span>
-<a name="line-1861"></a>               <span class='hs-keyword'>then</span> <span class='hs-conid'>[]</span>
-<a name="line-1862"></a>               <span class='hs-keyword'>else</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-lpthread"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1863"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>               <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
+<a name="line-1760"></a><span class='hs-comment'>-- The list of packages passed to link is the list of packages on</span>
+<a name="line-1761"></a><span class='hs-comment'>-- which this program depends, as discovered by the compilation</span>
+<a name="line-1762"></a><span class='hs-comment'>-- manager.  It is combined with the list of packages that the user</span>
+<a name="line-1763"></a><span class='hs-comment'>-- specifies on the command line with -package flags.</span>
+<a name="line-1764"></a><span class='hs-comment'>--</span>
+<a name="line-1765"></a><span class='hs-comment'>-- In one-shot linking mode, we can't discover the package</span>
+<a name="line-1766"></a><span class='hs-comment'>-- dependencies (because we haven't actually done any compilation or</span>
+<a name="line-1767"></a><span class='hs-comment'>-- read any interface files), so the user must explicitly specify all</span>
+<a name="line-1768"></a><span class='hs-comment'>-- the packages.</span>
+<a name="line-1769"></a>
+<a name="line-1770"></a><a name="linkBinary"></a><span class='hs-definition'>linkBinary</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-1771"></a><span class='hs-definition'>linkBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-1772"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>platform</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span>
+<a name="line-1773"></a>        <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>settings</span> <span class='hs-varid'>dflags</span>
+<a name="line-1774"></a>        <span class='hs-varid'>verbFlags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>getVerbFlags</span> <span class='hs-varid'>dflags</span>
+<a name="line-1775"></a>        <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exeFileName</span> <span class='hs-varid'>dflags</span>
+<a name="line-1776"></a>
+<a name="line-1777"></a>    <span class='hs-comment'>-- get the full list of packages to link with, by combining the</span>
+<a name="line-1778"></a>    <span class='hs-comment'>-- explicit packages with the auto packages and all of their</span>
+<a name="line-1779"></a>    <span class='hs-comment'>-- dependencies, and eliminating duplicates.</span>
+<a name="line-1780"></a>
+<a name="line-1781"></a>    <span class='hs-varid'>full_output_fn</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>isAbsolute</span> <span class='hs-varid'>output_fn</span>
+<a name="line-1782"></a>                      <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-varid'>output_fn</span>
+<a name="line-1783"></a>                      <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>d</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getCurrentDirectory</span>
+<a name="line-1784"></a>                              <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>normalise</span> <span class='hs-layout'>(</span><span class='hs-varid'>d</span> <span class='hs-varop'>&lt;/&gt;</span> <span class='hs-varid'>output_fn</span><span class='hs-layout'>)</span>
+<a name="line-1785"></a>    <span class='hs-varid'>pkg_lib_paths</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageLibraryPath</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1786"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>pkg_lib_path_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>concatMap</span> <span class='hs-varid'>get_pkg_lib_path_opts</span> <span class='hs-varid'>pkg_lib_paths</span>
+<a name="line-1787"></a>        <span class='hs-varid'>get_pkg_lib_path_opts</span> <span class='hs-varid'>l</span>
+<a name="line-1788"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>osElfTarget</span> <span class='hs-layout'>(</span><span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span><span class='hs-layout'>)</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1789"></a>           <span class='hs-varid'>dynLibLoader</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>==</span> <span class='hs-conid'>SystemDependent</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1790"></a>           <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_Static</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
+<a name="line-1791"></a>            <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>libpath</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_RelativeDynlibPaths</span> <span class='hs-varid'>dflags</span>
+<a name="line-1792"></a>                            <span class='hs-keyword'>then</span> <span class='hs-str'>"$ORIGIN"</span> <span class='hs-varop'>&lt;/&gt;</span>
+<a name="line-1793"></a>                                 <span class='hs-layout'>(</span><span class='hs-varid'>l</span> <span class='hs-varop'>`makeRelativeTo`</span> <span class='hs-varid'>full_output_fn</span><span class='hs-layout'>)</span>
+<a name="line-1794"></a>                            <span class='hs-keyword'>else</span> <span class='hs-varid'>l</span>
+<a name="line-1795"></a>                  <span class='hs-varid'>rpath</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_RPath</span> <span class='hs-varid'>dflags</span>
+<a name="line-1796"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-rpath"</span><span class='hs-layout'>,</span>      <span class='hs-str'>"-Wl,"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>libpath</span><span class='hs-keyglyph'>]</span>
+<a name="line-1797"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span>
+<a name="line-1798"></a>                  <span class='hs-comment'>-- Solaris 11's linker does not support -rpath-link option. It silently</span>
+<a name="line-1799"></a>                  <span class='hs-comment'>-- ignores it and then complains about next option which is -l&lt;some</span>
+<a name="line-1800"></a>                  <span class='hs-comment'>-- dir&gt; as being a directory and not expected object file, E.g</span>
+<a name="line-1801"></a>                  <span class='hs-comment'>-- ld: elf error: file</span>
+<a name="line-1802"></a>                  <span class='hs-comment'>-- /tmp/ghc-src/libraries/base/dist-install/build:</span>
+<a name="line-1803"></a>                  <span class='hs-comment'>-- elf_begin: I/O error: region read: Is a directory</span>
+<a name="line-1804"></a>                  <span class='hs-varid'>rpathlink</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>if</span> <span class='hs-layout'>(</span><span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSSolaris2</span>
+<a name="line-1805"></a>                              <span class='hs-keyword'>then</span> <span class='hs-conid'>[]</span>
+<a name="line-1806"></a>                              <span class='hs-keyword'>else</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-rpath-link"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-Wl,"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span>
+<a name="line-1807"></a>              <span class='hs-keyword'>in</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-L"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span> <span class='hs-varid'>rpathlink</span> <span class='hs-varop'>++</span> <span class='hs-varid'>rpath</span>
+<a name="line-1808"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-L"</span> <span class='hs-varop'>++</span> <span class='hs-varid'>l</span><span class='hs-keyglyph'>]</span>
+<a name="line-1809"></a>
+<a name="line-1810"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>lib_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>libraryPaths</span> <span class='hs-varid'>dflags</span>
+<a name="line-1811"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>lib_path_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-L"</span><span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>lib_paths</span>
+<a name="line-1812"></a>
+<a name="line-1813"></a>    <span class='hs-varid'>extraLinkObj</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkExtraObjToLinkIntoBinary</span> <span class='hs-varid'>dflags</span>
+<a name="line-1814"></a>    <span class='hs-varid'>noteLinkObjs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkNoteObjsToLinkIntoBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1815"></a>
+<a name="line-1816"></a>    <span class='hs-varid'>pkg_link_opts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>platformBinariesAreStaticLibs</span> <span class='hs-varid'>platform</span>
+<a name="line-1817"></a>                     <span class='hs-keyword'>then</span> <span class='hs-comment'>-- If building an executable really means</span>
+<a name="line-1818"></a>                          <span class='hs-comment'>-- making a static library (e.g. iOS), then</span>
+<a name="line-1819"></a>                          <span class='hs-comment'>-- we don't want the options (like -lm)</span>
+<a name="line-1820"></a>                          <span class='hs-comment'>-- that getPackageLinkOpts gives us. #7720</span>
+<a name="line-1821"></a>                          <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1822"></a>                     <span class='hs-keyword'>else</span> <span class='hs-varid'>getPackageLinkOpts</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1823"></a>
+<a name="line-1824"></a>    <span class='hs-varid'>pkg_framework_path_opts</span> <span class='hs-keyglyph'>&lt;-</span>
+<a name="line-1825"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
+<a name="line-1826"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>pkg_framework_paths</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageFrameworkPath</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1827"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-F"</span> <span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>pkg_framework_paths</span>
+<a name="line-1828"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1829"></a>
+<a name="line-1830"></a>    <span class='hs-varid'>framework_path_opts</span> <span class='hs-keyglyph'>&lt;-</span>
+<a name="line-1831"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
+<a name="line-1832"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>framework_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>frameworkPaths</span> <span class='hs-varid'>dflags</span>
+<a name="line-1833"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-str'>"-F"</span> <span class='hs-varop'>++</span><span class='hs-layout'>)</span> <span class='hs-varid'>framework_paths</span>
+<a name="line-1834"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1835"></a>
+<a name="line-1836"></a>    <span class='hs-varid'>pkg_framework_opts</span> <span class='hs-keyglyph'>&lt;-</span>
+<a name="line-1837"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
+<a name="line-1838"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageFrameworks</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1839"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>concat</span> <span class='hs-keyglyph'>[</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-framework"</span><span class='hs-layout'>,</span> <span class='hs-varid'>fw</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>fw</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>pkg_frameworks</span> <span class='hs-keyglyph'>]</span>
+<a name="line-1840"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1841"></a>
+<a name="line-1842"></a>    <span class='hs-varid'>framework_opts</span> <span class='hs-keyglyph'>&lt;-</span>
+<a name="line-1843"></a>        <span class='hs-keyword'>if</span> <span class='hs-varid'>platformUsesFrameworks</span> <span class='hs-varid'>platform</span>
+<a name="line-1844"></a>        <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>frameworks</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>cmdlineFrameworks</span> <span class='hs-varid'>dflags</span>
+<a name="line-1845"></a>                <span class='hs-comment'>-- reverse because they're added in reverse order from</span>
+<a name="line-1846"></a>                <span class='hs-comment'>-- the cmd line:</span>
+<a name="line-1847"></a>                <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>concat</span> <span class='hs-keyglyph'>[</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-framework"</span><span class='hs-layout'>,</span> <span class='hs-varid'>fw</span><span class='hs-keyglyph'>]</span>
+<a name="line-1848"></a>                                <span class='hs-keyglyph'>|</span> <span class='hs-varid'>fw</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>reverse</span> <span class='hs-varid'>frameworks</span> <span class='hs-keyglyph'>]</span>
+<a name="line-1849"></a>        <span class='hs-keyword'>else</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-1850"></a>
+<a name="line-1851"></a>        <span class='hs-comment'>-- probably _stub.o files</span>
+<a name="line-1852"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>extra_ld_inputs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ldInputs</span> <span class='hs-varid'>dflags</span>
+<a name="line-1853"></a>
+<a name="line-1854"></a>    <span class='hs-comment'>-- Here are some libs that need to be linked at the *end* of</span>
+<a name="line-1855"></a>    <span class='hs-comment'>-- the command line, because they contain symbols that are referred to</span>
+<a name="line-1856"></a>    <span class='hs-comment'>-- by the RTS.  We can't therefore use the ordinary way opts for these.</span>
+<a name="line-1857"></a>    <span class='hs-keyword'>let</span>
+<a name="line-1858"></a>        <span class='hs-varid'>debug_opts</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>WayDebug</span> <span class='hs-varop'>`elem`</span> <span class='hs-varid'>ways</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span>
+<a name="line-1859"></a><span class='hs-cpp'>#if defined(HAVE_LIBBFD)</span>
+<a name="line-1860"></a>                        <span class='hs-str'>"-lbfd"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-liberty"</span>
+<a name="line-1861"></a><span class='hs-cpp'>#endif</span>
+<a name="line-1862"></a>                         <span class='hs-keyglyph'>]</span>
+<a name="line-1863"></a>                   <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>            <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
 <a name="line-1864"></a>
-<a name="line-1865"></a>    <span class='hs-varid'>rc_objs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>maybeCreateManifest</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>output_fn</span>
-<a name="line-1866"></a>
-<a name="line-1867"></a>    <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runLink</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span>
-<a name="line-1868"></a>                       <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>verbFlags</span>
-<a name="line-1869"></a>                      <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-o"</span>
-<a name="line-1870"></a>                         <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span>
-<a name="line-1871"></a>                         <span class='hs-keyglyph'>]</span>
-<a name="line-1872"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-layout'>(</span>
-<a name="line-1873"></a>                         <span class='hs-conid'>[]</span>
+<a name="line-1865"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>thread_opts</span>
+<a name="line-1866"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-conid'>WayThreaded</span> <span class='hs-varop'>`elem`</span> <span class='hs-varid'>ways</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
+<a name="line-1867"></a>            <span class='hs-keyword'>let</span> <span class='hs-varid'>os</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
+<a name="line-1868"></a>            <span class='hs-keyword'>in</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>os</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSOsf3</span> <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-lpthread"</span><span class='hs-layout'>,</span> <span class='hs-str'>"-lexc"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1869"></a>               <span class='hs-keyword'>else</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>os</span> <span class='hs-varop'>`elem`</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>OSMinGW32</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSFreeBSD</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSOpenBSD</span><span class='hs-layout'>,</span>
+<a name="line-1870"></a>                                  <span class='hs-conid'>OSNetBSD</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSHaiku</span><span class='hs-layout'>,</span> <span class='hs-conid'>OSQNXNTO</span><span class='hs-keyglyph'>]</span>
+<a name="line-1871"></a>               <span class='hs-keyword'>then</span> <span class='hs-conid'>[]</span>
+<a name="line-1872"></a>               <span class='hs-keyword'>else</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-lpthread"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1873"></a>         <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>               <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
 <a name="line-1874"></a>
-<a name="line-1875"></a>                      <span class='hs-comment'>-- Permit the linker to auto link _symbol to _imp_symbol.</span>
-<a name="line-1876"></a>                      <span class='hs-comment'>-- This lets us link against DLLs without needing an "import library".</span>
-<a name="line-1877"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
-<a name="line-1878"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,--enable-auto-import"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1879"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
-<a name="line-1880"></a>
-<a name="line-1881"></a>                      <span class='hs-comment'>-- '-no_compact_unwind'</span>
-<a name="line-1882"></a>                      <span class='hs-comment'>-- C++/Objective-C exceptions cannot use optimised</span>
-<a name="line-1883"></a>                      <span class='hs-comment'>-- stack unwinding code. The optimised form is the</span>
-<a name="line-1884"></a>                      <span class='hs-comment'>-- default in Xcode 4 on at least x86_64, and</span>
-<a name="line-1885"></a>                      <span class='hs-comment'>-- without this flag we're also seeing warnings</span>
-<a name="line-1886"></a>                      <span class='hs-comment'>-- like</span>
-<a name="line-1887"></a>                      <span class='hs-comment'>--     ld: warning: could not create compact unwind for .LFB3: non-standard register 5 being saved in prolog</span>
-<a name="line-1888"></a>                      <span class='hs-comment'>-- on x86.</span>
-<a name="line-1889"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>sLdSupportsCompactUnwind</span> <span class='hs-varid'>mySettings</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1890"></a>                             <span class='hs-varid'>platformOS</span>   <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSDarwin</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1891"></a>                             <span class='hs-varid'>platformArch</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>`elem`</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ArchX86</span><span class='hs-layout'>,</span> <span class='hs-conid'>ArchX86_64</span><span class='hs-keyglyph'>]</span>
-<a name="line-1892"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-no_compact_unwind"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1893"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
-<a name="line-1894"></a>
-<a name="line-1895"></a>                      <span class='hs-comment'>-- '-Wl,-read_only_relocs,suppress'</span>
-<a name="line-1896"></a>                      <span class='hs-comment'>-- ld gives loads of warnings like:</span>
-<a name="line-1897"></a>                      <span class='hs-comment'>--     ld: warning: text reloc in _base_GHCziArr_unsafeArray_info to _base_GHCziArr_unsafeArray_closure</span>
-<a name="line-1898"></a>                      <span class='hs-comment'>-- when linking any program. We're not sure</span>
-<a name="line-1899"></a>                      <span class='hs-comment'>-- whether this is something we ought to fix, but</span>
-<a name="line-1900"></a>                      <span class='hs-comment'>-- for now this flags silences them.</span>
-<a name="line-1901"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span>   <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSDarwin</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1902"></a>                             <span class='hs-varid'>platformArch</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>ArchX86</span>
-<a name="line-1903"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-read_only_relocs,suppress"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1904"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
-<a name="line-1905"></a>
-<a name="line-1906"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>o_files</span>
-<a name="line-1907"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>lib_path_opts</span><span class='hs-layout'>)</span>
-<a name="line-1908"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>extra_ld_inputs</span>
-<a name="line-1909"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-layout'>(</span>
-<a name="line-1910"></a>                         <span class='hs-varid'>rc_objs</span>
-<a name="line-1911"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>framework_path_opts</span>
-<a name="line-1912"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>framework_opts</span>
-<a name="line-1913"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_lib_path_opts</span>
-<a name="line-1914"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>extraLinkObj</span><span class='hs-conop'>:</span><span class='hs-varid'>noteLinkObjs</span>
-<a name="line-1915"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_link_opts</span>
-<a name="line-1916"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_framework_path_opts</span>
-<a name="line-1917"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_framework_opts</span>
-<a name="line-1918"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>debug_opts</span>
-<a name="line-1919"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>thread_opts</span>
-<a name="line-1920"></a>                    <span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-1921"></a>
-<a name="line-1922"></a>    <span class='hs-comment'>-- parallel only: move binary to another dir -- HWL</span>
-<a name="line-1923"></a>    <span class='hs-varid'>success</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>runPhase_MoveBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>output_fn</span>
-<a name="line-1924"></a>    <span class='hs-varid'>unless</span> <span class='hs-varid'>success</span> <span class='hs-varop'>$</span>
-<a name="line-1925"></a>        <span class='hs-varid'>throwGhcExceptionIO</span> <span class='hs-layout'>(</span><span class='hs-conid'>InstallationError</span> <span class='hs-layout'>(</span><span class='hs-str'>"cannot move binary"</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-1926"></a>
-<a name="line-1927"></a>
-<a name="line-1928"></a><a name="exeFileName"></a><span class='hs-definition'>exeFileName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span>
-<a name="line-1929"></a><span class='hs-definition'>exeFileName</span> <span class='hs-varid'>dflags</span>
-<a name="line-1930"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>s</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>outputFile</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
-<a name="line-1931"></a>      <span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
-<a name="line-1932"></a>      <span class='hs-keyword'>then</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>null</span> <span class='hs-layout'>(</span><span class='hs-varid'>takeExtension</span> <span class='hs-varid'>s</span><span class='hs-layout'>)</span>
-<a name="line-1933"></a>           <span class='hs-keyword'>then</span> <span class='hs-varid'>s</span> <span class='hs-varop'>&lt;.&gt;</span> <span class='hs-str'>"exe"</span>
-<a name="line-1934"></a>           <span class='hs-keyword'>else</span> <span class='hs-varid'>s</span>
-<a name="line-1935"></a>      <span class='hs-keyword'>else</span> <span class='hs-varid'>s</span>
-<a name="line-1936"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span>
-<a name="line-1937"></a>      <span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
-<a name="line-1938"></a>      <span class='hs-keyword'>then</span> <span class='hs-str'>"main.exe"</span>
-<a name="line-1939"></a>      <span class='hs-keyword'>else</span> <span class='hs-str'>"a.out"</span>
-<a name="line-1940"></a>
-<a name="line-1941"></a><a name="maybeCreateManifest"></a><span class='hs-definition'>maybeCreateManifest</span>
-<a name="line-1942"></a>   <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span>
-<a name="line-1943"></a>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span>                          <span class='hs-comment'>-- filename of executable</span>
-<a name="line-1944"></a>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span>                     <span class='hs-comment'>-- extra objects to embed, maybe</span>
-<a name="line-1945"></a><span class='hs-definition'>maybeCreateManifest</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>exe_filename</span>
-<a name="line-1946"></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span> <span class='hs-varop'>&amp;&amp;</span>
-<a name="line-1947"></a>   <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_GenManifest</span> <span class='hs-varid'>dflags</span>
-<a name="line-1948"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exe_filename</span> <span class='hs-varop'>&lt;.&gt;</span> <span class='hs-str'>"manifest"</span>
-<a name="line-1949"></a>
-<a name="line-1950"></a>         <span class='hs-varid'>writeFile</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-varop'>$</span>
-<a name="line-1951"></a>             <span class='hs-str'>"&lt;?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1952"></a>             <span class='hs-str'>"  &lt;assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\"&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1953"></a>             <span class='hs-str'>"  &lt;assemblyIdentity version=\"1.0.0.0\"\n"</span><span class='hs-varop'>++</span>
-<a name="line-1954"></a>             <span class='hs-str'>"     processorArchitecture=\"X86\"\n"</span><span class='hs-varop'>++</span>
-<a name="line-1955"></a>             <span class='hs-str'>"     name=\""</span> <span class='hs-varop'>++</span> <span class='hs-varid'>dropExtension</span> <span class='hs-varid'>exe_filename</span> <span class='hs-varop'>++</span> <span class='hs-str'>"\"\n"</span><span class='hs-varop'>++</span>
-<a name="line-1956"></a>             <span class='hs-str'>"     type=\"win32\"/&gt;\n\n"</span><span class='hs-varop'>++</span>
-<a name="line-1957"></a>             <span class='hs-str'>"  &lt;trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\"&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1958"></a>             <span class='hs-str'>"    &lt;security&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1959"></a>             <span class='hs-str'>"      &lt;requestedPrivileges&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1960"></a>             <span class='hs-str'>"        &lt;requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1961"></a>             <span class='hs-str'>"        &lt;/requestedPrivileges&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1962"></a>             <span class='hs-str'>"       &lt;/security&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1963"></a>             <span class='hs-str'>"  &lt;/trustInfo&gt;\n"</span><span class='hs-varop'>++</span>
-<a name="line-1964"></a>             <span class='hs-str'>"&lt;/assembly&gt;\n"</span>
-<a name="line-1965"></a>
-<a name="line-1966"></a>         <span class='hs-comment'>-- Windows will find the manifest file if it is named</span>
-<a name="line-1967"></a>         <span class='hs-comment'>-- foo.exe.manifest. However, for extra robustness, and so that</span>
-<a name="line-1968"></a>         <span class='hs-comment'>-- we can move the binary around, we can embed the manifest in</span>
-<a name="line-1969"></a>         <span class='hs-comment'>-- the binary itself using windres:</span>
-<a name="line-1970"></a>         <span class='hs-keyword'>if</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_EmbedManifest</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span> <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span>
-<a name="line-1971"></a>
-<a name="line-1972"></a>         <span class='hs-varid'>rc_filename</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"rc"</span>
-<a name="line-1973"></a>         <span class='hs-varid'>rc_obj_filename</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-varid'>objectSuf</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
-<a name="line-1974"></a>
-<a name="line-1975"></a>         <span class='hs-varid'>writeFile</span> <span class='hs-varid'>rc_filename</span> <span class='hs-varop'>$</span>
-<a name="line-1976"></a>             <span class='hs-str'>"1 24 MOVEABLE PURE "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-varop'>++</span> <span class='hs-str'>"\n"</span>
-<a name="line-1977"></a>               <span class='hs-comment'>-- magic numbers :-)</span>
-<a name="line-1978"></a>               <span class='hs-comment'>-- show is a bit hackish above, but we need to escape the</span>
-<a name="line-1979"></a>               <span class='hs-comment'>-- backslashes in the path.</span>
-<a name="line-1980"></a>
-<a name="line-1981"></a>         <span class='hs-varid'>runWindres</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varop'>$</span>
-<a name="line-1982"></a>               <span class='hs-keyglyph'>[</span><span class='hs-str'>"--input="</span><span class='hs-varop'>++</span><span class='hs-varid'>rc_filename</span><span class='hs-layout'>,</span>
-<a name="line-1983"></a>                <span class='hs-str'>"--output="</span><span class='hs-varop'>++</span><span class='hs-varid'>rc_obj_filename</span><span class='hs-layout'>,</span>
-<a name="line-1984"></a>                <span class='hs-str'>"--output-format=coff"</span><span class='hs-keyglyph'>]</span>
-<a name="line-1985"></a>               <span class='hs-comment'>-- no FileOptions here: windres doesn't like seeing</span>
-<a name="line-1986"></a>               <span class='hs-comment'>-- backslashes, apparently</span>
-<a name="line-1987"></a>
-<a name="line-1988"></a>         <span class='hs-varid'>removeFile</span> <span class='hs-varid'>manifest_filename</span>
-<a name="line-1989"></a>
-<a name="line-1990"></a>         <span class='hs-varid'>return</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>rc_obj_filename</span><span class='hs-keyglyph'>]</span>
-<a name="line-1991"></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-1992"></a>
-<a name="line-1993"></a>
-<a name="line-1994"></a><a name="linkDynLibCheck"></a><span class='hs-definition'>linkDynLibCheck</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-1995"></a><span class='hs-definition'>linkDynLibCheck</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span>
-<a name="line-1996"></a> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-1997"></a>    <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>haveRtsOptsFlags</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
-<a name="line-1998"></a>      <span class='hs-varid'>log_action</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>SevInfo</span> <span class='hs-varid'>noSrcSpan</span> <span class='hs-varid'>defaultUserStyle</span>
-<a name="line-1999"></a>          <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-str'>"Warning: -rtsopts and -with-rtsopts have no effect with -shared."</span> <span class='hs-varop'>$$</span>
-<a name="line-2000"></a>           <span class='hs-varid'>text</span> <span class='hs-str'>"    Call hs_init_ghc() from your main() function to set these options."</span><span class='hs-layout'>)</span>
-<a name="line-2001"></a>
-<a name="line-2002"></a>    <span class='hs-varid'>linkDynLib</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-1875"></a>    <span class='hs-varid'>rc_objs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>maybeCreateManifest</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>output_fn</span>
+<a name="line-1876"></a>
+<a name="line-1877"></a>    <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runLink</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span>
+<a name="line-1878"></a>                       <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>verbFlags</span>
+<a name="line-1879"></a>                      <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-o"</span>
+<a name="line-1880"></a>                         <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span>
+<a name="line-1881"></a>                         <span class='hs-keyglyph'>]</span>
+<a name="line-1882"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-layout'>(</span>
+<a name="line-1883"></a>                         <span class='hs-conid'>[]</span>
+<a name="line-1884"></a>
+<a name="line-1885"></a>                      <span class='hs-comment'>-- Permit the linker to auto link _symbol to _imp_symbol.</span>
+<a name="line-1886"></a>                      <span class='hs-comment'>-- This lets us link against DLLs without needing an "import library".</span>
+<a name="line-1887"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
+<a name="line-1888"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,--enable-auto-import"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1889"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
+<a name="line-1890"></a>
+<a name="line-1891"></a>                      <span class='hs-comment'>-- '-no_compact_unwind'</span>
+<a name="line-1892"></a>                      <span class='hs-comment'>-- C++/Objective-C exceptions cannot use optimised</span>
+<a name="line-1893"></a>                      <span class='hs-comment'>-- stack unwinding code. The optimised form is the</span>
+<a name="line-1894"></a>                      <span class='hs-comment'>-- default in Xcode 4 on at least x86_64, and</span>
+<a name="line-1895"></a>                      <span class='hs-comment'>-- without this flag we're also seeing warnings</span>
+<a name="line-1896"></a>                      <span class='hs-comment'>-- like</span>
+<a name="line-1897"></a>                      <span class='hs-comment'>--     ld: warning: could not create compact unwind for .LFB3: non-standard register 5 being saved in prolog</span>
+<a name="line-1898"></a>                      <span class='hs-comment'>-- on x86.</span>
+<a name="line-1899"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>sLdSupportsCompactUnwind</span> <span class='hs-varid'>mySettings</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1900"></a>                             <span class='hs-varid'>platformOS</span>   <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSDarwin</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1901"></a>                             <span class='hs-varid'>platformArch</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>`elem`</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ArchX86</span><span class='hs-layout'>,</span> <span class='hs-conid'>ArchX86_64</span><span class='hs-keyglyph'>]</span>
+<a name="line-1902"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-no_compact_unwind"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1903"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
+<a name="line-1904"></a>
+<a name="line-1905"></a>                      <span class='hs-comment'>-- '-Wl,-read_only_relocs,suppress'</span>
+<a name="line-1906"></a>                      <span class='hs-comment'>-- ld gives loads of warnings like:</span>
+<a name="line-1907"></a>                      <span class='hs-comment'>--     ld: warning: text reloc in _base_GHCziArr_unsafeArray_info to _base_GHCziArr_unsafeArray_closure</span>
+<a name="line-1908"></a>                      <span class='hs-comment'>-- when linking any program. We're not sure</span>
+<a name="line-1909"></a>                      <span class='hs-comment'>-- whether this is something we ought to fix, but</span>
+<a name="line-1910"></a>                      <span class='hs-comment'>-- for now this flags silences them.</span>
+<a name="line-1911"></a>                      <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span>   <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSDarwin</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1912"></a>                             <span class='hs-varid'>platformArch</span> <span class='hs-varid'>platform</span> <span class='hs-varop'>==</span> <span class='hs-conid'>ArchX86</span>
+<a name="line-1913"></a>                          <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,-read_only_relocs,suppress"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1914"></a>                          <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
+<a name="line-1915"></a>
+<a name="line-1916"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>o_files</span>
+<a name="line-1917"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>lib_path_opts</span><span class='hs-layout'>)</span>
+<a name="line-1918"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>extra_ld_inputs</span>
+<a name="line-1919"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-layout'>(</span>
+<a name="line-1920"></a>                         <span class='hs-varid'>rc_objs</span>
+<a name="line-1921"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>framework_path_opts</span>
+<a name="line-1922"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>framework_opts</span>
+<a name="line-1923"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_lib_path_opts</span>
+<a name="line-1924"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>extraLinkObj</span><span class='hs-conop'>:</span><span class='hs-varid'>noteLinkObjs</span>
+<a name="line-1925"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_link_opts</span>
+<a name="line-1926"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_framework_path_opts</span>
+<a name="line-1927"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_framework_opts</span>
+<a name="line-1928"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>debug_opts</span>
+<a name="line-1929"></a>                      <span class='hs-varop'>++</span> <span class='hs-varid'>thread_opts</span>
+<a name="line-1930"></a>                    <span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-1931"></a>
+<a name="line-1932"></a>    <span class='hs-comment'>-- parallel only: move binary to another dir -- HWL</span>
+<a name="line-1933"></a>    <span class='hs-varid'>success</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>runPhase_MoveBinary</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>output_fn</span>
+<a name="line-1934"></a>    <span class='hs-varid'>unless</span> <span class='hs-varid'>success</span> <span class='hs-varop'>$</span>
+<a name="line-1935"></a>        <span class='hs-varid'>throwGhcExceptionIO</span> <span class='hs-layout'>(</span><span class='hs-conid'>InstallationError</span> <span class='hs-layout'>(</span><span class='hs-str'>"cannot move binary"</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-1936"></a>
+<a name="line-1937"></a>
+<a name="line-1938"></a><a name="exeFileName"></a><span class='hs-definition'>exeFileName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span>
+<a name="line-1939"></a><span class='hs-definition'>exeFileName</span> <span class='hs-varid'>dflags</span>
+<a name="line-1940"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>s</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>outputFile</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
+<a name="line-1941"></a>      <span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
+<a name="line-1942"></a>      <span class='hs-keyword'>then</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>null</span> <span class='hs-layout'>(</span><span class='hs-varid'>takeExtension</span> <span class='hs-varid'>s</span><span class='hs-layout'>)</span>
+<a name="line-1943"></a>           <span class='hs-keyword'>then</span> <span class='hs-varid'>s</span> <span class='hs-varop'>&lt;.&gt;</span> <span class='hs-str'>"exe"</span>
+<a name="line-1944"></a>           <span class='hs-keyword'>else</span> <span class='hs-varid'>s</span>
+<a name="line-1945"></a>      <span class='hs-keyword'>else</span> <span class='hs-varid'>s</span>
+<a name="line-1946"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span>
+<a name="line-1947"></a>      <span class='hs-keyword'>if</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span>
+<a name="line-1948"></a>      <span class='hs-keyword'>then</span> <span class='hs-str'>"main.exe"</span>
+<a name="line-1949"></a>      <span class='hs-keyword'>else</span> <span class='hs-str'>"a.out"</span>
+<a name="line-1950"></a>
+<a name="line-1951"></a><a name="maybeCreateManifest"></a><span class='hs-definition'>maybeCreateManifest</span>
+<a name="line-1952"></a>   <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span>
+<a name="line-1953"></a>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span>                          <span class='hs-comment'>-- filename of executable</span>
+<a name="line-1954"></a>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span>                     <span class='hs-comment'>-- extra objects to embed, maybe</span>
+<a name="line-1955"></a><span class='hs-definition'>maybeCreateManifest</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>exe_filename</span>
+<a name="line-1956"></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>platformOS</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>OSMinGW32</span> <span class='hs-varop'>&amp;&amp;</span>
+<a name="line-1957"></a>   <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_GenManifest</span> <span class='hs-varid'>dflags</span>
+<a name="line-1958"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exe_filename</span> <span class='hs-varop'>&lt;.&gt;</span> <span class='hs-str'>"manifest"</span>
+<a name="line-1959"></a>
+<a name="line-1960"></a>         <span class='hs-varid'>writeFile</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-varop'>$</span>
+<a name="line-1961"></a>             <span class='hs-str'>"&lt;?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1962"></a>             <span class='hs-str'>"  &lt;assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\"&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1963"></a>             <span class='hs-str'>"  &lt;assemblyIdentity version=\"1.0.0.0\"\n"</span><span class='hs-varop'>++</span>
+<a name="line-1964"></a>             <span class='hs-str'>"     processorArchitecture=\"X86\"\n"</span><span class='hs-varop'>++</span>
+<a name="line-1965"></a>             <span class='hs-str'>"     name=\""</span> <span class='hs-varop'>++</span> <span class='hs-varid'>dropExtension</span> <span class='hs-varid'>exe_filename</span> <span class='hs-varop'>++</span> <span class='hs-str'>"\"\n"</span><span class='hs-varop'>++</span>
+<a name="line-1966"></a>             <span class='hs-str'>"     type=\"win32\"/&gt;\n\n"</span><span class='hs-varop'>++</span>
+<a name="line-1967"></a>             <span class='hs-str'>"  &lt;trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v3\"&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1968"></a>             <span class='hs-str'>"    &lt;security&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1969"></a>             <span class='hs-str'>"      &lt;requestedPrivileges&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1970"></a>             <span class='hs-str'>"        &lt;requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1971"></a>             <span class='hs-str'>"        &lt;/requestedPrivileges&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1972"></a>             <span class='hs-str'>"       &lt;/security&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1973"></a>             <span class='hs-str'>"  &lt;/trustInfo&gt;\n"</span><span class='hs-varop'>++</span>
+<a name="line-1974"></a>             <span class='hs-str'>"&lt;/assembly&gt;\n"</span>
+<a name="line-1975"></a>
+<a name="line-1976"></a>         <span class='hs-comment'>-- Windows will find the manifest file if it is named</span>
+<a name="line-1977"></a>         <span class='hs-comment'>-- foo.exe.manifest. However, for extra robustness, and so that</span>
+<a name="line-1978"></a>         <span class='hs-comment'>-- we can move the binary around, we can embed the manifest in</span>
+<a name="line-1979"></a>         <span class='hs-comment'>-- the binary itself using windres:</span>
+<a name="line-1980"></a>         <span class='hs-keyword'>if</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_EmbedManifest</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span> <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span>
+<a name="line-1981"></a>
+<a name="line-1982"></a>         <span class='hs-varid'>rc_filename</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"rc"</span>
+<a name="line-1983"></a>         <span class='hs-varid'>rc_obj_filename</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-varid'>objectSuf</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span>
+<a name="line-1984"></a>
+<a name="line-1985"></a>         <span class='hs-varid'>writeFile</span> <span class='hs-varid'>rc_filename</span> <span class='hs-varop'>$</span>
+<a name="line-1986"></a>             <span class='hs-str'>"1 24 MOVEABLE PURE "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>manifest_filename</span> <span class='hs-varop'>++</span> <span class='hs-str'>"\n"</span>
+<a name="line-1987"></a>               <span class='hs-comment'>-- magic numbers :-)</span>
+<a name="line-1988"></a>               <span class='hs-comment'>-- show is a bit hackish above, but we need to escape the</span>
+<a name="line-1989"></a>               <span class='hs-comment'>-- backslashes in the path.</span>
+<a name="line-1990"></a>
+<a name="line-1991"></a>         <span class='hs-varid'>runWindres</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>$</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varop'>$</span>
+<a name="line-1992"></a>               <span class='hs-keyglyph'>[</span><span class='hs-str'>"--input="</span><span class='hs-varop'>++</span><span class='hs-varid'>rc_filename</span><span class='hs-layout'>,</span>
+<a name="line-1993"></a>                <span class='hs-str'>"--output="</span><span class='hs-varop'>++</span><span class='hs-varid'>rc_obj_filename</span><span class='hs-layout'>,</span>
+<a name="line-1994"></a>                <span class='hs-str'>"--output-format=coff"</span><span class='hs-keyglyph'>]</span>
+<a name="line-1995"></a>               <span class='hs-comment'>-- no FileOptions here: windres doesn't like seeing</span>
+<a name="line-1996"></a>               <span class='hs-comment'>-- backslashes, apparently</span>
+<a name="line-1997"></a>
+<a name="line-1998"></a>         <span class='hs-varid'>removeFile</span> <span class='hs-varid'>manifest_filename</span>
+<a name="line-1999"></a>
+<a name="line-2000"></a>         <span class='hs-varid'>return</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>rc_obj_filename</span><span class='hs-keyglyph'>]</span>
+<a name="line-2001"></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-2002"></a>
 <a name="line-2003"></a>
-<a name="line-2004"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
-<a name="line-2005"></a><span class='hs-comment'>-- Running CPP</span>
-<a name="line-2006"></a>
-<a name="line-2007"></a><a name="doCpp"></a><span class='hs-definition'>doCpp</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-2008"></a><span class='hs-definition'>doCpp</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>raw</span> <span class='hs-varid'>input_fn</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-2009"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>hscpp_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>picPOpts</span> <span class='hs-varid'>dflags</span>
-<a name="line-2010"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>cmdline_include_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>includePaths</span> <span class='hs-varid'>dflags</span>
+<a name="line-2004"></a><a name="linkDynLibCheck"></a><span class='hs-definition'>linkDynLibCheck</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-2005"></a><span class='hs-definition'>linkDynLibCheck</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-2006"></a> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-2007"></a>    <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>haveRtsOptsFlags</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
+<a name="line-2008"></a>      <span class='hs-varid'>log_action</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>SevInfo</span> <span class='hs-varid'>noSrcSpan</span> <span class='hs-varid'>defaultUserStyle</span>
+<a name="line-2009"></a>          <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-str'>"Warning: -rtsopts and -with-rtsopts have no effect with -shared."</span> <span class='hs-varop'>$$</span>
+<a name="line-2010"></a>           <span class='hs-varid'>text</span> <span class='hs-str'>"    Call hs_init_ghc() from your main() function to set these options."</span><span class='hs-layout'>)</span>
 <a name="line-2011"></a>
-<a name="line-2012"></a>    <span class='hs-varid'>pkg_include_dirs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageIncludePath</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>[]</span>
-<a name="line-2013"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>include_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span> <span class='hs-varid'>x</span> <span class='hs-varid'>xs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"-I"</span> <span class='hs-conop'>:</span> <span class='hs-varid'>x</span> <span class='hs-conop'>:</span> <span class='hs-varid'>xs</span><span class='hs-layout'>)</span> <span class='hs-conid'>[]</span>
-<a name="line-2014"></a>                          <span class='hs-layout'>(</span><span class='hs-varid'>cmdline_include_paths</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_include_dirs</span><span class='hs-layout'>)</span>
-<a name="line-2015"></a>
-<a name="line-2016"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>verbFlags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>getVerbFlags</span> <span class='hs-varid'>dflags</span>
-<a name="line-2017"></a>
-<a name="line-2018"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>cpp_prog</span> <span class='hs-varid'>args</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>raw</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runCpp</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>args</span>
-<a name="line-2019"></a>                      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runCc</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-E"</span> <span class='hs-conop'>:</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
-<a name="line-2020"></a>
-<a name="line-2021"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>target_defs</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2022"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>HOST_OS</span>     <span class='hs-varop'>++</span> <span class='hs-str'>"_BUILD_OS=1"</span><span class='hs-layout'>,</span>
-<a name="line-2023"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>HOST_ARCH</span>   <span class='hs-varop'>++</span> <span class='hs-str'>"_BUILD_ARCH=1"</span><span class='hs-layout'>,</span>
-<a name="line-2024"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>TARGET_OS</span>   <span class='hs-varop'>++</span> <span class='hs-str'>"_HOST_OS=1"</span><span class='hs-layout'>,</span>
-<a name="line-2025"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>TARGET_ARCH</span> <span class='hs-varop'>++</span> <span class='hs-str'>"_HOST_ARCH=1"</span> <span class='hs-keyglyph'>]</span>
-<a name="line-2026"></a>        <span class='hs-comment'>-- remember, in code we *compile*, the HOST is the same our TARGET,</span>
-<a name="line-2027"></a>        <span class='hs-comment'>-- and BUILD is the same as our HOST.</span>
-<a name="line-2028"></a>
-<a name="line-2029"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>sse2</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isSse2Enabled</span> <span class='hs-varid'>dflags</span>
-<a name="line-2030"></a>        <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isSse4_2Enabled</span> <span class='hs-varid'>dflags</span>
-<a name="line-2031"></a>        <span class='hs-varid'>sse_defs</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2032"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse2</span> <span class='hs-varop'>||</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span>
-<a name="line-2033"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE2__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse2</span> <span class='hs-varop'>||</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span>
-<a name="line-2034"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE4_2__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span>
-<a name="line-2035"></a>
-<a name="line-2036"></a>    <span class='hs-varid'>backend_defs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getBackendDefs</span> <span class='hs-varid'>dflags</span>
-<a name="line-2037"></a>
-<a name="line-2038"></a>    <span class='hs-varid'>cpp_prog</span>       <span class='hs-layout'>(</span>   <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>verbFlags</span>
-<a name="line-2039"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>include_paths</span>
-<a name="line-2040"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>hsSourceCppOpts</span>
-<a name="line-2041"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>target_defs</span>
-<a name="line-2042"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>backend_defs</span>
-<a name="line-2043"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>hscpp_opts</span>
-<a name="line-2044"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>sse_defs</span>
-<a name="line-2045"></a>        <span class='hs-comment'>-- Set the language mode to assembler-with-cpp when preprocessing. This</span>
-<a name="line-2046"></a>        <span class='hs-comment'>-- alleviates some of the C99 macro rules relating to whitespace and the hash</span>
-<a name="line-2047"></a>        <span class='hs-comment'>-- operator, which we tend to abuse. Clang in particular is not very happy</span>
-<a name="line-2048"></a>        <span class='hs-comment'>-- about this.</span>
-<a name="line-2049"></a>                    <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"-x"</span>
-<a name="line-2050"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"assembler-with-cpp"</span>
-<a name="line-2051"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-varid'>input_fn</span>
-<a name="line-2052"></a>        <span class='hs-comment'>-- We hackily use Option instead of FileOption here, so that the file</span>
-<a name="line-2053"></a>        <span class='hs-comment'>-- name is not back-slashed on Windows.  cpp is capable of</span>
-<a name="line-2054"></a>        <span class='hs-comment'>-- dealing with / in filenames, so it works fine.  Furthermore</span>
-<a name="line-2055"></a>        <span class='hs-comment'>-- if we put in backslashes, cpp outputs #line directives</span>
-<a name="line-2056"></a>        <span class='hs-comment'>-- with *double* backslashes.   And that in turn means that</span>
-<a name="line-2057"></a>        <span class='hs-comment'>-- our error messages get double backslashes in them.</span>
-<a name="line-2058"></a>        <span class='hs-comment'>-- In due course we should arrange that the lexer deals</span>
-<a name="line-2059"></a>        <span class='hs-comment'>-- with these \\ escapes properly.</span>
-<a name="line-2060"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"-o"</span>
-<a name="line-2061"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span>
-<a name="line-2062"></a>                       <span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
-<a name="line-2063"></a>
-<a name="line-2064"></a><a name="getBackendDefs"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span>
-<a name="line-2065"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>hscTarget</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>==</span> <span class='hs-conid'>HscLlvm</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-2066"></a>    <span class='hs-varid'>llvmVer</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>figureLlvmVersion</span> <span class='hs-varid'>dflags</span>
-<a name="line-2067"></a>    <span class='hs-varid'>return</span> <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__GLASGOW_HASKELL_LLVM__="</span><span class='hs-varop'>++</span><span class='hs-varid'>show</span> <span class='hs-varid'>llvmVer</span> <span class='hs-keyglyph'>]</span>
-<a name="line-2068"></a>
-<a name="line-2069"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2070"></a>    <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
-<a name="line-2071"></a>
-<a name="line-2072"></a><a name="hsSourceCppOpts"></a><span class='hs-definition'>hsSourceCppOpts</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span>
-<a name="line-2073"></a><span class='hs-comment'>-- Default CPP defines in Haskell source</span>
-<a name="line-2074"></a><span class='hs-definition'>hsSourceCppOpts</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2075"></a>        <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__GLASGOW_HASKELL__="</span><span class='hs-varop'>++</span><span class='hs-varid'>cProjectVersionInt</span> <span class='hs-keyglyph'>]</span>
-<a name="line-2076"></a>
-<a name="line-2077"></a><span class='hs-comment'>-- ---------------------------------------------------------------------------</span>
-<a name="line-2078"></a><span class='hs-comment'>-- join object files into a single relocatable object file, using ld -r</span>
-<a name="line-2079"></a>
-<a name="line-2080"></a><a name="joinObjectFiles"></a><span class='hs-definition'>joinObjectFiles</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-2081"></a><span class='hs-definition'>joinObjectFiles</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-2082"></a>  <span class='hs-keyword'>let</span> <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>settings</span> <span class='hs-varid'>dflags</span>
-<a name="line-2083"></a>      <span class='hs-varid'>ldIsGnuLd</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>sLdIsGnuLd</span> <span class='hs-varid'>mySettings</span>
-<a name="line-2084"></a>      <span class='hs-varid'>ld_r</span> <span class='hs-varid'>args</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runLink</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>[</span>
-<a name="line-2085"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-nostdlib"</span><span class='hs-layout'>,</span>
-<a name="line-2086"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-nodefaultlibs"</span><span class='hs-layout'>,</span>
-<a name="line-2087"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-r"</span>
-<a name="line-2088"></a>                            <span class='hs-keyglyph'>]</span>
-<a name="line-2089"></a>                            <span class='hs-comment'>-- gcc on sparc sets -Wl,--relax implicitly, but</span>
-<a name="line-2090"></a>                            <span class='hs-comment'>-- -r and --relax are incompatible for ld, so</span>
-<a name="line-2091"></a>                            <span class='hs-comment'>-- disable --relax explicitly.</span>
-<a name="line-2092"></a>                         <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformArch</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>ArchSPARC</span>
-<a name="line-2093"></a>                             <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>ldIsGnuLd</span>
-<a name="line-2094"></a>                                <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-no-relax"</span><span class='hs-keyglyph'>]</span>
-<a name="line-2095"></a>                                <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
-<a name="line-2096"></a>                         <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>ld_build_id</span>
-<a name="line-2097"></a>                         <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-o"</span><span class='hs-layout'>,</span>
-<a name="line-2098"></a>                              <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>]</span>
-<a name="line-2099"></a>                         <span class='hs-varop'>++</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
-<a name="line-2100"></a>
-<a name="line-2101"></a>      <span class='hs-comment'>-- suppress the generation of the .note.gnu.build-id section,</span>
-<a name="line-2102"></a>      <span class='hs-comment'>-- which we don't need and sometimes causes ld to emit a</span>
-<a name="line-2103"></a>      <span class='hs-comment'>-- warning:</span>
-<a name="line-2104"></a>      <span class='hs-varid'>ld_build_id</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sLdSupportsBuildId</span> <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,--build-id=none"</span><span class='hs-keyglyph'>]</span>
-<a name="line-2105"></a>                  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
-<a name="line-2106"></a>
-<a name="line-2107"></a>  <span class='hs-keyword'>if</span> <span class='hs-varid'>ldIsGnuLd</span>
-<a name="line-2108"></a>     <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span>
-<a name="line-2109"></a>          <span class='hs-varid'>script</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"ldscript"</span>
-<a name="line-2110"></a>          <span class='hs-varid'>writeFile</span> <span class='hs-varid'>script</span> <span class='hs-varop'>$</span> <span class='hs-str'>"INPUT("</span> <span class='hs-varop'>++</span> <span class='hs-varid'>unwords</span> <span class='hs-varid'>o_files</span> <span class='hs-varop'>++</span> <span class='hs-str'>")"</span>
-<a name="line-2111"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>script</span><span class='hs-keyglyph'>]</span>
-<a name="line-2112"></a>     <span class='hs-keyword'>else</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>sLdSupportsFilelist</span> <span class='hs-varid'>mySettings</span>
-<a name="line-2113"></a>     <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span>
-<a name="line-2114"></a>          <span class='hs-varid'>filelist</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"filelist"</span>
-<a name="line-2115"></a>          <span class='hs-varid'>writeFile</span> <span class='hs-varid'>filelist</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unlines</span> <span class='hs-varid'>o_files</span>
-<a name="line-2116"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-filelist"</span><span class='hs-layout'>,</span>
-<a name="line-2117"></a>                <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>"-Wl,"</span> <span class='hs-varid'>filelist</span><span class='hs-keyglyph'>]</span>
-<a name="line-2118"></a>     <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span>
-<a name="line-2119"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-layout'>(</span><span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span><span class='hs-layout'>)</span> <span class='hs-varid'>o_files</span><span class='hs-layout'>)</span>
-<a name="line-2120"></a>
-<a name="line-2121"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
-<a name="line-2122"></a><span class='hs-comment'>-- Misc.</span>
-<a name="line-2123"></a>
-<a name="line-2124"></a><a name="hscPostBackendPhase"></a><span class='hs-comment'>-- | What phase to run after one of the backend code generators has run</span>
-<a name="line-2125"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HscSource</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HscTarget</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Phase</span>
-<a name="line-2126"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-keyword'>_</span> <span class='hs-conid'>HsBootFile</span> <span class='hs-keyword'>_</span>    <span class='hs-keyglyph'>=</span>  <span class='hs-conid'>StopLn</span>
-<a name="line-2127"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-varid'>dflags</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>hsc_lang</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2128"></a>  <span class='hs-keyword'>case</span> <span class='hs-varid'>hsc_lang</span> <span class='hs-keyword'>of</span>
-<a name="line-2129"></a>        <span class='hs-conid'>HscC</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HCc</span>
-<a name="line-2130"></a>        <span class='hs-conid'>HscAsm</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_SplitObjs</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Splitter</span>
-<a name="line-2131"></a>               <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>                 <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>As</span>
-<a name="line-2132"></a>        <span class='hs-conid'>HscLlvm</span>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>LlvmOpt</span>
-<a name="line-2133"></a>        <span class='hs-conid'>HscNothing</span>     <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StopLn</span>
-<a name="line-2134"></a>        <span class='hs-conid'>HscInterpreted</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StopLn</span>
-<a name="line-2135"></a>
-<a name="line-2136"></a><a name="touchObjectFile"></a><span class='hs-definition'>touchObjectFile</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-2137"></a><span class='hs-definition'>touchObjectFile</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>path</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-2138"></a>  <span class='hs-varid'>createDirectoryIfMissing</span> <span class='hs-conid'>True</span> <span class='hs-varop'>$</span> <span class='hs-varid'>takeDirectory</span> <span class='hs-varid'>path</span>
-<a name="line-2139"></a>  <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>touch</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"Touching object file"</span> <span class='hs-varid'>path</span>
-<a name="line-2140"></a>
-<a name="line-2141"></a><a name="haveRtsOptsFlags"></a><span class='hs-definition'>haveRtsOptsFlags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-2142"></a><span class='hs-definition'>haveRtsOptsFlags</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
-<a name="line-2143"></a>         <span class='hs-varid'>isJust</span> <span class='hs-layout'>(</span><span class='hs-varid'>rtsOpts</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>||</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>rtsOptsEnabled</span> <span class='hs-varid'>dflags</span> <span class='hs-keyword'>of</span>
-<a name="line-2144"></a>                                        <span class='hs-conid'>RtsOptsSafeOnly</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>False</span>
-<a name="line-2145"></a>                                        <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>True</span>
+<a name="line-2012"></a>    <span class='hs-varid'>linkDynLib</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>dep_packages</span>
+<a name="line-2013"></a>
+<a name="line-2014"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
+<a name="line-2015"></a><span class='hs-comment'>-- Running CPP</span>
+<a name="line-2016"></a>
+<a name="line-2017"></a><a name="doCpp"></a><span class='hs-definition'>doCpp</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-2018"></a><span class='hs-definition'>doCpp</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>raw</span> <span class='hs-varid'>input_fn</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-2019"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>hscpp_opts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>picPOpts</span> <span class='hs-varid'>dflags</span>
+<a name="line-2020"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>cmdline_include_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>includePaths</span> <span class='hs-varid'>dflags</span>
+<a name="line-2021"></a>
+<a name="line-2022"></a>    <span class='hs-varid'>pkg_include_dirs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getPackageIncludePath</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>[]</span>
+<a name="line-2023"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>include_paths</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span> <span class='hs-varid'>x</span> <span class='hs-varid'>xs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-str'>"-I"</span> <span class='hs-conop'>:</span> <span class='hs-varid'>x</span> <span class='hs-conop'>:</span> <span class='hs-varid'>xs</span><span class='hs-layout'>)</span> <span class='hs-conid'>[]</span>
+<a name="line-2024"></a>                          <span class='hs-layout'>(</span><span class='hs-varid'>cmdline_include_paths</span> <span class='hs-varop'>++</span> <span class='hs-varid'>pkg_include_dirs</span><span class='hs-layout'>)</span>
+<a name="line-2025"></a>
+<a name="line-2026"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>verbFlags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>getVerbFlags</span> <span class='hs-varid'>dflags</span>
+<a name="line-2027"></a>
+<a name="line-2028"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>cpp_prog</span> <span class='hs-varid'>args</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>raw</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runCpp</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>args</span>
+<a name="line-2029"></a>                      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runCc</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-E"</span> <span class='hs-conop'>:</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
+<a name="line-2030"></a>
+<a name="line-2031"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>target_defs</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2032"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>HOST_OS</span>     <span class='hs-varop'>++</span> <span class='hs-str'>"_BUILD_OS=1"</span><span class='hs-layout'>,</span>
+<a name="line-2033"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>HOST_ARCH</span>   <span class='hs-varop'>++</span> <span class='hs-str'>"_BUILD_ARCH=1"</span><span class='hs-layout'>,</span>
+<a name="line-2034"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>TARGET_OS</span>   <span class='hs-varop'>++</span> <span class='hs-str'>"_HOST_OS=1"</span><span class='hs-layout'>,</span>
+<a name="line-2035"></a>            <span class='hs-str'>"-D"</span> <span class='hs-varop'>++</span> <span class='hs-conid'>TARGET_ARCH</span> <span class='hs-varop'>++</span> <span class='hs-str'>"_HOST_ARCH=1"</span> <span class='hs-keyglyph'>]</span>
+<a name="line-2036"></a>        <span class='hs-comment'>-- remember, in code we *compile*, the HOST is the same our TARGET,</span>
+<a name="line-2037"></a>        <span class='hs-comment'>-- and BUILD is the same as our HOST.</span>
+<a name="line-2038"></a>
+<a name="line-2039"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>sse2</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isSse2Enabled</span> <span class='hs-varid'>dflags</span>
+<a name="line-2040"></a>        <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isSse4_2Enabled</span> <span class='hs-varid'>dflags</span>
+<a name="line-2041"></a>        <span class='hs-varid'>sse_defs</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2042"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse2</span> <span class='hs-varop'>||</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span>
+<a name="line-2043"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE2__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse2</span> <span class='hs-varop'>||</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span> <span class='hs-varop'>++</span>
+<a name="line-2044"></a>          <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__SSE4_2__=1"</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sse4_2</span> <span class='hs-keyglyph'>]</span>
+<a name="line-2045"></a>
+<a name="line-2046"></a>    <span class='hs-varid'>backend_defs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getBackendDefs</span> <span class='hs-varid'>dflags</span>
+<a name="line-2047"></a>
+<a name="line-2048"></a>    <span class='hs-varid'>cpp_prog</span>       <span class='hs-layout'>(</span>   <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>verbFlags</span>
+<a name="line-2049"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>include_paths</span>
+<a name="line-2050"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>hsSourceCppOpts</span>
+<a name="line-2051"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>target_defs</span>
+<a name="line-2052"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>backend_defs</span>
+<a name="line-2053"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>hscpp_opts</span>
+<a name="line-2054"></a>                    <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>sse_defs</span>
+<a name="line-2055"></a>        <span class='hs-comment'>-- Set the language mode to assembler-with-cpp when preprocessing. This</span>
+<a name="line-2056"></a>        <span class='hs-comment'>-- alleviates some of the C99 macro rules relating to whitespace and the hash</span>
+<a name="line-2057"></a>        <span class='hs-comment'>-- operator, which we tend to abuse. Clang in particular is not very happy</span>
+<a name="line-2058"></a>        <span class='hs-comment'>-- about this.</span>
+<a name="line-2059"></a>                    <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"-x"</span>
+<a name="line-2060"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"assembler-with-cpp"</span>
+<a name="line-2061"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-varid'>input_fn</span>
+<a name="line-2062"></a>        <span class='hs-comment'>-- We hackily use Option instead of FileOption here, so that the file</span>
+<a name="line-2063"></a>        <span class='hs-comment'>-- name is not back-slashed on Windows.  cpp is capable of</span>
+<a name="line-2064"></a>        <span class='hs-comment'>-- dealing with / in filenames, so it works fine.  Furthermore</span>
+<a name="line-2065"></a>        <span class='hs-comment'>-- if we put in backslashes, cpp outputs #line directives</span>
+<a name="line-2066"></a>        <span class='hs-comment'>-- with *double* backslashes.   And that in turn means that</span>
+<a name="line-2067"></a>        <span class='hs-comment'>-- our error messages get double backslashes in them.</span>
+<a name="line-2068"></a>        <span class='hs-comment'>-- In due course we should arrange that the lexer deals</span>
+<a name="line-2069"></a>        <span class='hs-comment'>-- with these \\ escapes properly.</span>
+<a name="line-2070"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span>     <span class='hs-str'>"-o"</span>
+<a name="line-2071"></a>                       <span class='hs-layout'>,</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span>
+<a name="line-2072"></a>                       <span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
+<a name="line-2073"></a>
+<a name="line-2074"></a><a name="getBackendDefs"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span>
+<a name="line-2075"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>hscTarget</span> <span class='hs-varid'>dflags</span> <span class='hs-varop'>==</span> <span class='hs-conid'>HscLlvm</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-2076"></a>    <span class='hs-varid'>llvmVer</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>figureLlvmVersion</span> <span class='hs-varid'>dflags</span>
+<a name="line-2077"></a>    <span class='hs-varid'>return</span> <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__GLASGOW_HASKELL_LLVM__="</span><span class='hs-varop'>++</span><span class='hs-varid'>show</span> <span class='hs-varid'>llvmVer</span> <span class='hs-keyglyph'>]</span>
+<a name="line-2078"></a>
+<a name="line-2079"></a><span class='hs-definition'>getBackendDefs</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2080"></a>    <span class='hs-varid'>return</span> <span class='hs-conid'>[]</span>
+<a name="line-2081"></a>
+<a name="line-2082"></a><a name="hsSourceCppOpts"></a><span class='hs-definition'>hsSourceCppOpts</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span>
+<a name="line-2083"></a><span class='hs-comment'>-- Default CPP defines in Haskell source</span>
+<a name="line-2084"></a><span class='hs-definition'>hsSourceCppOpts</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2085"></a>        <span class='hs-keyglyph'>[</span> <span class='hs-str'>"-D__GLASGOW_HASKELL__="</span><span class='hs-varop'>++</span><span class='hs-varid'>cProjectVersionInt</span> <span class='hs-keyglyph'>]</span>
+<a name="line-2086"></a>
+<a name="line-2087"></a><span class='hs-comment'>-- ---------------------------------------------------------------------------</span>
+<a name="line-2088"></a><span class='hs-comment'>-- join object files into a single relocatable object file, using ld -r</span>
+<a name="line-2089"></a>
+<a name="line-2090"></a><a name="joinObjectFiles"></a><span class='hs-definition'>joinObjectFiles</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-2091"></a><span class='hs-definition'>joinObjectFiles</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>o_files</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-2092"></a>  <span class='hs-keyword'>let</span> <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>settings</span> <span class='hs-varid'>dflags</span>
+<a name="line-2093"></a>      <span class='hs-varid'>ldIsGnuLd</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>sLdIsGnuLd</span> <span class='hs-varid'>mySettings</span>
+<a name="line-2094"></a>      <span class='hs-varid'>ld_r</span> <span class='hs-varid'>args</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>runLink</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>[</span>
+<a name="line-2095"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-nostdlib"</span><span class='hs-layout'>,</span>
+<a name="line-2096"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-nodefaultlibs"</span><span class='hs-layout'>,</span>
+<a name="line-2097"></a>                            <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-r"</span>
+<a name="line-2098"></a>                            <span class='hs-keyglyph'>]</span>
+<a name="line-2099"></a>                            <span class='hs-comment'>-- gcc on sparc sets -Wl,--relax implicitly, but</span>
+<a name="line-2100"></a>                            <span class='hs-comment'>-- -r and --relax are incompatible for ld, so</span>
+<a name="line-2101"></a>                            <span class='hs-comment'>-- disable --relax explicitly.</span>
+<a name="line-2102"></a>                         <span class='hs-varop'>++</span> <span class='hs-layout'>(</span><span class='hs-keyword'>if</span> <span class='hs-varid'>platformArch</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-conid'>ArchSPARC</span>
+<a name="line-2103"></a>                             <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>ldIsGnuLd</span>
+<a name="line-2104"></a>                                <span class='hs-keyword'>then</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-no-relax"</span><span class='hs-keyglyph'>]</span>
+<a name="line-2105"></a>                                <span class='hs-keyword'>else</span> <span class='hs-conid'>[]</span><span class='hs-layout'>)</span>
+<a name="line-2106"></a>                         <span class='hs-varop'>++</span> <span class='hs-varid'>map</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-varid'>ld_build_id</span>
+<a name="line-2107"></a>                         <span class='hs-varop'>++</span> <span class='hs-keyglyph'>[</span> <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-o"</span><span class='hs-layout'>,</span>
+<a name="line-2108"></a>                              <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>output_fn</span> <span class='hs-keyglyph'>]</span>
+<a name="line-2109"></a>                         <span class='hs-varop'>++</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
+<a name="line-2110"></a>
+<a name="line-2111"></a>      <span class='hs-comment'>-- suppress the generation of the .note.gnu.build-id section,</span>
+<a name="line-2112"></a>      <span class='hs-comment'>-- which we don't need and sometimes causes ld to emit a</span>
+<a name="line-2113"></a>      <span class='hs-comment'>-- warning:</span>
+<a name="line-2114"></a>      <span class='hs-varid'>ld_build_id</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>sLdSupportsBuildId</span> <span class='hs-varid'>mySettings</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span><span class='hs-str'>"-Wl,--build-id=none"</span><span class='hs-keyglyph'>]</span>
+<a name="line-2115"></a>                  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span>
+<a name="line-2116"></a>
+<a name="line-2117"></a>  <span class='hs-keyword'>if</span> <span class='hs-varid'>ldIsGnuLd</span>
+<a name="line-2118"></a>     <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span>
+<a name="line-2119"></a>          <span class='hs-varid'>script</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"ldscript"</span>
+<a name="line-2120"></a>          <span class='hs-varid'>writeFile</span> <span class='hs-varid'>script</span> <span class='hs-varop'>$</span> <span class='hs-str'>"INPUT("</span> <span class='hs-varop'>++</span> <span class='hs-varid'>unwords</span> <span class='hs-varid'>o_files</span> <span class='hs-varop'>++</span> <span class='hs-str'>")"</span>
+<a name="line-2121"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span> <span class='hs-varid'>script</span><span class='hs-keyglyph'>]</span>
+<a name="line-2122"></a>     <span class='hs-keyword'>else</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>sLdSupportsFilelist</span> <span class='hs-varid'>mySettings</span>
+<a name="line-2123"></a>     <span class='hs-keyword'>then</span> <span class='hs-keyword'>do</span>
+<a name="line-2124"></a>          <span class='hs-varid'>filelist</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newTempName</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"filelist"</span>
+<a name="line-2125"></a>          <span class='hs-varid'>writeFile</span> <span class='hs-varid'>filelist</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unlines</span> <span class='hs-varid'>o_files</span>
+<a name="line-2126"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>Option</span> <span class='hs-str'>"-Wl,-filelist"</span><span class='hs-layout'>,</span>
+<a name="line-2127"></a>                <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>"-Wl,"</span> <span class='hs-varid'>filelist</span><span class='hs-keyglyph'>]</span>
+<a name="line-2128"></a>     <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span>
+<a name="line-2129"></a>          <span class='hs-varid'>ld_r</span> <span class='hs-layout'>(</span><span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-conid'>FileOption</span> <span class='hs-str'>""</span><span class='hs-layout'>)</span> <span class='hs-varid'>o_files</span><span class='hs-layout'>)</span>
+<a name="line-2130"></a>
+<a name="line-2131"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
+<a name="line-2132"></a><span class='hs-comment'>-- Misc.</span>
+<a name="line-2133"></a>
+<a name="line-2134"></a><a name="hscPostBackendPhase"></a><span class='hs-comment'>-- | What phase to run after one of the backend code generators has run</span>
+<a name="line-2135"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HscSource</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HscTarget</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Phase</span>
+<a name="line-2136"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-keyword'>_</span> <span class='hs-conid'>HsBootFile</span> <span class='hs-keyword'>_</span>    <span class='hs-keyglyph'>=</span>  <span class='hs-conid'>StopLn</span>
+<a name="line-2137"></a><span class='hs-definition'>hscPostBackendPhase</span> <span class='hs-varid'>dflags</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>hsc_lang</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2138"></a>  <span class='hs-keyword'>case</span> <span class='hs-varid'>hsc_lang</span> <span class='hs-keyword'>of</span>
+<a name="line-2139"></a>        <span class='hs-conid'>HscC</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HCc</span>
+<a name="line-2140"></a>        <span class='hs-conid'>HscAsm</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_SplitObjs</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Splitter</span>
+<a name="line-2141"></a>               <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>                 <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>As</span>
+<a name="line-2142"></a>        <span class='hs-conid'>HscLlvm</span>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>LlvmOpt</span>
+<a name="line-2143"></a>        <span class='hs-conid'>HscNothing</span>     <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StopLn</span>
+<a name="line-2144"></a>        <span class='hs-conid'>HscInterpreted</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StopLn</span>
+<a name="line-2145"></a>
+<a name="line-2146"></a><a name="touchObjectFile"></a><span class='hs-definition'>touchObjectFile</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FilePath</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-2147"></a><span class='hs-definition'>touchObjectFile</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>path</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-2148"></a>  <span class='hs-varid'>createDirectoryIfMissing</span> <span class='hs-conid'>True</span> <span class='hs-varop'>$</span> <span class='hs-varid'>takeDirectory</span> <span class='hs-varid'>path</span>
+<a name="line-2149"></a>  <span class='hs-conid'>SysTools</span><span class='hs-varop'>.</span><span class='hs-varid'>touch</span> <span class='hs-varid'>dflags</span> <span class='hs-str'>"Touching object file"</span> <span class='hs-varid'>path</span>
+<a name="line-2150"></a>
+<a name="line-2151"></a><a name="haveRtsOptsFlags"></a><span class='hs-definition'>haveRtsOptsFlags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-2152"></a><span class='hs-definition'>haveRtsOptsFlags</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span>
+<a name="line-2153"></a>         <span class='hs-varid'>isJust</span> <span class='hs-layout'>(</span><span class='hs-varid'>rtsOpts</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>||</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>rtsOptsEnabled</span> <span class='hs-varid'>dflags</span> <span class='hs-keyword'>of</span>
+<a name="line-2154"></a>                                        <span class='hs-conid'>RtsOptsSafeOnly</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>False</span>
+<a name="line-2155"></a>                                        <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>True</span>
 </pre></body>
 </html>

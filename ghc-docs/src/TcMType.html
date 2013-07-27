@@ -34,7 +34,7 @@ mutable type variables
 <a name="line-14"></a>  <span class='hs-varid'>newFlexiTyVarTy</span><span class='hs-layout'>,</span>		<span class='hs-comment'>-- Kind -&gt; TcM TcType</span>
 <a name="line-15"></a>  <span class='hs-varid'>newFlexiTyVarTys</span><span class='hs-layout'>,</span>		<span class='hs-comment'>-- Int -&gt; Kind -&gt; TcM [TcType]</span>
 <a name="line-16"></a>  <span class='hs-varid'>newPolyFlexiTyVarTy</span><span class='hs-layout'>,</span>
-<a name="line-17"></a>  <span class='hs-varid'>newMetaKindVar</span><span class='hs-layout'>,</span> <span class='hs-varid'>newMetaKindVars</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkKindSigVar</span><span class='hs-layout'>,</span>
+<a name="line-17"></a>  <span class='hs-varid'>newMetaKindVar</span><span class='hs-layout'>,</span> <span class='hs-varid'>newMetaKindVars</span><span class='hs-layout'>,</span>
 <a name="line-18"></a>  <span class='hs-varid'>mkTcTyVarName</span><span class='hs-layout'>,</span> <span class='hs-varid'>cloneMetaTyVar</span><span class='hs-layout'>,</span> 
 <a name="line-19"></a>
 <a name="line-20"></a>  <span class='hs-varid'>newMetaTyVar</span><span class='hs-layout'>,</span> <span class='hs-varid'>readMetaTyVar</span><span class='hs-layout'>,</span> <span class='hs-varid'>writeMetaTyVar</span><span class='hs-layout'>,</span> <span class='hs-varid'>writeMetaTyVarRef</span><span class='hs-layout'>,</span>
@@ -121,10 +121,6 @@ mutable type variables
 <a name="line-13"></a>
 <a name="line-14"></a><a name="newMetaKindVars"></a><span class='hs-definition'>newMetaKindVars</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TcKind</span><span class='hs-keyglyph'>]</span>
 <a name="line-15"></a><span class='hs-definition'>newMetaKindVars</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mapM</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>newMetaKindVar</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>nOfThem</span> <span class='hs-varid'>n</span> <span class='hs-conid'>()</span><span class='hs-layout'>)</span>
-<a name="line-16"></a>
-<a name="line-17"></a><a name="mkKindSigVar"></a><span class='hs-definition'>mkKindSigVar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>KindVar</span>
-<a name="line-18"></a><span class='hs-comment'>-- Use the specified name; don't clone it</span>
-<a name="line-19"></a><span class='hs-definition'>mkKindSigVar</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTcTyVar</span> <span class='hs-varid'>n</span> <span class='hs-varid'>superKind</span> <span class='hs-layout'>(</span><span class='hs-conid'>SkolemTv</span> <span class='hs-conid'>False</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 
@@ -536,94 +532,93 @@ has free vars {f,a}, but we must add 'k' as well! Hence step (3).
 <a name="line-20"></a>             <span class='hs-comment'>-- may make quantifyTyVars return a shorter list</span>
 <a name="line-21"></a>             <span class='hs-comment'>-- than it was passed, but that's ok</span>
 <a name="line-22"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>poly_kinds</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>xoptM</span> <span class='hs-conid'>Opt_PolyKinds</span>
-<a name="line-23"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>qkvs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>poly_kinds</span> 
+<a name="line-23"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>qkvs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>poly_kinds</span>
 <a name="line-24"></a>                 <span class='hs-keyword'>then</span> <span class='hs-varid'>return</span> <span class='hs-varid'>kvs2</span>
 <a name="line-25"></a>                 <span class='hs-keyword'>else</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>meta_kvs</span><span class='hs-layout'>,</span> <span class='hs-varid'>skolem_kvs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>partition</span> <span class='hs-varid'>is_meta</span> <span class='hs-varid'>kvs2</span>
 <a name="line-26"></a>                               <span class='hs-varid'>is_meta</span> <span class='hs-varid'>kv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isTcTyVar</span> <span class='hs-varid'>kv</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>isMetaTyVar</span> <span class='hs-varid'>kv</span>
 <a name="line-27"></a>                         <span class='hs-layout'>;</span> <span class='hs-varid'>mapM_</span> <span class='hs-varid'>defaultKindVarToStar</span> <span class='hs-varid'>meta_kvs</span>
-<a name="line-28"></a>                         <span class='hs-layout'>;</span> <span class='hs-conid'>WARN</span><span class='hs-layout'>(</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>skolem_kvs</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>skolem_kvs</span> <span class='hs-layout'>)</span>
-<a name="line-29"></a>                           <span class='hs-varid'>return</span> <span class='hs-varid'>skolem_kvs</span> <span class='hs-layout'>}</span>  <span class='hs-comment'>-- Should be empty</span>
-<a name="line-30"></a>
-<a name="line-31"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>mapM</span> <span class='hs-varid'>zonk_quant</span> <span class='hs-layout'>(</span><span class='hs-varid'>qkvs</span> <span class='hs-varop'>++</span> <span class='hs-varid'>qtvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span> 
-<a name="line-32"></a>           <span class='hs-comment'>-- Because of the order, any kind variables</span>
-<a name="line-33"></a>           <span class='hs-comment'>-- mentioned in the kinds of the type variables refer to</span>
-<a name="line-34"></a>           <span class='hs-comment'>-- the now-quantified versions</span>
-<a name="line-35"></a>  <span class='hs-keyword'>where</span>
-<a name="line-36"></a>    <span class='hs-varid'>zonk_quant</span> <span class='hs-varid'>tkv</span>
-<a name="line-37"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>isTcTyVar</span> <span class='hs-varid'>tkv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>zonkQuantifiedTyVar</span> <span class='hs-varid'>tkv</span>
-<a name="line-38"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>return</span> <span class='hs-varid'>tkv</span>
-<a name="line-39"></a>      <span class='hs-comment'>-- For associated types, we have the class variables </span>
-<a name="line-40"></a>      <span class='hs-comment'>-- in scope, and they are TyVars not TcTyVars</span>
-<a name="line-41"></a>
-<a name="line-42"></a><a name="zonkQuantifiedTyVar"></a><span class='hs-definition'>zonkQuantifiedTyVar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TcTyVar</span>
-<a name="line-43"></a><span class='hs-comment'>-- The quantified type variables often include meta type variables</span>
-<a name="line-44"></a><span class='hs-comment'>-- we want to freeze them into ordinary type variables, and</span>
-<a name="line-45"></a><span class='hs-comment'>-- default their kind (e.g. from OpenTypeKind to TypeKind)</span>
-<a name="line-46"></a><span class='hs-comment'>-- 			-- see notes with Kind.defaultKind</span>
-<a name="line-47"></a><span class='hs-comment'>-- The meta tyvar is updated to point to the new skolem TyVar.  Now any </span>
-<a name="line-48"></a><span class='hs-comment'>-- bound occurences of the original type variable will get zonked to </span>
-<a name="line-49"></a><span class='hs-comment'>-- the immutable version.</span>
-<a name="line-50"></a><span class='hs-comment'>--</span>
-<a name="line-51"></a><span class='hs-comment'>-- We leave skolem TyVars alone; they are immutable.</span>
-<a name="line-52"></a><span class='hs-comment'>--</span>
-<a name="line-53"></a><span class='hs-comment'>-- This function is called on both kind and type variables,</span>
-<a name="line-54"></a><span class='hs-comment'>-- but kind variables *only* if PolyKinds is on.</span>
-<a name="line-55"></a><span class='hs-definition'>zonkQuantifiedTyVar</span> <span class='hs-varid'>tv</span>
-<a name="line-56"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isTcTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span> 
-<a name="line-57"></a>    <span class='hs-keyword'>case</span> <span class='hs-varid'>tcTyVarDetails</span> <span class='hs-varid'>tv</span> <span class='hs-keyword'>of</span>
-<a name="line-58"></a>      <span class='hs-conid'>SkolemTv</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>zonkTcKind</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyVarKind</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span>
-<a name="line-59"></a>                        <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>setTyVarKind</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>kind</span> <span class='hs-layout'>}</span>
-<a name="line-60"></a>	<span class='hs-comment'>-- It might be a skolem type variable, </span>
-<a name="line-61"></a>	<span class='hs-comment'>-- for example from a user type signature</span>
-<a name="line-62"></a>
-<a name="line-63"></a>      <span class='hs-conid'>MetaTv</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mtv_ref</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ref</span> <span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-64"></a>          <span class='hs-keyword'>do</span> <span class='hs-varid'>when</span> <span class='hs-varid'>debugIsOn</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
-<a name="line-65"></a>                 <span class='hs-comment'>-- [Sept 04] Check for non-empty.</span>
-<a name="line-66"></a>                 <span class='hs-comment'>-- See note [Silly Type Synonym]</span>
-<a name="line-67"></a>                 <span class='hs-varid'>cts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>readMutVar</span> <span class='hs-varid'>ref</span>
-<a name="line-68"></a>                 <span class='hs-keyword'>case</span> <span class='hs-varid'>cts</span> <span class='hs-keyword'>of</span>
-<a name="line-69"></a>                     <span class='hs-conid'>Flexi</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>return</span> <span class='hs-conid'>()</span>
-<a name="line-70"></a>                     <span class='hs-conid'>Indirect</span> <span class='hs-varid'>ty</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>WARN</span><span class='hs-layout'>(</span> <span class='hs-conid'>True</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-varop'>$$</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>ty</span> <span class='hs-layout'>)</span>
-<a name="line-71"></a>                                    <span class='hs-varid'>return</span> <span class='hs-conid'>()</span>
-<a name="line-72"></a>             <span class='hs-varid'>skolemiseUnboundMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>vanillaSkolemTv</span>
-<a name="line-73"></a>      <span class='hs-sel'>_other</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>pprPanic</span> <span class='hs-str'>"zonkQuantifiedTyVar"</span> <span class='hs-layout'>(</span><span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- FlatSkol, RuntimeUnk</span>
-<a name="line-74"></a>
-<a name="line-75"></a><a name="defaultKindVarToStar"></a><span class='hs-definition'>defaultKindVarToStar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>Kind</span>
-<a name="line-76"></a><span class='hs-comment'>-- We have a meta-kind: unify it with '*'</span>
-<a name="line-77"></a><span class='hs-definition'>defaultKindVarToStar</span> <span class='hs-varid'>kv</span> 
-<a name="line-78"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span> <span class='hs-varid'>isKindVar</span> <span class='hs-varid'>kv</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>isMetaTyVar</span> <span class='hs-varid'>kv</span> <span class='hs-layout'>)</span>
-<a name="line-79"></a>         <span class='hs-varid'>writeMetaTyVar</span> <span class='hs-varid'>kv</span> <span class='hs-varid'>liftedTypeKind</span>
-<a name="line-80"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>liftedTypeKind</span> <span class='hs-layout'>}</span>
-<a name="line-81"></a>
-<a name="line-82"></a><a name="skolemiseUnboundMetaTyVar"></a><span class='hs-definition'>skolemiseUnboundMetaTyVar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcTyVarDetails</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TyVar</span>
-<a name="line-83"></a><span class='hs-comment'>-- We have a Meta tyvar with a ref-cell inside it</span>
-<a name="line-84"></a><span class='hs-comment'>-- Skolemise it, including giving it a new Name, so that</span>
-<a name="line-85"></a><span class='hs-comment'>--   we are totally out of Meta-tyvar-land</span>
-<a name="line-86"></a><span class='hs-comment'>-- We create a skolem TyVar, not a regular TyVar</span>
-<a name="line-87"></a><span class='hs-comment'>--   See Note [Zonking to Skolem]</span>
-<a name="line-88"></a><span class='hs-definition'>skolemiseUnboundMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>details</span>
-<a name="line-89"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isMetaTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span> 
-<a name="line-90"></a>    <span class='hs-keyword'>do</span>  <span class='hs-layout'>{</span> <span class='hs-varid'>span</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getSrcSpanM</span>    <span class='hs-comment'>-- Get the location from "here"</span>
-<a name="line-91"></a>                                 <span class='hs-comment'>-- ie where we are generalising</span>
-<a name="line-92"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>uniq</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newUnique</span>      <span class='hs-comment'>-- Remove it from TcMetaTyVar unique land</span>
-<a name="line-93"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>zonkTcKind</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyVarKind</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span>
-<a name="line-94"></a>        <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>final_kind</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>defaultKind</span> <span class='hs-varid'>kind</span>
-<a name="line-95"></a>              <span class='hs-varid'>final_name</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkInternalName</span> <span class='hs-varid'>uniq</span> <span class='hs-layout'>(</span><span class='hs-varid'>getOccName</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-varid'>span</span>
-<a name="line-96"></a>              <span class='hs-varid'>final_tv</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTcTyVar</span> <span class='hs-varid'>final_name</span> <span class='hs-varid'>final_kind</span> <span class='hs-varid'>details</span>
-<a name="line-97"></a>
-<a name="line-98"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>writeMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>final_tv</span><span class='hs-layout'>)</span>
-<a name="line-99"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>final_tv</span> <span class='hs-layout'>}</span>
-<a name="line-100"></a>
-<a name="line-101"></a><a name="skolemiseSigTv"></a><span class='hs-definition'>skolemiseSigTv</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TcTyVar</span>
-<a name="line-102"></a><span class='hs-comment'>-- In TcBinds we create SigTvs for type signatures</span>
-<a name="line-103"></a><span class='hs-comment'>-- but for singleton groups we want them to really be skolems</span>
-<a name="line-104"></a><span class='hs-comment'>-- which do not unify with each other</span>
-<a name="line-105"></a><span class='hs-definition'>skolemiseSigTv</span> <span class='hs-varid'>tv</span>  
-<a name="line-106"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isSigTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span>
-<a name="line-107"></a>    <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>writeMetaTyVarRef</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-varid'>metaTvRef</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>skol_tv</span><span class='hs-layout'>)</span>
-<a name="line-108"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>skol_tv</span> <span class='hs-layout'>}</span>
-<a name="line-109"></a>  <span class='hs-keyword'>where</span>
-<a name="line-110"></a>    <span class='hs-varid'>skol_tv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>setTcTyVarDetails</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-conid'>SkolemTv</span> <span class='hs-conid'>False</span><span class='hs-layout'>)</span>
+<a name="line-28"></a>                         <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>skolem_kvs</span> <span class='hs-layout'>}</span>  <span class='hs-comment'>-- should be empty</span>
+<a name="line-29"></a>
+<a name="line-30"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>mapM</span> <span class='hs-varid'>zonk_quant</span> <span class='hs-layout'>(</span><span class='hs-varid'>qkvs</span> <span class='hs-varop'>++</span> <span class='hs-varid'>qtvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span> 
+<a name="line-31"></a>           <span class='hs-comment'>-- Because of the order, any kind variables</span>
+<a name="line-32"></a>           <span class='hs-comment'>-- mentioned in the kinds of the type variables refer to</span>
+<a name="line-33"></a>           <span class='hs-comment'>-- the now-quantified versions</span>
+<a name="line-34"></a>  <span class='hs-keyword'>where</span>
+<a name="line-35"></a>    <span class='hs-varid'>zonk_quant</span> <span class='hs-varid'>tkv</span>
+<a name="line-36"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>isTcTyVar</span> <span class='hs-varid'>tkv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>zonkQuantifiedTyVar</span> <span class='hs-varid'>tkv</span>
+<a name="line-37"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>return</span> <span class='hs-varid'>tkv</span>
+<a name="line-38"></a>      <span class='hs-comment'>-- For associated types, we have the class variables </span>
+<a name="line-39"></a>      <span class='hs-comment'>-- in scope, and they are TyVars not TcTyVars</span>
+<a name="line-40"></a>
+<a name="line-41"></a><a name="zonkQuantifiedTyVar"></a><span class='hs-definition'>zonkQuantifiedTyVar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TcTyVar</span>
+<a name="line-42"></a><span class='hs-comment'>-- The quantified type variables often include meta type variables</span>
+<a name="line-43"></a><span class='hs-comment'>-- we want to freeze them into ordinary type variables, and</span>
+<a name="line-44"></a><span class='hs-comment'>-- default their kind (e.g. from OpenTypeKind to TypeKind)</span>
+<a name="line-45"></a><span class='hs-comment'>-- 			-- see notes with Kind.defaultKind</span>
+<a name="line-46"></a><span class='hs-comment'>-- The meta tyvar is updated to point to the new skolem TyVar.  Now any </span>
+<a name="line-47"></a><span class='hs-comment'>-- bound occurences of the original type variable will get zonked to </span>
+<a name="line-48"></a><span class='hs-comment'>-- the immutable version.</span>
+<a name="line-49"></a><span class='hs-comment'>--</span>
+<a name="line-50"></a><span class='hs-comment'>-- We leave skolem TyVars alone; they are immutable.</span>
+<a name="line-51"></a><span class='hs-comment'>--</span>
+<a name="line-52"></a><span class='hs-comment'>-- This function is called on both kind and type variables,</span>
+<a name="line-53"></a><span class='hs-comment'>-- but kind variables *only* if PolyKinds is on.</span>
+<a name="line-54"></a><span class='hs-definition'>zonkQuantifiedTyVar</span> <span class='hs-varid'>tv</span>
+<a name="line-55"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isTcTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span> 
+<a name="line-56"></a>    <span class='hs-keyword'>case</span> <span class='hs-varid'>tcTyVarDetails</span> <span class='hs-varid'>tv</span> <span class='hs-keyword'>of</span>
+<a name="line-57"></a>      <span class='hs-conid'>SkolemTv</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>zonkTcKind</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyVarKind</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span>
+<a name="line-58"></a>                        <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>setTyVarKind</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>kind</span> <span class='hs-layout'>}</span>
+<a name="line-59"></a>	<span class='hs-comment'>-- It might be a skolem type variable, </span>
+<a name="line-60"></a>	<span class='hs-comment'>-- for example from a user type signature</span>
+<a name="line-61"></a>
+<a name="line-62"></a>      <span class='hs-conid'>MetaTv</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mtv_ref</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ref</span> <span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-63"></a>          <span class='hs-keyword'>do</span> <span class='hs-varid'>when</span> <span class='hs-varid'>debugIsOn</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
+<a name="line-64"></a>                 <span class='hs-comment'>-- [Sept 04] Check for non-empty.</span>
+<a name="line-65"></a>                 <span class='hs-comment'>-- See note [Silly Type Synonym]</span>
+<a name="line-66"></a>                 <span class='hs-varid'>cts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>readMutVar</span> <span class='hs-varid'>ref</span>
+<a name="line-67"></a>                 <span class='hs-keyword'>case</span> <span class='hs-varid'>cts</span> <span class='hs-keyword'>of</span>
+<a name="line-68"></a>                     <span class='hs-conid'>Flexi</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>return</span> <span class='hs-conid'>()</span>
+<a name="line-69"></a>                     <span class='hs-conid'>Indirect</span> <span class='hs-varid'>ty</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>WARN</span><span class='hs-layout'>(</span> <span class='hs-conid'>True</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-varop'>$$</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>ty</span> <span class='hs-layout'>)</span>
+<a name="line-70"></a>                                    <span class='hs-varid'>return</span> <span class='hs-conid'>()</span>
+<a name="line-71"></a>             <span class='hs-varid'>skolemiseUnboundMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>vanillaSkolemTv</span>
+<a name="line-72"></a>      <span class='hs-sel'>_other</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>pprPanic</span> <span class='hs-str'>"zonkQuantifiedTyVar"</span> <span class='hs-layout'>(</span><span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- FlatSkol, RuntimeUnk</span>
+<a name="line-73"></a>
+<a name="line-74"></a><a name="defaultKindVarToStar"></a><span class='hs-definition'>defaultKindVarToStar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>Kind</span>
+<a name="line-75"></a><span class='hs-comment'>-- We have a meta-kind: unify it with '*'</span>
+<a name="line-76"></a><span class='hs-definition'>defaultKindVarToStar</span> <span class='hs-varid'>kv</span> 
+<a name="line-77"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span> <span class='hs-varid'>isKindVar</span> <span class='hs-varid'>kv</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>isMetaTyVar</span> <span class='hs-varid'>kv</span> <span class='hs-layout'>)</span>
+<a name="line-78"></a>         <span class='hs-varid'>writeMetaTyVar</span> <span class='hs-varid'>kv</span> <span class='hs-varid'>liftedTypeKind</span>
+<a name="line-79"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>liftedTypeKind</span> <span class='hs-layout'>}</span>
+<a name="line-80"></a>
+<a name="line-81"></a><a name="skolemiseUnboundMetaTyVar"></a><span class='hs-definition'>skolemiseUnboundMetaTyVar</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcTyVarDetails</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TyVar</span>
+<a name="line-82"></a><span class='hs-comment'>-- We have a Meta tyvar with a ref-cell inside it</span>
+<a name="line-83"></a><span class='hs-comment'>-- Skolemise it, including giving it a new Name, so that</span>
+<a name="line-84"></a><span class='hs-comment'>--   we are totally out of Meta-tyvar-land</span>
+<a name="line-85"></a><span class='hs-comment'>-- We create a skolem TyVar, not a regular TyVar</span>
+<a name="line-86"></a><span class='hs-comment'>--   See Note [Zonking to Skolem]</span>
+<a name="line-87"></a><span class='hs-definition'>skolemiseUnboundMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-varid'>details</span>
+<a name="line-88"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isMetaTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span> 
+<a name="line-89"></a>    <span class='hs-keyword'>do</span>  <span class='hs-layout'>{</span> <span class='hs-varid'>span</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getSrcSpanM</span>    <span class='hs-comment'>-- Get the location from "here"</span>
+<a name="line-90"></a>                                 <span class='hs-comment'>-- ie where we are generalising</span>
+<a name="line-91"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>uniq</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newUnique</span>      <span class='hs-comment'>-- Remove it from TcMetaTyVar unique land</span>
+<a name="line-92"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>zonkTcKind</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyVarKind</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span>
+<a name="line-93"></a>        <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>final_kind</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>defaultKind</span> <span class='hs-varid'>kind</span>
+<a name="line-94"></a>              <span class='hs-varid'>final_name</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkInternalName</span> <span class='hs-varid'>uniq</span> <span class='hs-layout'>(</span><span class='hs-varid'>getOccName</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-varid'>span</span>
+<a name="line-95"></a>              <span class='hs-varid'>final_tv</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTcTyVar</span> <span class='hs-varid'>final_name</span> <span class='hs-varid'>final_kind</span> <span class='hs-varid'>details</span>
+<a name="line-96"></a>
+<a name="line-97"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>writeMetaTyVar</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>final_tv</span><span class='hs-layout'>)</span>
+<a name="line-98"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>final_tv</span> <span class='hs-layout'>}</span>
+<a name="line-99"></a>
+<a name="line-100"></a><a name="skolemiseSigTv"></a><span class='hs-definition'>skolemiseSigTv</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcTyVar</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TcM</span> <span class='hs-conid'>TcTyVar</span>
+<a name="line-101"></a><span class='hs-comment'>-- In TcBinds we create SigTvs for type signatures</span>
+<a name="line-102"></a><span class='hs-comment'>-- but for singleton groups we want them to really be skolems</span>
+<a name="line-103"></a><span class='hs-comment'>-- which do not unify with each other</span>
+<a name="line-104"></a><span class='hs-definition'>skolemiseSigTv</span> <span class='hs-varid'>tv</span>  
+<a name="line-105"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isSigTyVar</span> <span class='hs-varid'>tv</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>)</span>
+<a name="line-106"></a>    <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>writeMetaTyVarRef</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-varid'>metaTvRef</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>skol_tv</span><span class='hs-layout'>)</span>
+<a name="line-107"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>skol_tv</span> <span class='hs-layout'>}</span>
+<a name="line-108"></a>  <span class='hs-keyword'>where</span>
+<a name="line-109"></a>    <span class='hs-varid'>skol_tv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>setTcTyVarDetails</span> <span class='hs-varid'>tv</span> <span class='hs-layout'>(</span><span class='hs-conid'>SkolemTv</span> <span class='hs-conid'>False</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 Note [Zonking to Skolem]

@@ -793,20 +793,19 @@ but we also need to handle closed ones when normalising a type:
 <a name="line-38"></a>      <span class='hs-conid'>Just</span> <span class='hs-varid'>subst</span> <span class='hs-comment'>-- matching worked. now, check for apartness.</span>
 <a name="line-39"></a>        <span class='hs-keyglyph'>|</span>  <span class='hs-varid'>all</span> <span class='hs-layout'>(</span><span class='hs-varid'>isSurelyApart</span>
 <a name="line-40"></a>                <span class='hs-varop'>.</span> <span class='hs-varid'>tcApartTys</span> <span class='hs-varid'>instanceBindFun</span> <span class='hs-varid'>target_tys</span>
-<a name="line-41"></a>                <span class='hs-varop'>.</span> <span class='hs-varid'>coAxBranchLHS</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-comment'>-- RAE: This is horribly inefficient</span>
-<a name="line-42"></a>             <span class='hs-varid'>incomps</span>
-<a name="line-43"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-comment'>-- matching worked &amp; we're apart from all incompatible branches. success</span>
-<a name="line-44"></a>           <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>ind</span><span class='hs-layout'>,</span> <span class='hs-varid'>substTyVars</span> <span class='hs-varid'>subst</span> <span class='hs-varid'>tpl_tvs</span><span class='hs-layout'>)</span>
-<a name="line-45"></a>
-<a name="line-46"></a>      <span class='hs-comment'>-- failure. keep looking</span>
-<a name="line-47"></a>      <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>findBranch</span> <span class='hs-varid'>rest</span> <span class='hs-layout'>(</span><span class='hs-varid'>ind</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span> <span class='hs-varid'>target_tys</span>
-<a name="line-48"></a>
-<a name="line-49"></a>  <span class='hs-keyword'>where</span> <span class='hs-varid'>isSurelyApart</span> <span class='hs-conid'>SurelyApart</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-50"></a>        <span class='hs-varid'>isSurelyApart</span> <span class='hs-keyword'>_</span>           <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-51"></a>
-<a name="line-52"></a><span class='hs-comment'>-- fail if no branches left</span>
-<a name="line-53"></a><span class='hs-definition'>findBranch</span> <span class='hs-conid'>[]</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
-<a name="line-54"></a>
+<a name="line-41"></a>                <span class='hs-varop'>.</span> <span class='hs-varid'>coAxBranchLHS</span><span class='hs-layout'>)</span> <span class='hs-varid'>incomps</span>
+<a name="line-42"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-comment'>-- matching worked &amp; we're apart from all incompatible branches. success</span>
+<a name="line-43"></a>           <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>ind</span><span class='hs-layout'>,</span> <span class='hs-varid'>substTyVars</span> <span class='hs-varid'>subst</span> <span class='hs-varid'>tpl_tvs</span><span class='hs-layout'>)</span>
+<a name="line-44"></a>
+<a name="line-45"></a>      <span class='hs-comment'>-- failure. keep looking</span>
+<a name="line-46"></a>      <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>findBranch</span> <span class='hs-varid'>rest</span> <span class='hs-layout'>(</span><span class='hs-varid'>ind</span><span class='hs-varop'>+</span><span class='hs-num'>1</span><span class='hs-layout'>)</span> <span class='hs-varid'>target_tys</span>
+<a name="line-47"></a>
+<a name="line-48"></a>  <span class='hs-keyword'>where</span> <span class='hs-varid'>isSurelyApart</span> <span class='hs-conid'>SurelyApart</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-49"></a>        <span class='hs-varid'>isSurelyApart</span> <span class='hs-keyword'>_</span>           <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-50"></a>
+<a name="line-51"></a><span class='hs-comment'>-- fail if no branches left</span>
+<a name="line-52"></a><span class='hs-definition'>findBranch</span> <span class='hs-conid'>[]</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
+<a name="line-53"></a>
 </pre>\end{code}
 
 

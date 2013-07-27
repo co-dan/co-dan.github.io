@@ -177,13 +177,9 @@
 <a name="line-2"></a><span class='hs-definition'>outputLlvm</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>filenm</span> <span class='hs-varid'>cmm_stream</span>
 <a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>ncg_uniqs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkSplitUniqSupply</span> <span class='hs-chr'>'n'</span>
 <a name="line-4"></a>
-<a name="line-5"></a>       <span class='hs-comment'>-- ToDo: make the LLVM backend consume the C-- incrementally,</span>
-<a name="line-6"></a>       <span class='hs-comment'>-- by pushing the cmm_stream inside (c.f. nativeCodeGen)</span>
-<a name="line-7"></a>       <span class='hs-varid'>rawcmms</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-conid'>Stream</span><span class='hs-varop'>.</span><span class='hs-varid'>collect</span> <span class='hs-varid'>cmm_stream</span>
-<a name="line-8"></a>
-<a name="line-9"></a>       <span class='hs-comment'>{-# SCC "llvm_output" #-}</span> <span class='hs-varid'>doOutput</span> <span class='hs-varid'>filenm</span> <span class='hs-varop'>$</span>
-<a name="line-10"></a>           <span class='hs-keyglyph'>\</span><span class='hs-varid'>f</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-comment'>{-# SCC "llvm_CodeGen" #-}</span>
-<a name="line-11"></a>                 <span class='hs-varid'>llvmCodeGen</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>f</span> <span class='hs-varid'>ncg_uniqs</span> <span class='hs-varid'>rawcmms</span>
+<a name="line-5"></a>       <span class='hs-comment'>{-# SCC "llvm_output" #-}</span> <span class='hs-varid'>doOutput</span> <span class='hs-varid'>filenm</span> <span class='hs-varop'>$</span>
+<a name="line-6"></a>           <span class='hs-keyglyph'>\</span><span class='hs-varid'>f</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-comment'>{-# SCC "llvm_CodeGen" #-}</span>
+<a name="line-7"></a>                 <span class='hs-varid'>llvmCodeGen</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>f</span> <span class='hs-varid'>ncg_uniqs</span> <span class='hs-varid'>cmm_stream</span>
 </pre>\end{code}
 
 

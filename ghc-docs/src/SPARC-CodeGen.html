@@ -656,18 +656,19 @@
 <a name="line-647"></a>        <span class='hs-conid'>MO_Memset</span>    <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>fsLit</span> <span class='hs-str'>"memset"</span>
 <a name="line-648"></a>        <span class='hs-conid'>MO_Memmove</span>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>fsLit</span> <span class='hs-str'>"memmove"</span>
 <a name="line-649"></a>
-<a name="line-650"></a>        <span class='hs-conid'>MO_PopCnt</span> <span class='hs-varid'>w</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>fsLit</span> <span class='hs-varop'>$</span> <span class='hs-varid'>popCntLabel</span> <span class='hs-varid'>w</span>
-<a name="line-651"></a>
-<a name="line-652"></a>        <span class='hs-conid'>MO_S_QuotRem</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-653"></a>        <span class='hs-conid'>MO_U_QuotRem</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-654"></a>        <span class='hs-conid'>MO_U_QuotRem2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-655"></a>        <span class='hs-conid'>MO_Add2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>       <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-656"></a>        <span class='hs-conid'>MO_U_Mul2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>     <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-657"></a>        <span class='hs-conid'>MO_WriteBarrier</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-658"></a>        <span class='hs-conid'>MO_Touch</span>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-659"></a>        <span class='hs-conid'>MO_Prefetch_Data</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
-<a name="line-660"></a>    <span class='hs-keyword'>where</span> <span class='hs-varid'>unsupported</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"outOfLineCmmOp: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>mop</span>
-<a name="line-661"></a>                            <span class='hs-varop'>++</span> <span class='hs-str'>" not supported here"</span><span class='hs-layout'>)</span>
-<a name="line-662"></a>
+<a name="line-650"></a>        <span class='hs-conid'>MO_BSwap</span> <span class='hs-varid'>w</span>   <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>fsLit</span> <span class='hs-varop'>$</span> <span class='hs-varid'>bSwapLabel</span> <span class='hs-varid'>w</span>
+<a name="line-651"></a>        <span class='hs-conid'>MO_PopCnt</span> <span class='hs-varid'>w</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>fsLit</span> <span class='hs-varop'>$</span> <span class='hs-varid'>popCntLabel</span> <span class='hs-varid'>w</span>
+<a name="line-652"></a>
+<a name="line-653"></a>        <span class='hs-conid'>MO_S_QuotRem</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-654"></a>        <span class='hs-conid'>MO_U_QuotRem</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-655"></a>        <span class='hs-conid'>MO_U_QuotRem2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-656"></a>        <span class='hs-conid'>MO_Add2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>       <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-657"></a>        <span class='hs-conid'>MO_U_Mul2</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span>     <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-658"></a>        <span class='hs-conid'>MO_WriteBarrier</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-659"></a>        <span class='hs-conid'>MO_Touch</span>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-660"></a>        <span class='hs-conid'>MO_Prefetch_Data</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>unsupported</span>
+<a name="line-661"></a>    <span class='hs-keyword'>where</span> <span class='hs-varid'>unsupported</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"outOfLineCmmOp: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>mop</span>
+<a name="line-662"></a>                            <span class='hs-varop'>++</span> <span class='hs-str'>" not supported here"</span><span class='hs-layout'>)</span>
+<a name="line-663"></a>
 </pre></body>
 </html>
