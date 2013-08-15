@@ -484,43 +484,45 @@
 <a name="line-341"></a>        <span class='hs-comment'>-- NB. keep these in sync with includes/Constants.h</span>
 <a name="line-342"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>0</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadRunning</span>
 <a name="line-343"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>1</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnMVar</span>
-<a name="line-344"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>2</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnBlackHole</span>
-<a name="line-345"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>6</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnSTM</span>
-<a name="line-346"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>10</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnForeignCall</span>
+<a name="line-344"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>2</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnMVar</span> <span class='hs-comment'>-- XXX distinguish?</span>
+<a name="line-345"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>3</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnBlackHole</span>
+<a name="line-346"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>7</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnSTM</span>
 <a name="line-347"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>11</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnForeignCall</span>
-<a name="line-348"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>12</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnException</span>
-<a name="line-349"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>16</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadFinished</span>
-<a name="line-350"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>17</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadDied</span>
-<a name="line-351"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-keyword'>_</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnOther</span>
-<a name="line-352"></a>
-<a name="line-353"></a><a name="threadCapability"></a><span class='hs-comment'>-- | returns the number of the capability on which the thread is currently</span>
-<a name="line-354"></a><span class='hs-comment'>-- running, and a boolean indicating whether the thread is locked to</span>
-<a name="line-355"></a><span class='hs-comment'>-- that capability or not.  A thread is locked to a capability if it</span>
-<a name="line-356"></a><span class='hs-comment'>-- was created with @forkOn@.</span>
-<a name="line-357"></a><span class='hs-definition'>threadCapability</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ThreadId</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>
-<a name="line-358"></a><span class='hs-definition'>threadCapability</span> <span class='hs-layout'>(</span><span class='hs-conid'>ThreadId</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IO</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-359"></a>   <span class='hs-keyword'>case</span> <span class='hs-varid'>threadStatus</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
-<a name="line-360"></a>     <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s'</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>cap</span><span class='hs-cpp'>#</span><span class='hs-layout'>,</span> <span class='hs-varid'>locked</span><span class='hs-cpp'>#</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s'</span><span class='hs-layout'>,</span> <span class='hs-layout'>(</span><span class='hs-conid'>I</span><span class='hs-cpp'>#</span> <span class='hs-varid'>cap</span><span class='hs-cpp'>#</span><span class='hs-layout'>,</span> <span class='hs-varid'>locked</span><span class='hs-cpp'>#</span> <span class='hs-varop'>/=#</span> <span class='hs-num'>0</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
-<a name="line-361"></a>
-<a name="line-362"></a><a name="mkWeakThreadId"></a><span class='hs-comment'>-- | make a weak pointer to a 'ThreadId'.  It can be important to do</span>
-<a name="line-363"></a><span class='hs-comment'>-- this if you want to hold a reference to a 'ThreadId' while still</span>
-<a name="line-364"></a><span class='hs-comment'>-- allowing the thread to receive the @BlockedIndefinitely@ family of</span>
-<a name="line-365"></a><span class='hs-comment'>-- exceptions (e.g. 'BlockedIndefinitelyOnMVar').  Holding a normal</span>
-<a name="line-366"></a><span class='hs-comment'>-- 'ThreadId' reference will prevent the delivery of</span>
-<a name="line-367"></a><span class='hs-comment'>-- @BlockedIndefinitely@ exceptions because the reference could be</span>
-<a name="line-368"></a><span class='hs-comment'>-- used as the target of 'throwTo' at any time, which would unblock</span>
-<a name="line-369"></a><span class='hs-comment'>-- the thread.</span>
-<a name="line-370"></a><span class='hs-comment'>--</span>
-<a name="line-371"></a><span class='hs-comment'>-- Holding a @Weak ThreadId@, on the other hand, will not prevent the</span>
-<a name="line-372"></a><span class='hs-comment'>-- thread from receiving @BlockedIndefinitely@ exceptions.  It is</span>
-<a name="line-373"></a><span class='hs-comment'>-- still possible to throw an exception to a @Weak ThreadId@, but the</span>
-<a name="line-374"></a><span class='hs-comment'>-- caller must use @deRefWeak@ first to determine whether the thread</span>
-<a name="line-375"></a><span class='hs-comment'>-- still exists.</span>
-<a name="line-376"></a><span class='hs-comment'>--</span>
-<a name="line-377"></a><span class='hs-definition'>mkWeakThreadId</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ThreadId</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Weak</span> <span class='hs-conid'>ThreadId</span><span class='hs-layout'>)</span>
-<a name="line-378"></a><span class='hs-definition'>mkWeakThreadId</span> <span class='hs-varid'>t</span><span class='hs-keyglyph'>@</span><span class='hs-layout'>(</span><span class='hs-conid'>ThreadId</span> <span class='hs-varid'>t</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IO</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-379"></a>   <span class='hs-keyword'>case</span> <span class='hs-varid'>mkWeakNoFinalizer</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
-<a name="line-380"></a>      <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s1</span><span class='hs-layout'>,</span> <span class='hs-varid'>w</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s1</span><span class='hs-layout'>,</span> <span class='hs-conid'>Weak</span> <span class='hs-varid'>w</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
+<a name="line-348"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>12</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnForeignCall</span>
+<a name="line-349"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>13</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnException</span>
+<a name="line-350"></a>     <span class='hs-comment'>-- NB. these are hardcoded in rts/PrimOps.cmm</span>
+<a name="line-351"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>16</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadFinished</span>
+<a name="line-352"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-num'>17</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadDied</span>
+<a name="line-353"></a>     <span class='hs-varid'>mk_stat</span> <span class='hs-keyword'>_</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ThreadBlocked</span> <span class='hs-conid'>BlockedOnOther</span>
+<a name="line-354"></a>
+<a name="line-355"></a><a name="threadCapability"></a><span class='hs-comment'>-- | returns the number of the capability on which the thread is currently</span>
+<a name="line-356"></a><span class='hs-comment'>-- running, and a boolean indicating whether the thread is locked to</span>
+<a name="line-357"></a><span class='hs-comment'>-- that capability or not.  A thread is locked to a capability if it</span>
+<a name="line-358"></a><span class='hs-comment'>-- was created with @forkOn@.</span>
+<a name="line-359"></a><span class='hs-definition'>threadCapability</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ThreadId</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>
+<a name="line-360"></a><span class='hs-definition'>threadCapability</span> <span class='hs-layout'>(</span><span class='hs-conid'>ThreadId</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IO</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-361"></a>   <span class='hs-keyword'>case</span> <span class='hs-varid'>threadStatus</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
+<a name="line-362"></a>     <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s'</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>cap</span><span class='hs-cpp'>#</span><span class='hs-layout'>,</span> <span class='hs-varid'>locked</span><span class='hs-cpp'>#</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s'</span><span class='hs-layout'>,</span> <span class='hs-layout'>(</span><span class='hs-conid'>I</span><span class='hs-cpp'>#</span> <span class='hs-varid'>cap</span><span class='hs-cpp'>#</span><span class='hs-layout'>,</span> <span class='hs-varid'>locked</span><span class='hs-cpp'>#</span> <span class='hs-varop'>/=#</span> <span class='hs-num'>0</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
+<a name="line-363"></a>
+<a name="line-364"></a><a name="mkWeakThreadId"></a><span class='hs-comment'>-- | make a weak pointer to a 'ThreadId'.  It can be important to do</span>
+<a name="line-365"></a><span class='hs-comment'>-- this if you want to hold a reference to a 'ThreadId' while still</span>
+<a name="line-366"></a><span class='hs-comment'>-- allowing the thread to receive the @BlockedIndefinitely@ family of</span>
+<a name="line-367"></a><span class='hs-comment'>-- exceptions (e.g. 'BlockedIndefinitelyOnMVar').  Holding a normal</span>
+<a name="line-368"></a><span class='hs-comment'>-- 'ThreadId' reference will prevent the delivery of</span>
+<a name="line-369"></a><span class='hs-comment'>-- @BlockedIndefinitely@ exceptions because the reference could be</span>
+<a name="line-370"></a><span class='hs-comment'>-- used as the target of 'throwTo' at any time, which would unblock</span>
+<a name="line-371"></a><span class='hs-comment'>-- the thread.</span>
+<a name="line-372"></a><span class='hs-comment'>--</span>
+<a name="line-373"></a><span class='hs-comment'>-- Holding a @Weak ThreadId@, on the other hand, will not prevent the</span>
+<a name="line-374"></a><span class='hs-comment'>-- thread from receiving @BlockedIndefinitely@ exceptions.  It is</span>
+<a name="line-375"></a><span class='hs-comment'>-- still possible to throw an exception to a @Weak ThreadId@, but the</span>
+<a name="line-376"></a><span class='hs-comment'>-- caller must use @deRefWeak@ first to determine whether the thread</span>
+<a name="line-377"></a><span class='hs-comment'>-- still exists.</span>
+<a name="line-378"></a><span class='hs-comment'>--</span>
+<a name="line-379"></a><span class='hs-definition'>mkWeakThreadId</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ThreadId</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Weak</span> <span class='hs-conid'>ThreadId</span><span class='hs-layout'>)</span>
+<a name="line-380"></a><span class='hs-definition'>mkWeakThreadId</span> <span class='hs-varid'>t</span><span class='hs-keyglyph'>@</span><span class='hs-layout'>(</span><span class='hs-conid'>ThreadId</span> <span class='hs-varid'>t</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IO</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-381"></a>   <span class='hs-keyword'>case</span> <span class='hs-varid'>mkWeakNoFinalizer</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span><span class='hs-cpp'>#</span> <span class='hs-varid'>t</span> <span class='hs-varid'>s</span> <span class='hs-keyword'>of</span>
+<a name="line-382"></a>      <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s1</span><span class='hs-layout'>,</span> <span class='hs-varid'>w</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-cpp'>#</span> <span class='hs-varid'>s1</span><span class='hs-layout'>,</span> <span class='hs-conid'>Weak</span> <span class='hs-varid'>w</span> <span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 

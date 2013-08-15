@@ -26,22 +26,24 @@
 <a name="line-16"></a><span class='hs-comment'>-- </span>
 <a name="line-17"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
 <a name="line-18"></a>
-<a name="line-19"></a><span class='hs-comment'>-- #hide</span>
-<a name="line-20"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Enum</span><span class='hs-layout'>(</span>
-<a name="line-21"></a>        <span class='hs-conid'>Bounded</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Enum</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-22"></a>        <span class='hs-varid'>boundedEnumFrom</span><span class='hs-layout'>,</span> <span class='hs-varid'>boundedEnumFromThen</span><span class='hs-layout'>,</span>
-<a name="line-23"></a>        <span class='hs-varid'>toEnumError</span><span class='hs-layout'>,</span> <span class='hs-varid'>fromEnumError</span><span class='hs-layout'>,</span> <span class='hs-varid'>succError</span><span class='hs-layout'>,</span> <span class='hs-varid'>predError</span><span class='hs-layout'>,</span>
-<a name="line-24"></a>
-<a name="line-25"></a>        <span class='hs-comment'>-- Instances for Bounded and Enum: (), Char, Int</span>
+<a name="line-19"></a><span class='hs-cpp'>#include "MachDeps.h"</span>
+<a name="line-20"></a>
+<a name="line-21"></a><span class='hs-comment'>-- #hide</span>
+<a name="line-22"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Enum</span><span class='hs-layout'>(</span>
+<a name="line-23"></a>        <span class='hs-conid'>Bounded</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Enum</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-24"></a>        <span class='hs-varid'>boundedEnumFrom</span><span class='hs-layout'>,</span> <span class='hs-varid'>boundedEnumFromThen</span><span class='hs-layout'>,</span>
+<a name="line-25"></a>        <span class='hs-varid'>toEnumError</span><span class='hs-layout'>,</span> <span class='hs-varid'>fromEnumError</span><span class='hs-layout'>,</span> <span class='hs-varid'>succError</span><span class='hs-layout'>,</span> <span class='hs-varid'>predError</span><span class='hs-layout'>,</span>
 <a name="line-26"></a>
-<a name="line-27"></a>   <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-27"></a>        <span class='hs-comment'>-- Instances for Bounded and Enum: (), Char, Int</span>
 <a name="line-28"></a>
-<a name="line-29"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Base</span>
-<a name="line-30"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Char</span>
-<a name="line-31"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Integer</span>
-<a name="line-32"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Num</span>
-<a name="line-33"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Show</span>
-<a name="line-34"></a><span class='hs-keyword'>default</span> <span class='hs-conid'>()</span>              <span class='hs-comment'>-- Double isn't available yet</span>
+<a name="line-29"></a>   <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-30"></a>
+<a name="line-31"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Base</span>
+<a name="line-32"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Char</span>
+<a name="line-33"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Integer</span>
+<a name="line-34"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Num</span>
+<a name="line-35"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Show</span>
+<a name="line-36"></a><span class='hs-keyword'>default</span> <span class='hs-conid'>()</span>              <span class='hs-comment'>-- Double isn't available yet</span>
 </pre>\end{code}
 
 
@@ -649,9 +651,11 @@ Be careful about these instances.
 <a name="line-5"></a>    <span class='hs-comment'>-- (fromInteger 0xffffffff :: Word).</span>
 <a name="line-6"></a><span class='hs-cpp'>#if WORD_SIZE_IN_BITS == 32</span>
 <a name="line-7"></a>    <span class='hs-varid'>maxBound</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>W</span><span class='hs-cpp'>#</span> <span class='hs-layout'>(</span><span class='hs-varid'>int2Word</span><span class='hs-cpp'>#</span> <span class='hs-num'>0xFFFFFFFF</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
-<a name="line-8"></a><span class='hs-cpp'>#else</span>
+<a name="line-8"></a><span class='hs-cpp'>#elif WORD_SIZE_IN_BITS == 64</span>
 <a name="line-9"></a>    <span class='hs-varid'>maxBound</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>W</span><span class='hs-cpp'>#</span> <span class='hs-layout'>(</span><span class='hs-varid'>int2Word</span><span class='hs-cpp'>#</span> <span class='hs-num'>0xFFFFFFFFFFFFFFFF</span><span class='hs-cpp'>#</span><span class='hs-layout'>)</span>
-<a name="line-10"></a><span class='hs-cpp'>#endif</span>
+<a name="line-10"></a><span class='hs-cpp'>#else</span>
+<a name="line-11"></a><span class='hs-cpp'>#error Unhandled value for WORD_SIZE_IN_BITS</span>
+<a name="line-12"></a><span class='hs-cpp'>#endif</span>
 </pre>\end{code}
 
 

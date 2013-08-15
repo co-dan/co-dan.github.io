@@ -791,29 +791,35 @@ to switch off those rules until after floating.
 <a name="line-66"></a>        <span class='hs-varid'>modifyS</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>s</span> <span class='hs-layout'>{</span> <span class='hs-varid'>cs_uniq_supply</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>us2</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span>
 <a name="line-67"></a>        <span class='hs-varid'>return</span> <span class='hs-varid'>us1</span>
 <a name="line-68"></a>
-<a name="line-69"></a><a name="runCoreM"></a><span class='hs-definition'>runCoreM</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HscEnv</span>
-<a name="line-70"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>RuleBase</span>
-<a name="line-71"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>UniqSupply</span>
-<a name="line-72"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-73"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>CoreM</span> <span class='hs-varid'>a</span>
-<a name="line-74"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>SimplCount</span><span class='hs-layout'>)</span>
-<a name="line-75"></a><span class='hs-definition'>runCoreM</span> <span class='hs-varid'>hsc_env</span> <span class='hs-varid'>rule_base</span> <span class='hs-varid'>us</span> <span class='hs-varid'>mod</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-76"></a>        <span class='hs-varid'>glbls</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>liftM2</span> <span class='hs-conid'>(,)</span> <span class='hs-varid'>saveStaticFlagGlobals</span> <span class='hs-varid'>saveLinkerGlobals</span>
-<a name="line-77"></a>        <span class='hs-varid'>liftM</span> <span class='hs-varid'>extract</span> <span class='hs-varop'>$</span> <span class='hs-varid'>runIOEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>reader</span> <span class='hs-varid'>glbls</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unCoreM</span> <span class='hs-varid'>m</span> <span class='hs-varid'>state</span>
-<a name="line-78"></a>  <span class='hs-keyword'>where</span>
-<a name="line-79"></a>    <span class='hs-varid'>reader</span> <span class='hs-varid'>glbls</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CoreReader</span> <span class='hs-layout'>{</span>
-<a name="line-80"></a>            <span class='hs-varid'>cr_hsc_env</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hsc_env</span><span class='hs-layout'>,</span>
-<a name="line-81"></a>            <span class='hs-varid'>cr_rule_base</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>rule_base</span><span class='hs-layout'>,</span>
-<a name="line-82"></a>            <span class='hs-varid'>cr_module</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
-<a name="line-83"></a>            <span class='hs-varid'>cr_globals</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>glbls</span>
-<a name="line-84"></a>        <span class='hs-layout'>}</span>
-<a name="line-85"></a>    <span class='hs-varid'>state</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CoreState</span> <span class='hs-layout'>{</span> 
-<a name="line-86"></a>            <span class='hs-varid'>cs_uniq_supply</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>us</span>
-<a name="line-87"></a>        <span class='hs-layout'>}</span>
-<a name="line-88"></a>
-<a name="line-89"></a>    <span class='hs-varid'>extract</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreState</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreWriter</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>SimplCount</span><span class='hs-layout'>)</span>
-<a name="line-90"></a>    <span class='hs-varid'>extract</span> <span class='hs-layout'>(</span><span class='hs-varid'>value</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>writer</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>value</span><span class='hs-layout'>,</span> <span class='hs-varid'>cw_simpl_count</span> <span class='hs-varid'>writer</span><span class='hs-layout'>)</span>
-<a name="line-91"></a>
+<a name="line-69"></a>    <span class='hs-varid'>getUniqueM</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-70"></a>        <span class='hs-varid'>us</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getS</span> <span class='hs-varid'>cs_uniq_supply</span>
+<a name="line-71"></a>        <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>u</span><span class='hs-layout'>,</span><span class='hs-varid'>us'</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>takeUniqFromSupply</span> <span class='hs-varid'>us</span>
+<a name="line-72"></a>        <span class='hs-varid'>modifyS</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span><span class='hs-varid'>s</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>s</span> <span class='hs-layout'>{</span> <span class='hs-varid'>cs_uniq_supply</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>us'</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span>
+<a name="line-73"></a>        <span class='hs-varid'>return</span> <span class='hs-varid'>u</span>
+<a name="line-74"></a>
+<a name="line-75"></a><a name="runCoreM"></a><span class='hs-definition'>runCoreM</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HscEnv</span>
+<a name="line-76"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>RuleBase</span>
+<a name="line-77"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>UniqSupply</span>
+<a name="line-78"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-79"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>CoreM</span> <span class='hs-varid'>a</span>
+<a name="line-80"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>SimplCount</span><span class='hs-layout'>)</span>
+<a name="line-81"></a><span class='hs-definition'>runCoreM</span> <span class='hs-varid'>hsc_env</span> <span class='hs-varid'>rule_base</span> <span class='hs-varid'>us</span> <span class='hs-varid'>mod</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-82"></a>        <span class='hs-varid'>glbls</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>liftM2</span> <span class='hs-conid'>(,)</span> <span class='hs-varid'>saveStaticFlagGlobals</span> <span class='hs-varid'>saveLinkerGlobals</span>
+<a name="line-83"></a>        <span class='hs-varid'>liftM</span> <span class='hs-varid'>extract</span> <span class='hs-varop'>$</span> <span class='hs-varid'>runIOEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>reader</span> <span class='hs-varid'>glbls</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unCoreM</span> <span class='hs-varid'>m</span> <span class='hs-varid'>state</span>
+<a name="line-84"></a>  <span class='hs-keyword'>where</span>
+<a name="line-85"></a>    <span class='hs-varid'>reader</span> <span class='hs-varid'>glbls</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CoreReader</span> <span class='hs-layout'>{</span>
+<a name="line-86"></a>            <span class='hs-varid'>cr_hsc_env</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hsc_env</span><span class='hs-layout'>,</span>
+<a name="line-87"></a>            <span class='hs-varid'>cr_rule_base</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>rule_base</span><span class='hs-layout'>,</span>
+<a name="line-88"></a>            <span class='hs-varid'>cr_module</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
+<a name="line-89"></a>            <span class='hs-varid'>cr_globals</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>glbls</span>
+<a name="line-90"></a>        <span class='hs-layout'>}</span>
+<a name="line-91"></a>    <span class='hs-varid'>state</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CoreState</span> <span class='hs-layout'>{</span> 
+<a name="line-92"></a>            <span class='hs-varid'>cs_uniq_supply</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>us</span>
+<a name="line-93"></a>        <span class='hs-layout'>}</span>
+<a name="line-94"></a>
+<a name="line-95"></a>    <span class='hs-varid'>extract</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreState</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreWriter</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-varid'>a</span><span class='hs-layout'>,</span> <span class='hs-conid'>SimplCount</span><span class='hs-layout'>)</span>
+<a name="line-96"></a>    <span class='hs-varid'>extract</span> <span class='hs-layout'>(</span><span class='hs-varid'>value</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>,</span> <span class='hs-varid'>writer</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>value</span><span class='hs-layout'>,</span> <span class='hs-varid'>cw_simpl_count</span> <span class='hs-varid'>writer</span><span class='hs-layout'>)</span>
+<a name="line-97"></a>
 </pre>\end{code}
 
 
@@ -905,6 +911,14 @@ gets linked against a *newly loaded* copy of the GHC package. This would
 not be a problem, except that the new copy has its own mutable state
 that is not shared with that state that has already been initialized by
 the original GHC package.
+
+(NB This mechanism is sufficient for granting plugins read-only access to
+globals that are guaranteed to be initialized before the plugin is loaded.  If
+any further synchronization is necessary, I would suggest using the more
+sophisticated mechanism involving GHC.Conc.Sync.sharedCAF and rts/Globals.c to
+share a single instance of the global variable among the compiler and the
+plugins.  Perhaps we should migrate all global variables to use that mechanism,
+for robustness... -- NSF July 2013)
 
 This leads to loaded plugins calling GHC code which pokes the static flags,
 and then dying with a panic because the static flags *it* sees are uninitialized.

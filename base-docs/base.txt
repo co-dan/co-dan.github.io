@@ -862,6 +862,9 @@ data Word32
 
 -- | 64-bit unsigned integer type
 data Word64
+byteSwap16 :: Word16 -> Word16
+byteSwap32 :: Word32 -> Word32
+byteSwap64 :: Word64 -> Word64
 
 
 -- | Odds and ends, mostly functions for reading and showing
@@ -6350,10 +6353,11 @@ instance Show PatternMatchFail
 --   different ways:
 --   
 --   <ol>
---   <li>As synchronized mutable variables, 2. As channels, with
---   <a>takeMVar</a> and <a>putMVar</a> as receive and send, and 3. As a
---   binary semaphore <tt><a>MVar</a> ()</tt>, with <a>takeMVar</a> and
---   <a>putMVar</a> as wait and signal.</li>
+--   <li>As synchronized mutable variables,</li>
+--   <li>As channels, with <a>takeMVar</a> and <a>putMVar</a> as receive
+--   and send, and</li>
+--   <li>As a binary semaphore <tt><a>MVar</a> ()</tt>, with
+--   <a>takeMVar</a> and <a>putMVar</a> as wait and signal.</li>
 --   </ol>
 --   
 --   They were introduced in the paper <a>Concurrent Haskell</a> by Simon
@@ -6506,12 +6510,29 @@ takeMVar :: MVar a -> IO a
 --   </ul>
 putMVar :: MVar a -> a -> IO ()
 
--- | This is a combination of <a>takeMVar</a> and <a>putMVar</a>; ie. it
---   takes the value from the <a>MVar</a>, puts it back, and also returns
---   it. This function is atomic only if there are no other producers (i.e.
---   threads calling <a>putMVar</a>) for this <a>MVar</a>. Note: a
---   <a>tryTakeMVar</a> may temporarily see the <a>MVar</a> as empty while
---   a read is occurring.
+-- | Atomically read the contents of an <a>MVar</a>. If the <a>MVar</a> is
+--   currently empty, <a>readMVar</a> will wait until its full.
+--   <a>readMVar</a> is guaranteed to receive the next <a>putMVar</a>.
+--   
+--   <a>readMVar</a> is multiple-wakeup, so when multiple readers are
+--   blocked on an <a>MVar</a>, all of them are woken up at the same time.
+--   
+--   <i>Compatibility note:</i> Prior to base 4.7, <a>readMVar</a> was a
+--   combination of <a>takeMVar</a> and <a>putMVar</a>. This mean that in
+--   the presence of other threads attempting to <a>putMVar</a>,
+--   <a>readMVar</a> could block. Furthermore, <a>readMVar</a> would not
+--   receive the next <a>putMVar</a> if there was already a pending thread
+--   blocked on <a>takeMVar</a>. The old behavior can be recovered by
+--   implementing 'readMVar as follows:
+--   
+--   <pre>
+--   readMVar :: MVar a -&gt; IO a
+--   readMVar m =
+--     mask_ $ do
+--       a &lt;- takeMVar m
+--       putMVar m a
+--       return a
+--   </pre>
 readMVar :: MVar a -> IO a
 
 -- | Take a value from an <a>MVar</a>, put a new value into the <a>MVar</a>
@@ -6565,6 +6586,12 @@ modifyMVarMasked_ :: MVar a -> (a -> IO a) -> IO ()
 -- | Like <a>modifyMVar</a>, but the <tt>IO</tt> action in the second
 --   argument is executed with asynchronous exceptions masked.
 modifyMVarMasked :: MVar a -> (a -> IO (a, b)) -> IO b
+
+-- | A non-blocking version of <a>readMVar</a>. The <a>tryReadMVar</a>
+--   function returns immediately, with <a>Nothing</a> if the <a>MVar</a>
+--   was empty, or <tt><a>Just</a> a</tt> if the <a>MVar</a> was full with
+--   contents <tt>a</tt>.
+tryReadMVar :: MVar a -> IO (Maybe a)
 
 -- | Make a <a>Weak</a> pointer to an <a>MVar</a>, using the second
 --   argument as a finalizer to run when <a>MVar</a> is garbage-collected
@@ -13389,6 +13416,10 @@ liftA3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
 
 -- | One or none.
 optional :: Alternative f => f a -> f (Maybe a)
+instance Show a => Show (ZipList a)
+instance Eq a => Eq (ZipList a)
+instance Ord a => Ord (ZipList a)
+instance Read a => Read (ZipList a)
 instance Applicative ZipList
 instance Functor ZipList
 instance (ArrowZero a, ArrowPlus a) => Alternative (WrappedArrow a b)

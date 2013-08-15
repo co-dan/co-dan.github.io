@@ -259,91 +259,92 @@ sharing a unique will be used.
 <a name="line-96"></a>        <span class='hs-varid'>stablePtrTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ptrTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>funPtrTyConName</span><span class='hs-layout'>,</span>
 <a name="line-97"></a>        <span class='hs-varid'>int8TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>int16TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>int32TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>int64TyConName</span><span class='hs-layout'>,</span>
 <a name="line-98"></a>        <span class='hs-varid'>wordTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>word8TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>word16TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>word32TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>word64TyConName</span><span class='hs-layout'>,</span>
-<a name="line-99"></a>
-<a name="line-100"></a>        <span class='hs-comment'>-- Others</span>
-<a name="line-101"></a>        <span class='hs-varid'>otherwiseIdName</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlineIdName</span><span class='hs-layout'>,</span>
-<a name="line-102"></a>        <span class='hs-varid'>eqStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>assertName</span><span class='hs-layout'>,</span> <span class='hs-varid'>breakpointName</span><span class='hs-layout'>,</span> <span class='hs-varid'>breakpointCondName</span><span class='hs-layout'>,</span>
-<a name="line-103"></a>        <span class='hs-varid'>breakpointAutoName</span><span class='hs-layout'>,</span>  <span class='hs-varid'>opaqueTyConName</span><span class='hs-layout'>,</span>
-<a name="line-104"></a>        <span class='hs-varid'>assertErrorName</span><span class='hs-layout'>,</span> <span class='hs-varid'>runSTRepName</span><span class='hs-layout'>,</span>
-<a name="line-105"></a>        <span class='hs-varid'>printName</span><span class='hs-layout'>,</span> <span class='hs-varid'>fstName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sndName</span><span class='hs-layout'>,</span>
-<a name="line-106"></a>
-<a name="line-107"></a>        <span class='hs-comment'>-- Integer</span>
-<a name="line-108"></a>        <span class='hs-varid'>integerTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-109"></a>        <span class='hs-varid'>integerToWord64Name</span><span class='hs-layout'>,</span> <span class='hs-varid'>integerToInt64Name</span><span class='hs-layout'>,</span>
-<a name="line-110"></a>        <span class='hs-varid'>word64ToIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>int64ToIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-111"></a>        <span class='hs-varid'>plusIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>timesIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>smallIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-112"></a>        <span class='hs-varid'>wordToIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-113"></a>        <span class='hs-varid'>integerToWordName</span><span class='hs-layout'>,</span> <span class='hs-varid'>integerToIntName</span><span class='hs-layout'>,</span> <span class='hs-varid'>minusIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-114"></a>        <span class='hs-varid'>negateIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>eqIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>neqIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-115"></a>        <span class='hs-varid'>absIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>signumIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-116"></a>        <span class='hs-varid'>leIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gtIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ltIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>geIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-117"></a>        <span class='hs-varid'>compareIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>quotRemIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>divModIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-118"></a>        <span class='hs-varid'>quotIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>remIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-119"></a>        <span class='hs-varid'>floatFromIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>doubleFromIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-120"></a>        <span class='hs-varid'>encodeFloatIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>encodeDoubleIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-121"></a>        <span class='hs-varid'>decodeDoubleIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-122"></a>        <span class='hs-varid'>gcdIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>lcmIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-123"></a>        <span class='hs-varid'>andIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>orIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>xorIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>complementIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-124"></a>        <span class='hs-varid'>shiftLIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>shiftRIntegerName</span><span class='hs-layout'>,</span>
-<a name="line-125"></a>
-<a name="line-126"></a>        <span class='hs-comment'>-- Float/Double</span>
-<a name="line-127"></a>        <span class='hs-varid'>rationalToFloatName</span><span class='hs-layout'>,</span>
-<a name="line-128"></a>        <span class='hs-varid'>rationalToDoubleName</span><span class='hs-layout'>,</span>
-<a name="line-129"></a>
-<a name="line-130"></a>        <span class='hs-comment'>-- MonadFix</span>
-<a name="line-131"></a>        <span class='hs-varid'>monadFixClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>mfixName</span><span class='hs-layout'>,</span>
-<a name="line-132"></a>
-<a name="line-133"></a>        <span class='hs-comment'>-- Other classes</span>
-<a name="line-134"></a>        <span class='hs-varid'>randomClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>randomGenClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>monadPlusClassName</span><span class='hs-layout'>,</span>
-<a name="line-135"></a>
-<a name="line-136"></a>        <span class='hs-comment'>-- Type-level naturals</span>
-<a name="line-137"></a>        <span class='hs-varid'>singIClassName</span><span class='hs-layout'>,</span>
-<a name="line-138"></a>        <span class='hs-varid'>typeNatLeqClassName</span><span class='hs-layout'>,</span>
-<a name="line-139"></a>        <span class='hs-varid'>typeNatAddTyFamName</span><span class='hs-layout'>,</span>
-<a name="line-140"></a>        <span class='hs-varid'>typeNatMulTyFamName</span><span class='hs-layout'>,</span>
-<a name="line-141"></a>        <span class='hs-varid'>typeNatExpTyFamName</span><span class='hs-layout'>,</span>
-<a name="line-142"></a>
-<a name="line-143"></a>        <span class='hs-comment'>-- Implicit parameters</span>
-<a name="line-144"></a>        <span class='hs-varid'>ipClassName</span><span class='hs-layout'>,</span>
-<a name="line-145"></a>
-<a name="line-146"></a>        <span class='hs-comment'>-- Annotation type checking</span>
-<a name="line-147"></a>        <span class='hs-varid'>toAnnotationWrapperName</span>
-<a name="line-148"></a>
-<a name="line-149"></a>        <span class='hs-comment'>-- The Ordering type</span>
-<a name="line-150"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>orderingTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ltDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>eqDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gtDataConName</span>
-<a name="line-151"></a>
-<a name="line-152"></a>        <span class='hs-comment'>-- The Either type</span>
-<a name="line-153"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>eitherTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>leftDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rightDataConName</span>
-<a name="line-154"></a>
-<a name="line-155"></a>        <span class='hs-comment'>-- Plugins</span>
-<a name="line-156"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>pluginTyConName</span>
-<a name="line-157"></a>
-<a name="line-158"></a>        <span class='hs-comment'>-- dotnet interop</span>
-<a name="line-159"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>objectTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>unmarshalObjectName</span>
-<a name="line-160"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>marshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>unmarshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>checkDotnetResName</span>
-<a name="line-161"></a>
-<a name="line-162"></a>        <span class='hs-comment'>-- Generics</span>
-<a name="line-163"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>genClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gen1ClassName</span>
-<a name="line-164"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>datatypeClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>constructorClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>selectorClassName</span>
-<a name="line-165"></a>
-<a name="line-166"></a>        <span class='hs-comment'>-- Monad comprehensions</span>
-<a name="line-167"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>guardMName</span>
-<a name="line-168"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>liftMName</span>
-<a name="line-169"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>mzipName</span>
-<a name="line-170"></a>
-<a name="line-171"></a>        <span class='hs-comment'>-- GHCi Sandbox</span>
-<a name="line-172"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>ghciIoClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ghciStepIoMName</span>
-<a name="line-173"></a>    <span class='hs-keyglyph'>]</span>
-<a name="line-174"></a>
-<a name="line-175"></a><a name="genericTyConNames"></a><span class='hs-definition'>genericTyConNames</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Name</span><span class='hs-keyglyph'>]</span>
-<a name="line-176"></a><span class='hs-definition'>genericTyConNames</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span>
-<a name="line-177"></a>    <span class='hs-varid'>v1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>u1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>par1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec1TyConName</span><span class='hs-layout'>,</span>
-<a name="line-178"></a>    <span class='hs-varid'>k1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>m1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sumTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>prodTyConName</span><span class='hs-layout'>,</span>
-<a name="line-179"></a>    <span class='hs-varid'>compTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>pTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>dTyConName</span><span class='hs-layout'>,</span>
-<a name="line-180"></a>    <span class='hs-varid'>cTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec0TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>par0TyConName</span><span class='hs-layout'>,</span>
-<a name="line-181"></a>    <span class='hs-varid'>d1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>c1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>s1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>noSelTyConName</span><span class='hs-layout'>,</span>
-<a name="line-182"></a>    <span class='hs-varid'>repTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rep1TyConName</span>
-<a name="line-183"></a>  <span class='hs-keyglyph'>]</span>
+<a name="line-99"></a>        <span class='hs-varid'>jsrefTyConName</span><span class='hs-layout'>,</span>
+<a name="line-100"></a>
+<a name="line-101"></a>        <span class='hs-comment'>-- Others</span>
+<a name="line-102"></a>        <span class='hs-varid'>otherwiseIdName</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlineIdName</span><span class='hs-layout'>,</span>
+<a name="line-103"></a>        <span class='hs-varid'>eqStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>assertName</span><span class='hs-layout'>,</span> <span class='hs-varid'>breakpointName</span><span class='hs-layout'>,</span> <span class='hs-varid'>breakpointCondName</span><span class='hs-layout'>,</span>
+<a name="line-104"></a>        <span class='hs-varid'>breakpointAutoName</span><span class='hs-layout'>,</span>  <span class='hs-varid'>opaqueTyConName</span><span class='hs-layout'>,</span>
+<a name="line-105"></a>        <span class='hs-varid'>assertErrorName</span><span class='hs-layout'>,</span> <span class='hs-varid'>runSTRepName</span><span class='hs-layout'>,</span>
+<a name="line-106"></a>        <span class='hs-varid'>printName</span><span class='hs-layout'>,</span> <span class='hs-varid'>fstName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sndName</span><span class='hs-layout'>,</span>
+<a name="line-107"></a>
+<a name="line-108"></a>        <span class='hs-comment'>-- Integer</span>
+<a name="line-109"></a>        <span class='hs-varid'>integerTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-110"></a>        <span class='hs-varid'>integerToWord64Name</span><span class='hs-layout'>,</span> <span class='hs-varid'>integerToInt64Name</span><span class='hs-layout'>,</span>
+<a name="line-111"></a>        <span class='hs-varid'>word64ToIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>int64ToIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-112"></a>        <span class='hs-varid'>plusIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>timesIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>smallIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-113"></a>        <span class='hs-varid'>wordToIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-114"></a>        <span class='hs-varid'>integerToWordName</span><span class='hs-layout'>,</span> <span class='hs-varid'>integerToIntName</span><span class='hs-layout'>,</span> <span class='hs-varid'>minusIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-115"></a>        <span class='hs-varid'>negateIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>eqIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>neqIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-116"></a>        <span class='hs-varid'>absIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>signumIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-117"></a>        <span class='hs-varid'>leIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gtIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ltIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>geIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-118"></a>        <span class='hs-varid'>compareIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>quotRemIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>divModIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-119"></a>        <span class='hs-varid'>quotIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>remIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-120"></a>        <span class='hs-varid'>floatFromIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>doubleFromIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-121"></a>        <span class='hs-varid'>encodeFloatIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>encodeDoubleIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-122"></a>        <span class='hs-varid'>decodeDoubleIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-123"></a>        <span class='hs-varid'>gcdIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>lcmIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-124"></a>        <span class='hs-varid'>andIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>orIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>xorIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>complementIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-125"></a>        <span class='hs-varid'>shiftLIntegerName</span><span class='hs-layout'>,</span> <span class='hs-varid'>shiftRIntegerName</span><span class='hs-layout'>,</span>
+<a name="line-126"></a>
+<a name="line-127"></a>        <span class='hs-comment'>-- Float/Double</span>
+<a name="line-128"></a>        <span class='hs-varid'>rationalToFloatName</span><span class='hs-layout'>,</span>
+<a name="line-129"></a>        <span class='hs-varid'>rationalToDoubleName</span><span class='hs-layout'>,</span>
+<a name="line-130"></a>
+<a name="line-131"></a>        <span class='hs-comment'>-- MonadFix</span>
+<a name="line-132"></a>        <span class='hs-varid'>monadFixClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>mfixName</span><span class='hs-layout'>,</span>
+<a name="line-133"></a>
+<a name="line-134"></a>        <span class='hs-comment'>-- Other classes</span>
+<a name="line-135"></a>        <span class='hs-varid'>randomClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>randomGenClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>monadPlusClassName</span><span class='hs-layout'>,</span>
+<a name="line-136"></a>
+<a name="line-137"></a>        <span class='hs-comment'>-- Type-level naturals</span>
+<a name="line-138"></a>        <span class='hs-varid'>singIClassName</span><span class='hs-layout'>,</span>
+<a name="line-139"></a>        <span class='hs-varid'>typeNatLeqClassName</span><span class='hs-layout'>,</span>
+<a name="line-140"></a>        <span class='hs-varid'>typeNatAddTyFamName</span><span class='hs-layout'>,</span>
+<a name="line-141"></a>        <span class='hs-varid'>typeNatMulTyFamName</span><span class='hs-layout'>,</span>
+<a name="line-142"></a>        <span class='hs-varid'>typeNatExpTyFamName</span><span class='hs-layout'>,</span>
+<a name="line-143"></a>
+<a name="line-144"></a>        <span class='hs-comment'>-- Implicit parameters</span>
+<a name="line-145"></a>        <span class='hs-varid'>ipClassName</span><span class='hs-layout'>,</span>
+<a name="line-146"></a>
+<a name="line-147"></a>        <span class='hs-comment'>-- Annotation type checking</span>
+<a name="line-148"></a>        <span class='hs-varid'>toAnnotationWrapperName</span>
+<a name="line-149"></a>
+<a name="line-150"></a>        <span class='hs-comment'>-- The Ordering type</span>
+<a name="line-151"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>orderingTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ltDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>eqDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gtDataConName</span>
+<a name="line-152"></a>
+<a name="line-153"></a>        <span class='hs-comment'>-- The Either type</span>
+<a name="line-154"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>eitherTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>leftDataConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rightDataConName</span>
+<a name="line-155"></a>
+<a name="line-156"></a>        <span class='hs-comment'>-- Plugins</span>
+<a name="line-157"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>pluginTyConName</span>
+<a name="line-158"></a>
+<a name="line-159"></a>        <span class='hs-comment'>-- dotnet interop</span>
+<a name="line-160"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>objectTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>unmarshalObjectName</span>
+<a name="line-161"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>marshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>unmarshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>checkDotnetResName</span>
+<a name="line-162"></a>
+<a name="line-163"></a>        <span class='hs-comment'>-- Generics</span>
+<a name="line-164"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>genClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>gen1ClassName</span>
+<a name="line-165"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>datatypeClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>constructorClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>selectorClassName</span>
+<a name="line-166"></a>
+<a name="line-167"></a>        <span class='hs-comment'>-- Monad comprehensions</span>
+<a name="line-168"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>guardMName</span>
+<a name="line-169"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>liftMName</span>
+<a name="line-170"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>mzipName</span>
+<a name="line-171"></a>
+<a name="line-172"></a>        <span class='hs-comment'>-- GHCi Sandbox</span>
+<a name="line-173"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>ghciIoClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>ghciStepIoMName</span>
+<a name="line-174"></a>    <span class='hs-keyglyph'>]</span>
+<a name="line-175"></a>
+<a name="line-176"></a><a name="genericTyConNames"></a><span class='hs-definition'>genericTyConNames</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Name</span><span class='hs-keyglyph'>]</span>
+<a name="line-177"></a><span class='hs-definition'>genericTyConNames</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span>
+<a name="line-178"></a>    <span class='hs-varid'>v1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>u1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>par1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec1TyConName</span><span class='hs-layout'>,</span>
+<a name="line-179"></a>    <span class='hs-varid'>k1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>m1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sumTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>prodTyConName</span><span class='hs-layout'>,</span>
+<a name="line-180"></a>    <span class='hs-varid'>compTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>pTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>dTyConName</span><span class='hs-layout'>,</span>
+<a name="line-181"></a>    <span class='hs-varid'>cTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>sTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec0TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>par0TyConName</span><span class='hs-layout'>,</span>
+<a name="line-182"></a>    <span class='hs-varid'>d1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>c1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>s1TyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>noSelTyConName</span><span class='hs-layout'>,</span>
+<a name="line-183"></a>    <span class='hs-varid'>repTyConName</span><span class='hs-layout'>,</span> <span class='hs-varid'>rep1TyConName</span>
+<a name="line-184"></a>  <span class='hs-keyglyph'>]</span>
 </pre>\end{code}
 
 
@@ -370,7 +371,7 @@ sharing a unique will be used.
 <a name="line-12"></a>    <span class='hs-varid'>tYPEABLE</span><span class='hs-layout'>,</span> <span class='hs-varid'>tYPEABLE_INTERNAL</span><span class='hs-layout'>,</span> <span class='hs-varid'>oLDTYPEABLE</span><span class='hs-layout'>,</span> <span class='hs-varid'>oLDTYPEABLE_INTERNAL</span><span class='hs-layout'>,</span> <span class='hs-varid'>gENERICS</span><span class='hs-layout'>,</span>
 <a name="line-13"></a>    <span class='hs-varid'>dOTNET</span><span class='hs-layout'>,</span> <span class='hs-varid'>rEAD_PREC</span><span class='hs-layout'>,</span> <span class='hs-varid'>lEX</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_INT</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_WORD</span><span class='hs-layout'>,</span> <span class='hs-varid'>mONAD</span><span class='hs-layout'>,</span> <span class='hs-varid'>mONAD_FIX</span><span class='hs-layout'>,</span> <span class='hs-varid'>mONAD_ZIP</span><span class='hs-layout'>,</span>
 <a name="line-14"></a>    <span class='hs-varid'>aRROW</span><span class='hs-layout'>,</span> <span class='hs-varid'>cONTROL_APPLICATIVE</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_DESUGAR</span><span class='hs-layout'>,</span> <span class='hs-varid'>rANDOM</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_EXTS</span><span class='hs-layout'>,</span>
-<a name="line-15"></a>    <span class='hs-varid'>cONTROL_EXCEPTION_BASE</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_TYPELITS</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_IP</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
+<a name="line-15"></a>    <span class='hs-varid'>cONTROL_EXCEPTION_BASE</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_TYPELITS</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHC_IP</span><span class='hs-layout'>,</span> <span class='hs-varid'>gHCJS_PRIM</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
 <a name="line-16"></a>
 <a name="line-17"></a><span class='hs-definition'>gHC_PRIM</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPrimModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.Prim"</span><span class='hs-layout'>)</span>   <span class='hs-comment'>-- Primitive types and values</span>
 <a name="line-18"></a><a name="gHC_TYPES"></a><span class='hs-definition'>gHC_TYPES</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPrimModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.Types"</span><span class='hs-layout'>)</span>
@@ -428,52 +429,56 @@ sharing a unique will be used.
 <a name="line-70"></a><a name="gHC_GENERICS"></a><span class='hs-definition'>gHC_GENERICS</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkBaseModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.Generics"</span><span class='hs-layout'>)</span>
 <a name="line-71"></a><a name="gHC_TYPELITS"></a><span class='hs-definition'>gHC_TYPELITS</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkBaseModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.TypeLits"</span><span class='hs-layout'>)</span>
 <a name="line-72"></a><a name="gHC_IP"></a><span class='hs-definition'>gHC_IP</span>          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkBaseModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.IP"</span><span class='hs-layout'>)</span>
-<a name="line-73"></a>
-<a name="line-74"></a><a name="gHC_PARR'"></a><span class='hs-definition'>gHC_PARR'</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
-<a name="line-75"></a><span class='hs-definition'>gHC_PARR'</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkBaseModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.PArr"</span><span class='hs-layout'>)</span>
-<a name="line-76"></a>
-<a name="line-77"></a><a name="mAIN"></a><span class='hs-definition'>mAIN</span><span class='hs-layout'>,</span> <span class='hs-varid'>rOOT_MAIN</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
-<a name="line-78"></a><span class='hs-definition'>mAIN</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule_</span> <span class='hs-varid'>mAIN_NAME</span>
-<a name="line-79"></a><a name="rOOT_MAIN"></a><span class='hs-definition'>rOOT_MAIN</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>":Main"</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Root module for initialisation</span>
-<a name="line-80"></a>
-<a name="line-81"></a>        <span class='hs-comment'>-- The ':xxx' makes a module name that the user can never</span>
-<a name="line-82"></a>        <span class='hs-comment'>-- use himself.  The z-encoding for ':' is "ZC", so the z-encoded</span>
-<a name="line-83"></a>        <span class='hs-comment'>-- module name still starts with a capital letter, which keeps</span>
-<a name="line-84"></a>        <span class='hs-comment'>-- the z-encoded version consistent.</span>
-<a name="line-85"></a><a name="iNTERACTIVE"></a><span class='hs-definition'>iNTERACTIVE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
-<a name="line-86"></a><span class='hs-definition'>iNTERACTIVE</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>":Interactive"</span><span class='hs-layout'>)</span>
-<a name="line-87"></a>
-<a name="line-88"></a><a name="pRELUDE_NAME"></a><span class='hs-definition'>pRELUDE_NAME</span><span class='hs-layout'>,</span> <span class='hs-varid'>mAIN_NAME</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span>
-<a name="line-89"></a><span class='hs-definition'>pRELUDE_NAME</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Prelude"</span><span class='hs-layout'>)</span>
-<a name="line-90"></a><a name="mAIN_NAME"></a><span class='hs-definition'>mAIN_NAME</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Main"</span><span class='hs-layout'>)</span>
-<a name="line-91"></a>
-<a name="line-92"></a><a name="dATA_ARRAY_PARALLEL_NAME"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_NAME</span><span class='hs-layout'>,</span> <span class='hs-varid'>dATA_ARRAY_PARALLEL_PRIM_NAME</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span>
-<a name="line-93"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_NAME</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Data.Array.Parallel"</span><span class='hs-layout'>)</span>
-<a name="line-94"></a><a name="dATA_ARRAY_PARALLEL_PRIM_NAME"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_PRIM_NAME</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Data.Array.Parallel.Prim"</span><span class='hs-layout'>)</span>
-<a name="line-95"></a>
-<a name="line-96"></a><a name="mkPrimModule"></a><span class='hs-definition'>mkPrimModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-97"></a><span class='hs-definition'>mkPrimModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>primPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
-<a name="line-98"></a>
-<a name="line-99"></a><a name="mkIntegerModule"></a><span class='hs-definition'>mkIntegerModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-100"></a><span class='hs-definition'>mkIntegerModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>integerPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
-<a name="line-101"></a>
-<a name="line-102"></a><a name="mkBaseModule"></a><span class='hs-definition'>mkBaseModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-103"></a><span class='hs-definition'>mkBaseModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>basePackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
-<a name="line-104"></a>
-<a name="line-105"></a><a name="mkBaseModule_"></a><span class='hs-definition'>mkBaseModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-106"></a><span class='hs-definition'>mkBaseModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>basePackageId</span> <span class='hs-varid'>m</span>
-<a name="line-107"></a>
-<a name="line-108"></a><a name="mkThisGhcModule"></a><span class='hs-definition'>mkThisGhcModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-109"></a><span class='hs-definition'>mkThisGhcModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>thisGhcPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
-<a name="line-110"></a>
-<a name="line-111"></a><a name="mkThisGhcModule_"></a><span class='hs-definition'>mkThisGhcModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-112"></a><span class='hs-definition'>mkThisGhcModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>thisGhcPackageId</span> <span class='hs-varid'>m</span>
-<a name="line-113"></a>
-<a name="line-114"></a><a name="mkMainModule"></a><span class='hs-definition'>mkMainModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-115"></a><span class='hs-definition'>mkMainModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>mainPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
-<a name="line-116"></a>
-<a name="line-117"></a><a name="mkMainModule_"></a><span class='hs-definition'>mkMainModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-118"></a><span class='hs-definition'>mkMainModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>mainPackageId</span> <span class='hs-varid'>m</span>
+<a name="line-73"></a><a name="gHCJS_PRIM"></a><span class='hs-definition'>gHCJS_PRIM</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkGhcjsPrimModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHCJS.Prim"</span><span class='hs-layout'>)</span>
+<a name="line-74"></a>
+<a name="line-75"></a><a name="gHC_PARR'"></a><span class='hs-definition'>gHC_PARR'</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
+<a name="line-76"></a><span class='hs-definition'>gHC_PARR'</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkBaseModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"GHC.PArr"</span><span class='hs-layout'>)</span>
+<a name="line-77"></a>
+<a name="line-78"></a><a name="mAIN"></a><span class='hs-definition'>mAIN</span><span class='hs-layout'>,</span> <span class='hs-varid'>rOOT_MAIN</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
+<a name="line-79"></a><span class='hs-definition'>mAIN</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule_</span> <span class='hs-varid'>mAIN_NAME</span>
+<a name="line-80"></a><a name="rOOT_MAIN"></a><span class='hs-definition'>rOOT_MAIN</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>":Main"</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Root module for initialisation</span>
+<a name="line-81"></a>
+<a name="line-82"></a>        <span class='hs-comment'>-- The ':xxx' makes a module name that the user can never</span>
+<a name="line-83"></a>        <span class='hs-comment'>-- use himself.  The z-encoding for ':' is "ZC", so the z-encoded</span>
+<a name="line-84"></a>        <span class='hs-comment'>-- module name still starts with a capital letter, which keeps</span>
+<a name="line-85"></a>        <span class='hs-comment'>-- the z-encoded version consistent.</span>
+<a name="line-86"></a><a name="iNTERACTIVE"></a><span class='hs-definition'>iNTERACTIVE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
+<a name="line-87"></a><span class='hs-definition'>iNTERACTIVE</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkMainModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>":Interactive"</span><span class='hs-layout'>)</span>
+<a name="line-88"></a>
+<a name="line-89"></a><a name="pRELUDE_NAME"></a><span class='hs-definition'>pRELUDE_NAME</span><span class='hs-layout'>,</span> <span class='hs-varid'>mAIN_NAME</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span>
+<a name="line-90"></a><span class='hs-definition'>pRELUDE_NAME</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Prelude"</span><span class='hs-layout'>)</span>
+<a name="line-91"></a><a name="mAIN_NAME"></a><span class='hs-definition'>mAIN_NAME</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Main"</span><span class='hs-layout'>)</span>
+<a name="line-92"></a>
+<a name="line-93"></a><a name="dATA_ARRAY_PARALLEL_NAME"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_NAME</span><span class='hs-layout'>,</span> <span class='hs-varid'>dATA_ARRAY_PARALLEL_PRIM_NAME</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span>
+<a name="line-94"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_NAME</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Data.Array.Parallel"</span><span class='hs-layout'>)</span>
+<a name="line-95"></a><a name="dATA_ARRAY_PARALLEL_PRIM_NAME"></a><span class='hs-definition'>dATA_ARRAY_PARALLEL_PRIM_NAME</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModuleNameFS</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Data.Array.Parallel.Prim"</span><span class='hs-layout'>)</span>
+<a name="line-96"></a>
+<a name="line-97"></a><a name="mkPrimModule"></a><span class='hs-definition'>mkPrimModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-98"></a><span class='hs-definition'>mkPrimModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>primPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-99"></a>
+<a name="line-100"></a><a name="mkIntegerModule"></a><span class='hs-definition'>mkIntegerModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-101"></a><span class='hs-definition'>mkIntegerModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>integerPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-102"></a>
+<a name="line-103"></a><a name="mkBaseModule"></a><span class='hs-definition'>mkBaseModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-104"></a><span class='hs-definition'>mkBaseModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>basePackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-105"></a>
+<a name="line-106"></a><a name="mkBaseModule_"></a><span class='hs-definition'>mkBaseModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-107"></a><span class='hs-definition'>mkBaseModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>basePackageId</span> <span class='hs-varid'>m</span>
+<a name="line-108"></a>
+<a name="line-109"></a><a name="mkGhcjsPrimModule"></a><span class='hs-definition'>mkGhcjsPrimModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-110"></a><span class='hs-definition'>mkGhcjsPrimModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>ghcjsPrimPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-111"></a>
+<a name="line-112"></a><a name="mkThisGhcModule"></a><span class='hs-definition'>mkThisGhcModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-113"></a><span class='hs-definition'>mkThisGhcModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>thisGhcPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-114"></a>
+<a name="line-115"></a><a name="mkThisGhcModule_"></a><span class='hs-definition'>mkThisGhcModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-116"></a><span class='hs-definition'>mkThisGhcModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>thisGhcPackageId</span> <span class='hs-varid'>m</span>
+<a name="line-117"></a>
+<a name="line-118"></a><a name="mkMainModule"></a><span class='hs-definition'>mkMainModule</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FastString</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-119"></a><span class='hs-definition'>mkMainModule</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>mainPackageId</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkModuleNameFS</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span>
+<a name="line-120"></a>
+<a name="line-121"></a><a name="mkMainModule_"></a><span class='hs-definition'>mkMainModule_</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-122"></a><span class='hs-definition'>mkMainModule_</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkModule</span> <span class='hs-varid'>mainPackageId</span> <span class='hs-varid'>m</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -1140,26 +1145,28 @@ and it's convenient to write them all down in one place.
 <a name="line-395"></a><span class='hs-definition'>ipClassName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
 <a name="line-396"></a><span class='hs-definition'>ipClassName</span>         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>clsQual</span> <span class='hs-varid'>gHC_IP</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"IP"</span><span class='hs-layout'>)</span>      <span class='hs-varid'>ipClassNameKey</span>
 <a name="line-397"></a>
-<a name="line-398"></a>
-<a name="line-399"></a>
-<a name="line-400"></a><a name="objectTyConName"></a><span class='hs-comment'>-- dotnet interop</span>
-<a name="line-401"></a><span class='hs-definition'>objectTyConName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
-<a name="line-402"></a><span class='hs-definition'>objectTyConName</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcQual</span>   <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Object"</span><span class='hs-layout'>)</span> <span class='hs-varid'>objectTyConKey</span>
-<a name="line-403"></a>        <span class='hs-comment'>-- objectTyConName was "wTcQual", but that's gone now, and</span>
-<a name="line-404"></a>        <span class='hs-comment'>-- I can't see why it was wired in anyway...</span>
-<a name="line-405"></a><a name="unmarshalObjectName"></a><span class='hs-definition'>unmarshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalStringName</span><span class='hs-layout'>,</span>
-<a name="line-406"></a>    <span class='hs-varid'>unmarshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>checkDotnetResName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
-<a name="line-407"></a><span class='hs-definition'>unmarshalObjectName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"unmarshalObject"</span><span class='hs-layout'>)</span> <span class='hs-varid'>unmarshalObjectIdKey</span>
-<a name="line-408"></a><a name="marshalObjectName"></a><span class='hs-definition'>marshalObjectName</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"marshalObject"</span><span class='hs-layout'>)</span> <span class='hs-varid'>marshalObjectIdKey</span>
-<a name="line-409"></a><a name="marshalStringName"></a><span class='hs-definition'>marshalStringName</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"marshalString"</span><span class='hs-layout'>)</span> <span class='hs-varid'>marshalStringIdKey</span>
-<a name="line-410"></a><a name="unmarshalStringName"></a><span class='hs-definition'>unmarshalStringName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"unmarshalString"</span><span class='hs-layout'>)</span> <span class='hs-varid'>unmarshalStringIdKey</span>
-<a name="line-411"></a><a name="checkDotnetResName"></a><span class='hs-definition'>checkDotnetResName</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"checkResult"</span><span class='hs-layout'>)</span>     <span class='hs-varid'>checkDotnetResNameIdKey</span>
-<a name="line-412"></a>
-<a name="line-413"></a><a name="cORE_MONAD"></a><span class='hs-comment'>-- plugins</span>
-<a name="line-414"></a><span class='hs-definition'>cORE_MONAD</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
-<a name="line-415"></a><span class='hs-definition'>cORE_MONAD</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkThisGhcModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"CoreMonad"</span><span class='hs-layout'>)</span>
-<a name="line-416"></a><a name="pluginTyConName"></a><span class='hs-definition'>pluginTyConName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
-<a name="line-417"></a><span class='hs-definition'>pluginTyConName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcQual</span> <span class='hs-varid'>cORE_MONAD</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Plugin"</span><span class='hs-layout'>)</span> <span class='hs-varid'>pluginTyConKey</span>
+<a name="line-398"></a><a name="jsrefTyConName"></a><span class='hs-comment'>-- GHCJS JavaScript reference</span>
+<a name="line-399"></a><span class='hs-definition'>jsrefTyConName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
+<a name="line-400"></a><span class='hs-definition'>jsrefTyConName</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcQual</span>  <span class='hs-varid'>gHCJS_PRIM</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"JSRef"</span><span class='hs-layout'>)</span> <span class='hs-varid'>jsrefTyConKey</span>
+<a name="line-401"></a>
+<a name="line-402"></a><a name="objectTyConName"></a><span class='hs-comment'>-- dotnet interop</span>
+<a name="line-403"></a><span class='hs-definition'>objectTyConName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
+<a name="line-404"></a><span class='hs-definition'>objectTyConName</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcQual</span>   <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Object"</span><span class='hs-layout'>)</span> <span class='hs-varid'>objectTyConKey</span>
+<a name="line-405"></a>        <span class='hs-comment'>-- objectTyConName was "wTcQual", but that's gone now, and</span>
+<a name="line-406"></a>        <span class='hs-comment'>-- I can't see why it was wired in anyway...</span>
+<a name="line-407"></a><a name="unmarshalObjectName"></a><span class='hs-definition'>unmarshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalObjectName</span><span class='hs-layout'>,</span> <span class='hs-varid'>marshalStringName</span><span class='hs-layout'>,</span>
+<a name="line-408"></a>    <span class='hs-varid'>unmarshalStringName</span><span class='hs-layout'>,</span> <span class='hs-varid'>checkDotnetResName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
+<a name="line-409"></a><span class='hs-definition'>unmarshalObjectName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"unmarshalObject"</span><span class='hs-layout'>)</span> <span class='hs-varid'>unmarshalObjectIdKey</span>
+<a name="line-410"></a><a name="marshalObjectName"></a><span class='hs-definition'>marshalObjectName</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"marshalObject"</span><span class='hs-layout'>)</span> <span class='hs-varid'>marshalObjectIdKey</span>
+<a name="line-411"></a><a name="marshalStringName"></a><span class='hs-definition'>marshalStringName</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"marshalString"</span><span class='hs-layout'>)</span> <span class='hs-varid'>marshalStringIdKey</span>
+<a name="line-412"></a><a name="unmarshalStringName"></a><span class='hs-definition'>unmarshalStringName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"unmarshalString"</span><span class='hs-layout'>)</span> <span class='hs-varid'>unmarshalStringIdKey</span>
+<a name="line-413"></a><a name="checkDotnetResName"></a><span class='hs-definition'>checkDotnetResName</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>varQual</span>  <span class='hs-varid'>dOTNET</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"checkResult"</span><span class='hs-layout'>)</span>     <span class='hs-varid'>checkDotnetResNameIdKey</span>
+<a name="line-414"></a>
+<a name="line-415"></a><a name="cORE_MONAD"></a><span class='hs-comment'>-- plugins</span>
+<a name="line-416"></a><span class='hs-definition'>cORE_MONAD</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span>
+<a name="line-417"></a><span class='hs-definition'>cORE_MONAD</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkThisGhcModule</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"CoreMonad"</span><span class='hs-layout'>)</span>
+<a name="line-418"></a><a name="pluginTyConName"></a><span class='hs-definition'>pluginTyConName</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span>
+<a name="line-419"></a><span class='hs-definition'>pluginTyConName</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tcQual</span> <span class='hs-varid'>cORE_MONAD</span> <span class='hs-layout'>(</span><span class='hs-varid'>fsLit</span> <span class='hs-str'>"Plugin"</span><span class='hs-layout'>)</span> <span class='hs-varid'>pluginTyConKey</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -1369,119 +1376,122 @@ All these are original names; hence mkOrig
 <a name="line-80"></a><a name="funPtrTyConKey"></a><span class='hs-definition'>funPtrTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>75</span>
 <a name="line-81"></a><a name="tVarPrimTyConKey"></a><span class='hs-definition'>tVarPrimTyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>76</span>
 <a name="line-82"></a>
-<a name="line-83"></a><a name="parrTyConKey"></a><span class='hs-comment'>-- Parallel array type constructor</span>
-<a name="line-84"></a><span class='hs-definition'>parrTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-85"></a><span class='hs-definition'>parrTyConKey</span>                            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>82</span>
-<a name="line-86"></a>
-<a name="line-87"></a><a name="objectTyConKey"></a><span class='hs-comment'>-- dotnet interop</span>
-<a name="line-88"></a><span class='hs-definition'>objectTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-89"></a><span class='hs-definition'>objectTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>83</span>
-<a name="line-90"></a>
-<a name="line-91"></a><a name="eitherTyConKey"></a><span class='hs-definition'>eitherTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-92"></a><span class='hs-definition'>eitherTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>84</span>
+<a name="line-83"></a><a name="jsrefTyConKey"></a><span class='hs-comment'>-- GHCJS JavaScript reference</span>
+<a name="line-84"></a><span class='hs-definition'>jsrefTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>77</span>
+<a name="line-85"></a>
+<a name="line-86"></a><a name="parrTyConKey"></a><span class='hs-comment'>-- Parallel array type constructor</span>
+<a name="line-87"></a><span class='hs-definition'>parrTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-88"></a><span class='hs-definition'>parrTyConKey</span>                            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>82</span>
+<a name="line-89"></a>
+<a name="line-90"></a><a name="objectTyConKey"></a><span class='hs-comment'>-- dotnet interop</span>
+<a name="line-91"></a><span class='hs-definition'>objectTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-92"></a><span class='hs-definition'>objectTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>83</span>
 <a name="line-93"></a>
-<a name="line-94"></a><a name="superKindTyConKey"></a><span class='hs-comment'>-- Super Kinds constructors</span>
-<a name="line-95"></a><span class='hs-definition'>superKindTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-96"></a><span class='hs-definition'>superKindTyConKey</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>85</span>
-<a name="line-97"></a>
-<a name="line-98"></a><a name="liftedTypeKindTyConKey"></a><span class='hs-comment'>-- Kind constructors</span>
-<a name="line-99"></a><span class='hs-definition'>liftedTypeKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>anyKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>openTypeKindTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-100"></a>  <span class='hs-varid'>unliftedTypeKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>constraintKindTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-101"></a><a name="anyKindTyConKey"></a><span class='hs-definition'>anyKindTyConKey</span>                         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>86</span>
-<a name="line-102"></a><span class='hs-definition'>liftedTypeKindTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>87</span>
-<a name="line-103"></a><a name="openTypeKindTyConKey"></a><span class='hs-definition'>openTypeKindTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>88</span>
-<a name="line-104"></a><a name="unliftedTypeKindTyConKey"></a><span class='hs-definition'>unliftedTypeKindTyConKey</span>                <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>89</span>
-<a name="line-105"></a><a name="constraintKindTyConKey"></a><span class='hs-definition'>constraintKindTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>92</span>
-<a name="line-106"></a>
-<a name="line-107"></a><a name="symCoercionTyConKey"></a><span class='hs-comment'>-- Coercion constructors</span>
-<a name="line-108"></a><span class='hs-definition'>symCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>transCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>leftCoercionTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-109"></a>    <span class='hs-varid'>rightCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>instCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unsafeCoercionTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-110"></a>    <span class='hs-varid'>csel1CoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>csel2CoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>cselRCoercionTyConKey</span>
-<a name="line-111"></a>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-112"></a><span class='hs-definition'>symCoercionTyConKey</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>93</span>
-<a name="line-113"></a><a name="transCoercionTyConKey"></a><span class='hs-definition'>transCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>94</span>
-<a name="line-114"></a><a name="leftCoercionTyConKey"></a><span class='hs-definition'>leftCoercionTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>95</span>
-<a name="line-115"></a><a name="rightCoercionTyConKey"></a><span class='hs-definition'>rightCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>96</span>
-<a name="line-116"></a><a name="instCoercionTyConKey"></a><span class='hs-definition'>instCoercionTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>97</span>
-<a name="line-117"></a><a name="unsafeCoercionTyConKey"></a><span class='hs-definition'>unsafeCoercionTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>98</span>
-<a name="line-118"></a><a name="csel1CoercionTyConKey"></a><span class='hs-definition'>csel1CoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>99</span>
-<a name="line-119"></a><a name="csel2CoercionTyConKey"></a><span class='hs-definition'>csel2CoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>100</span>
-<a name="line-120"></a><a name="cselRCoercionTyConKey"></a><span class='hs-definition'>cselRCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>101</span>
-<a name="line-121"></a>
-<a name="line-122"></a><a name="pluginTyConKey"></a><span class='hs-definition'>pluginTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-123"></a><span class='hs-definition'>pluginTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>102</span>
+<a name="line-94"></a><a name="eitherTyConKey"></a><span class='hs-definition'>eitherTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-95"></a><span class='hs-definition'>eitherTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>84</span>
+<a name="line-96"></a>
+<a name="line-97"></a><a name="superKindTyConKey"></a><span class='hs-comment'>-- Super Kinds constructors</span>
+<a name="line-98"></a><span class='hs-definition'>superKindTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-99"></a><span class='hs-definition'>superKindTyConKey</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>85</span>
+<a name="line-100"></a>
+<a name="line-101"></a><a name="liftedTypeKindTyConKey"></a><span class='hs-comment'>-- Kind constructors</span>
+<a name="line-102"></a><span class='hs-definition'>liftedTypeKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>anyKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>openTypeKindTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-103"></a>  <span class='hs-varid'>unliftedTypeKindTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>constraintKindTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-104"></a><a name="anyKindTyConKey"></a><span class='hs-definition'>anyKindTyConKey</span>                         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>86</span>
+<a name="line-105"></a><span class='hs-definition'>liftedTypeKindTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>87</span>
+<a name="line-106"></a><a name="openTypeKindTyConKey"></a><span class='hs-definition'>openTypeKindTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>88</span>
+<a name="line-107"></a><a name="unliftedTypeKindTyConKey"></a><span class='hs-definition'>unliftedTypeKindTyConKey</span>                <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>89</span>
+<a name="line-108"></a><a name="constraintKindTyConKey"></a><span class='hs-definition'>constraintKindTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>92</span>
+<a name="line-109"></a>
+<a name="line-110"></a><a name="symCoercionTyConKey"></a><span class='hs-comment'>-- Coercion constructors</span>
+<a name="line-111"></a><span class='hs-definition'>symCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>transCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>leftCoercionTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-112"></a>    <span class='hs-varid'>rightCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>instCoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unsafeCoercionTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-113"></a>    <span class='hs-varid'>csel1CoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>csel2CoercionTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>cselRCoercionTyConKey</span>
+<a name="line-114"></a>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-115"></a><span class='hs-definition'>symCoercionTyConKey</span>                     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>93</span>
+<a name="line-116"></a><a name="transCoercionTyConKey"></a><span class='hs-definition'>transCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>94</span>
+<a name="line-117"></a><a name="leftCoercionTyConKey"></a><span class='hs-definition'>leftCoercionTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>95</span>
+<a name="line-118"></a><a name="rightCoercionTyConKey"></a><span class='hs-definition'>rightCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>96</span>
+<a name="line-119"></a><a name="instCoercionTyConKey"></a><span class='hs-definition'>instCoercionTyConKey</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>97</span>
+<a name="line-120"></a><a name="unsafeCoercionTyConKey"></a><span class='hs-definition'>unsafeCoercionTyConKey</span>                  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>98</span>
+<a name="line-121"></a><a name="csel1CoercionTyConKey"></a><span class='hs-definition'>csel1CoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>99</span>
+<a name="line-122"></a><a name="csel2CoercionTyConKey"></a><span class='hs-definition'>csel2CoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>100</span>
+<a name="line-123"></a><a name="cselRCoercionTyConKey"></a><span class='hs-definition'>cselRCoercionTyConKey</span>                   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>101</span>
 <a name="line-124"></a>
-<a name="line-125"></a><a name="unknownTyConKey"></a><span class='hs-definition'>unknownTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown2TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown3TyConKey</span><span class='hs-layout'>,</span>
-<a name="line-126"></a>    <span class='hs-varid'>opaqueTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-127"></a><span class='hs-definition'>unknownTyConKey</span>                         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>129</span>
-<a name="line-128"></a><a name="unknown1TyConKey"></a><span class='hs-definition'>unknown1TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>130</span>
-<a name="line-129"></a><a name="unknown2TyConKey"></a><span class='hs-definition'>unknown2TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>131</span>
-<a name="line-130"></a><a name="unknown3TyConKey"></a><span class='hs-definition'>unknown3TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>132</span>
-<a name="line-131"></a><a name="opaqueTyConKey"></a><span class='hs-definition'>opaqueTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>133</span>
-<a name="line-132"></a>
-<a name="line-133"></a><a name="stringTyConKey"></a><span class='hs-definition'>stringTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-134"></a><span class='hs-definition'>stringTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>134</span>
+<a name="line-125"></a><a name="pluginTyConKey"></a><span class='hs-definition'>pluginTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-126"></a><span class='hs-definition'>pluginTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>102</span>
+<a name="line-127"></a>
+<a name="line-128"></a><a name="unknownTyConKey"></a><span class='hs-definition'>unknownTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown2TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>unknown3TyConKey</span><span class='hs-layout'>,</span>
+<a name="line-129"></a>    <span class='hs-varid'>opaqueTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-130"></a><span class='hs-definition'>unknownTyConKey</span>                         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>129</span>
+<a name="line-131"></a><a name="unknown1TyConKey"></a><span class='hs-definition'>unknown1TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>130</span>
+<a name="line-132"></a><a name="unknown2TyConKey"></a><span class='hs-definition'>unknown2TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>131</span>
+<a name="line-133"></a><a name="unknown3TyConKey"></a><span class='hs-definition'>unknown3TyConKey</span>                        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>132</span>
+<a name="line-134"></a><a name="opaqueTyConKey"></a><span class='hs-definition'>opaqueTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>133</span>
 <a name="line-135"></a>
-<a name="line-136"></a><a name="v1TyConKey"></a><span class='hs-comment'>-- Generics (Unique keys)</span>
-<a name="line-137"></a><span class='hs-definition'>v1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>u1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>par1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec1TyConKey</span><span class='hs-layout'>,</span>
-<a name="line-138"></a>  <span class='hs-varid'>k1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>m1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sumTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>prodTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-139"></a>  <span class='hs-varid'>compTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>pTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>dTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-140"></a>  <span class='hs-varid'>cTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec0TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>par0TyConKey</span><span class='hs-layout'>,</span>
-<a name="line-141"></a>  <span class='hs-varid'>d1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>c1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>s1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>noSelTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-142"></a>  <span class='hs-varid'>repTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rep1TyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-143"></a>
-<a name="line-144"></a><span class='hs-definition'>v1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>135</span>
-<a name="line-145"></a><a name="u1TyConKey"></a><span class='hs-definition'>u1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>136</span>
-<a name="line-146"></a><a name="par1TyConKey"></a><span class='hs-definition'>par1TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>137</span>
-<a name="line-147"></a><a name="rec1TyConKey"></a><span class='hs-definition'>rec1TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>138</span>
-<a name="line-148"></a><a name="k1TyConKey"></a><span class='hs-definition'>k1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>139</span>
-<a name="line-149"></a><a name="m1TyConKey"></a><span class='hs-definition'>m1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>140</span>
-<a name="line-150"></a>
-<a name="line-151"></a><a name="sumTyConKey"></a><span class='hs-definition'>sumTyConKey</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>141</span>
-<a name="line-152"></a><a name="prodTyConKey"></a><span class='hs-definition'>prodTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>142</span>
-<a name="line-153"></a><a name="compTyConKey"></a><span class='hs-definition'>compTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>143</span>
-<a name="line-154"></a>
-<a name="line-155"></a><a name="rTyConKey"></a><span class='hs-definition'>rTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>144</span>
-<a name="line-156"></a><a name="pTyConKey"></a><span class='hs-definition'>pTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>145</span>
-<a name="line-157"></a><a name="dTyConKey"></a><span class='hs-definition'>dTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>146</span>
-<a name="line-158"></a><a name="cTyConKey"></a><span class='hs-definition'>cTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>147</span>
-<a name="line-159"></a><a name="sTyConKey"></a><span class='hs-definition'>sTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>148</span>
-<a name="line-160"></a>
-<a name="line-161"></a><a name="rec0TyConKey"></a><span class='hs-definition'>rec0TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>149</span>
-<a name="line-162"></a><a name="par0TyConKey"></a><span class='hs-definition'>par0TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>150</span>
-<a name="line-163"></a><a name="d1TyConKey"></a><span class='hs-definition'>d1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>151</span>
-<a name="line-164"></a><a name="c1TyConKey"></a><span class='hs-definition'>c1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>152</span>
-<a name="line-165"></a><a name="s1TyConKey"></a><span class='hs-definition'>s1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>153</span>
-<a name="line-166"></a><a name="noSelTyConKey"></a><span class='hs-definition'>noSelTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>154</span>
-<a name="line-167"></a>
-<a name="line-168"></a><a name="repTyConKey"></a><span class='hs-definition'>repTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>155</span>
-<a name="line-169"></a><a name="rep1TyConKey"></a><span class='hs-definition'>rep1TyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>156</span>
+<a name="line-136"></a><a name="stringTyConKey"></a><span class='hs-definition'>stringTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-137"></a><span class='hs-definition'>stringTyConKey</span>                          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>134</span>
+<a name="line-138"></a>
+<a name="line-139"></a><a name="v1TyConKey"></a><span class='hs-comment'>-- Generics (Unique keys)</span>
+<a name="line-140"></a><span class='hs-definition'>v1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>u1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>par1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec1TyConKey</span><span class='hs-layout'>,</span>
+<a name="line-141"></a>  <span class='hs-varid'>k1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>m1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sumTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>prodTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-142"></a>  <span class='hs-varid'>compTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>pTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>dTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-143"></a>  <span class='hs-varid'>cTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>sTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rec0TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>par0TyConKey</span><span class='hs-layout'>,</span>
+<a name="line-144"></a>  <span class='hs-varid'>d1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>c1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>s1TyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>noSelTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-145"></a>  <span class='hs-varid'>repTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>rep1TyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-146"></a>
+<a name="line-147"></a><span class='hs-definition'>v1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>135</span>
+<a name="line-148"></a><a name="u1TyConKey"></a><span class='hs-definition'>u1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>136</span>
+<a name="line-149"></a><a name="par1TyConKey"></a><span class='hs-definition'>par1TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>137</span>
+<a name="line-150"></a><a name="rec1TyConKey"></a><span class='hs-definition'>rec1TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>138</span>
+<a name="line-151"></a><a name="k1TyConKey"></a><span class='hs-definition'>k1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>139</span>
+<a name="line-152"></a><a name="m1TyConKey"></a><span class='hs-definition'>m1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>140</span>
+<a name="line-153"></a>
+<a name="line-154"></a><a name="sumTyConKey"></a><span class='hs-definition'>sumTyConKey</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>141</span>
+<a name="line-155"></a><a name="prodTyConKey"></a><span class='hs-definition'>prodTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>142</span>
+<a name="line-156"></a><a name="compTyConKey"></a><span class='hs-definition'>compTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>143</span>
+<a name="line-157"></a>
+<a name="line-158"></a><a name="rTyConKey"></a><span class='hs-definition'>rTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>144</span>
+<a name="line-159"></a><a name="pTyConKey"></a><span class='hs-definition'>pTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>145</span>
+<a name="line-160"></a><a name="dTyConKey"></a><span class='hs-definition'>dTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>146</span>
+<a name="line-161"></a><a name="cTyConKey"></a><span class='hs-definition'>cTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>147</span>
+<a name="line-162"></a><a name="sTyConKey"></a><span class='hs-definition'>sTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>148</span>
+<a name="line-163"></a>
+<a name="line-164"></a><a name="rec0TyConKey"></a><span class='hs-definition'>rec0TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>149</span>
+<a name="line-165"></a><a name="par0TyConKey"></a><span class='hs-definition'>par0TyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>150</span>
+<a name="line-166"></a><a name="d1TyConKey"></a><span class='hs-definition'>d1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>151</span>
+<a name="line-167"></a><a name="c1TyConKey"></a><span class='hs-definition'>c1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>152</span>
+<a name="line-168"></a><a name="s1TyConKey"></a><span class='hs-definition'>s1TyConKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>153</span>
+<a name="line-169"></a><a name="noSelTyConKey"></a><span class='hs-definition'>noSelTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>154</span>
 <a name="line-170"></a>
-<a name="line-171"></a><a name="typeNatKindConNameKey"></a><span class='hs-comment'>-- Type-level naturals</span>
-<a name="line-172"></a><span class='hs-definition'>typeNatKindConNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeSymbolKindConNameKey</span><span class='hs-layout'>,</span>
-<a name="line-173"></a>  <span class='hs-varid'>typeNatAddTyFamNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeNatMulTyFamNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeNatExpTyFamNameKey</span>
-<a name="line-174"></a>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-175"></a><span class='hs-definition'>typeNatKindConNameKey</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>160</span>
-<a name="line-176"></a><a name="typeSymbolKindConNameKey"></a><span class='hs-definition'>typeSymbolKindConNameKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>161</span>
-<a name="line-177"></a><a name="typeNatAddTyFamNameKey"></a><span class='hs-definition'>typeNatAddTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>162</span>
-<a name="line-178"></a><a name="typeNatMulTyFamNameKey"></a><span class='hs-definition'>typeNatMulTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>163</span>
-<a name="line-179"></a><a name="typeNatExpTyFamNameKey"></a><span class='hs-definition'>typeNatExpTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>164</span>
-<a name="line-180"></a>
-<a name="line-181"></a><a name="floatX4PrimTyConKey"></a><span class='hs-comment'>-- SIMD vector types (Unique keys)</span>
-<a name="line-182"></a><span class='hs-definition'>floatX4PrimTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>doubleX2PrimTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>int32X4PrimTyConKey</span><span class='hs-layout'>,</span>
-<a name="line-183"></a>  <span class='hs-varid'>int64X2PrimTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-184"></a>
-<a name="line-185"></a><span class='hs-definition'>floatX4PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>170</span>
-<a name="line-186"></a><a name="doubleX2PrimTyConKey"></a><span class='hs-definition'>doubleX2PrimTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>171</span>
-<a name="line-187"></a><a name="int32X4PrimTyConKey"></a><span class='hs-definition'>int32X4PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>172</span>
-<a name="line-188"></a><a name="int64X2PrimTyConKey"></a><span class='hs-definition'>int64X2PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>173</span>
-<a name="line-189"></a>
-<a name="line-190"></a><span class='hs-comment'>---------------- Template Haskell -------------------</span>
-<a name="line-191"></a><span class='hs-comment'>--      USES TyConUniques 200-299</span>
-<a name="line-192"></a><span class='hs-comment'>-----------------------------------------------------</span>
-<a name="line-193"></a>
-<a name="line-194"></a><a name="unitTyConKey"></a><span class='hs-definition'>unitTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
-<a name="line-195"></a><span class='hs-definition'>unitTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTupleTyConUnique</span> <span class='hs-conid'>BoxedTuple</span> <span class='hs-num'>0</span>
+<a name="line-171"></a><a name="repTyConKey"></a><span class='hs-definition'>repTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>155</span>
+<a name="line-172"></a><a name="rep1TyConKey"></a><span class='hs-definition'>rep1TyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>156</span>
+<a name="line-173"></a>
+<a name="line-174"></a><a name="typeNatKindConNameKey"></a><span class='hs-comment'>-- Type-level naturals</span>
+<a name="line-175"></a><span class='hs-definition'>typeNatKindConNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeSymbolKindConNameKey</span><span class='hs-layout'>,</span>
+<a name="line-176"></a>  <span class='hs-varid'>typeNatAddTyFamNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeNatMulTyFamNameKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeNatExpTyFamNameKey</span>
+<a name="line-177"></a>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-178"></a><span class='hs-definition'>typeNatKindConNameKey</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>160</span>
+<a name="line-179"></a><a name="typeSymbolKindConNameKey"></a><span class='hs-definition'>typeSymbolKindConNameKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>161</span>
+<a name="line-180"></a><a name="typeNatAddTyFamNameKey"></a><span class='hs-definition'>typeNatAddTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>162</span>
+<a name="line-181"></a><a name="typeNatMulTyFamNameKey"></a><span class='hs-definition'>typeNatMulTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>163</span>
+<a name="line-182"></a><a name="typeNatExpTyFamNameKey"></a><span class='hs-definition'>typeNatExpTyFamNameKey</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>164</span>
+<a name="line-183"></a>
+<a name="line-184"></a><a name="floatX4PrimTyConKey"></a><span class='hs-comment'>-- SIMD vector types (Unique keys)</span>
+<a name="line-185"></a><span class='hs-definition'>floatX4PrimTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>doubleX2PrimTyConKey</span><span class='hs-layout'>,</span> <span class='hs-varid'>int32X4PrimTyConKey</span><span class='hs-layout'>,</span>
+<a name="line-186"></a>  <span class='hs-varid'>int64X2PrimTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-187"></a>
+<a name="line-188"></a><span class='hs-definition'>floatX4PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>170</span>
+<a name="line-189"></a><a name="doubleX2PrimTyConKey"></a><span class='hs-definition'>doubleX2PrimTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>171</span>
+<a name="line-190"></a><a name="int32X4PrimTyConKey"></a><span class='hs-definition'>int32X4PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>172</span>
+<a name="line-191"></a><a name="int64X2PrimTyConKey"></a><span class='hs-definition'>int64X2PrimTyConKey</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPreludeTyConUnique</span> <span class='hs-num'>173</span>
+<a name="line-192"></a>
+<a name="line-193"></a><span class='hs-comment'>---------------- Template Haskell -------------------</span>
+<a name="line-194"></a><span class='hs-comment'>--      USES TyConUniques 200-299</span>
+<a name="line-195"></a><span class='hs-comment'>-----------------------------------------------------</span>
+<a name="line-196"></a>
+<a name="line-197"></a><a name="unitTyConKey"></a><span class='hs-definition'>unitTyConKey</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Unique</span>
+<a name="line-198"></a><span class='hs-definition'>unitTyConKey</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTupleTyConUnique</span> <span class='hs-conid'>BoxedTuple</span> <span class='hs-num'>0</span>
 </pre>\end{code}
 
 %************************************************************************
