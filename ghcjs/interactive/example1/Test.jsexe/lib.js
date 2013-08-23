@@ -15180,6 +15180,22 @@ function h$stmCommitInvariant(localInv) {
   } catch (e) { if(e !== goog.iter.StopIteration) { throw e; } }
 }
 
+function h$ghcjs_setLineDash(arr, ctx) {
+    if (typeof ctx.setLineDash !== 'undefined' ) {
+        ctx.setLineDash(arr);
+    } else if (typeof ctx.mozDash !== 'undefined' ) {
+        ctx.mozDash = arr;
+    }
+};
+
+function h$ghcjs_lineDashOffset(off, ctx) {
+    if (typeof ctx.setLineDash !== 'undefined' ) {
+        ctx.lineDashOffset = off;
+    } else if (typeof ctx.mozDash !== 'undefined' ) {
+        ctx.mozDashOffset = off;
+    }
+};
+
 function h$ghcjs_currentWindow() {
   return window;
 };
