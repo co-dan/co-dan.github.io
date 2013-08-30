@@ -17608,6 +17608,12 @@ data Sig name
 
 -- | An ordinary type signature <tt>f :: Num a =&gt; a -&gt; a</tt>
 TypeSig :: [Located name] -> (LHsType name) -> Sig name
+
+-- | A type signature for a default method inside a class
+--   
+--   <pre>
+--   default eq :: (Representable0 a, GEq (Rep0 a)) =&gt; a -&gt; a -&gt; Bool
+--   </pre>
 GenericSig :: [Located name] -> (LHsType name) -> Sig name
 
 -- | A type signature in generated code, notably the code generated for
@@ -17615,11 +17621,36 @@ GenericSig :: [Located name] -> (LHsType name) -> Sig name
 --   its name, type and IdDetails. Otherwise it's just like a type
 --   signature: there should be an accompanying binding
 IdSig :: Id -> Sig name
+
+-- | An ordinary fixity declaration
+--   
+--   <pre>
+--   infixl *** 8
+--   </pre>
 FixSig :: (FixitySig name) -> Sig name
+
+-- | An inline pragma
+--   
+--   <pre>
+--   {#- INLINE f #-}
+--   </pre>
 InlineSig :: (Located name) -> InlinePragma -> Sig name
+
+-- | A specialisation pragma
+--   
+--   <pre>
+--   {-# SPECIALISE f :: Int -&gt; Int #-}
+--   </pre>
 SpecSig :: (Located name) -> (LHsType name) -> InlinePragma -> Sig name
 
--- | (Class tys); should be a specialisation of the current instance decl
+-- | A specialisation pragma for instance declarations only
+--   
+--   <pre>
+--   {-# SPECIALISE instance Eq [Int] #-}
+--   </pre>
+--   
+--   (Class tys); should be a specialisation of the current instance
+--   declaration
 SpecInstSig :: (LHsType name) -> Sig name
 type LFixitySig name = Located (FixitySig name)
 data FixitySig name
@@ -18257,10 +18288,10 @@ noSyntaxTable :: CmdSyntaxTable id
 -- | A Haskell expression.
 data HsExpr id
 
--- | variable
+-- | Variable
 HsVar :: id -> HsExpr id
 
--- | implicit parameter
+-- | Implicit parameter
 HsIPVar :: HsIPName -> HsExpr id
 
 -- | Overloaded literals
@@ -18268,27 +18299,60 @@ HsOverLit :: (HsOverLit id) -> HsExpr id
 
 -- | Simple (non-overloaded) literals
 HsLit :: HsLit -> HsExpr id
+
+-- | Lambda abstraction. Currently always a single match
 HsLam :: (MatchGroup id (LHsExpr id)) -> HsExpr id
+
+-- | Lambda-case
 HsLamCase :: PostTcType -> (MatchGroup id (LHsExpr id)) -> HsExpr id
+
+-- | Application
 HsApp :: (LHsExpr id) -> (LHsExpr id) -> HsExpr id
+
+-- | Operator applications: NB Bracketed ops such as (+) come out as Vars.
 OpApp :: (LHsExpr id) -> (LHsExpr id) -> Fixity -> (LHsExpr id) -> HsExpr id
+
+-- | Negation operator. Contains the negated expression and the name of
+--   <a>negate</a>
 NegApp :: (LHsExpr id) -> (SyntaxExpr id) -> HsExpr id
+
+-- | Parenthesised expr; see Note [Parens in HsSyn]
 HsPar :: (LHsExpr id) -> HsExpr id
 SectionL :: (LHsExpr id) -> (LHsExpr id) -> HsExpr id
 SectionR :: (LHsExpr id) -> (LHsExpr id) -> HsExpr id
+
+-- | Used for explicit tuples and sections thereof
 ExplicitTuple :: [HsTupArg id] -> Boxity -> HsExpr id
 HsCase :: (LHsExpr id) -> (MatchGroup id (LHsExpr id)) -> HsExpr id
 HsIf :: (Maybe (SyntaxExpr id)) -> (LHsExpr id) -> (LHsExpr id) -> (LHsExpr id) -> HsExpr id
+
+-- | Multi-way if
 HsMultiIf :: PostTcType -> [LGRHS id (LHsExpr id)] -> HsExpr id
+
+-- | let(rec)
 HsLet :: (HsLocalBinds id) -> (LHsExpr id) -> HsExpr id
 HsDo :: (HsStmtContext Name) -> [ExprLStmt id] -> PostTcType -> HsExpr id
+
+-- | Syntactic list: [a,b,c,...]
 ExplicitList :: PostTcType -> (Maybe (SyntaxExpr id)) -> [LHsExpr id] -> HsExpr id
+
+-- | Syntactic parallel array: [:e1, ..., en:]
 ExplicitPArr :: PostTcType -> [LHsExpr id] -> HsExpr id
+
+-- | Record construction
 RecordCon :: (Located id) -> PostTcExpr -> (HsRecordBinds id) -> HsExpr id
+
+-- | Record update
 RecordUpd :: (LHsExpr id) -> (HsRecordBinds id) -> [DataCon] -> [PostTcType] -> [PostTcType] -> HsExpr id
+
+-- | Expression with an explicit type signature. <tt>e :: type</tt>
 ExprWithTySig :: (LHsExpr id) -> (LHsType id) -> HsExpr id
 ExprWithTySigOut :: (LHsExpr id) -> (LHsType Name) -> HsExpr id
+
+-- | Arithmetic sequence
 ArithSeq :: PostTcExpr -> (Maybe (SyntaxExpr id)) -> (ArithSeqInfo id) -> HsExpr id
+
+-- | Arithmetic sequence for parallel array
 PArrSeq :: PostTcExpr -> (ArithSeqInfo id) -> HsExpr id
 HsSCC :: FastString -> (LHsExpr id) -> HsExpr id
 HsCoreAnn :: FastString -> (LHsExpr id) -> HsExpr id
@@ -18296,6 +18360,8 @@ HsBracket :: (HsBracket id) -> HsExpr id
 HsBracketOut :: (HsBracket Name) -> [PendingSplice] -> HsExpr id
 HsSpliceE :: (HsSplice id) -> HsExpr id
 HsQuasiQuoteE :: (HsQuasiQuote id) -> HsExpr id
+
+-- | <tt>proc</tt> notation for Arrows
 HsProc :: (LPat id) -> (LHsCmdTop id) -> HsExpr id
 HsArrApp :: (LHsExpr id) -> (LHsExpr id) -> PostTcType -> HsArrAppType -> Bool -> HsExpr id
 HsArrForm :: (LHsExpr id) -> (Maybe Fixity) -> [LHsCmdTop id] -> HsExpr id
@@ -18309,10 +18375,20 @@ ELazyPat :: (LHsExpr id) -> HsExpr id
 HsType :: (LHsType id) -> HsExpr id
 HsWrap :: HsWrapper -> (HsExpr id) -> HsExpr id
 HsUnboundVar :: RdrName -> HsExpr id
+
+-- | HsTupArg is used for tuple sections (,a,) is represented by
+--   ExplicitTuple [Mising ty1, Present a, Missing ty3] Which in turn
+--   stands for (x:ty1 y:ty2. (x,a,y))
 data HsTupArg id
+
+-- | The argument
 Present :: (LHsExpr id) -> HsTupArg id
+
+-- | The argument is missing, but this is its type
 Missing :: PostTcType -> HsTupArg id
 tupArgPresent :: HsTupArg id -> Bool
+
+-- | Typechecked splices, waiting to be pasted back in by the desugarer
 type PendingSplice = (Name, LHsExpr Id)
 pprLExpr :: OutputableBndr id => LHsExpr id -> SDoc
 pprExpr :: OutputableBndr id => HsExpr id -> SDoc

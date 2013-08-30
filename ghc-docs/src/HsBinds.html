@@ -526,117 +526,128 @@ serves for both.
 <a name="line-7"></a>    <span class='hs-conid'>TypeSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
 <a name="line-8"></a>
 <a name="line-9"></a>        <span class='hs-comment'>-- | A type signature for a default method inside a class</span>
-<a name="line-10"></a>        <span class='hs-comment'>-- &gt; default eq :: (Representable0 a, GEq (Rep0 a)) =&gt; a -&gt; a -&gt; Bool</span>
-<a name="line-11"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>GenericSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-12"></a>
-<a name="line-13"></a>        <span class='hs-comment'>-- | A type signature in generated code, notably the code</span>
-<a name="line-14"></a>        <span class='hs-comment'>-- generated for record selectors.  We simply record</span>
-<a name="line-15"></a>        <span class='hs-comment'>-- the desired Id itself, replete with its name, type</span>
-<a name="line-16"></a>        <span class='hs-comment'>-- and IdDetails.  Otherwise it's just like a type</span>
-<a name="line-17"></a>        <span class='hs-comment'>-- signature: there should be an accompanying binding</span>
-<a name="line-18"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IdSig</span> <span class='hs-conid'>Id</span>
-<a name="line-19"></a>
-<a name="line-20"></a>        <span class='hs-comment'>-- | An ordinary fixity declaration</span>
-<a name="line-21"></a>        <span class='hs-comment'>-- &gt;     infixl *** 8</span>
-<a name="line-22"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>FixSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-23"></a>
-<a name="line-24"></a>        <span class='hs-comment'>-- | An inline pragma</span>
-<a name="line-25"></a>        <span class='hs-comment'>-- &gt; {#- INLINE f #-}</span>
-<a name="line-26"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InlineSig</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Function name</span>
-<a name="line-27"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- Never defaultInlinePragma</span>
-<a name="line-28"></a>
-<a name="line-29"></a>        <span class='hs-comment'>-- | A specialisation pragma</span>
-<a name="line-30"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE f :: Int -&gt; Int #-}</span>
-<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecSig</span>     <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Specialise a function or datatype  ...</span>
-<a name="line-32"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ... to these types</span>
-<a name="line-33"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- The pragma on SPECIALISE_INLINE form.</span>
-<a name="line-34"></a>                                <span class='hs-comment'>-- If it's just defaultInlinePragma, then we said</span>
-<a name="line-35"></a>                                <span class='hs-comment'>--    SPECIALISE, not SPECIALISE_INLINE</span>
-<a name="line-36"></a>
-<a name="line-37"></a>        <span class='hs-comment'>-- | A specialisation pragma for instance declarations only</span>
-<a name="line-38"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE instance Eq [Int] #-}</span>
-<a name="line-39"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ^ (Class tys); should be a specialisation of the</span>
-<a name="line-40"></a>                                <span class='hs-comment'>-- current instance decl</span>
-<a name="line-41"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-42"></a>
-<a name="line-43"></a>
-<a name="line-44"></a><a name="LFixitySig"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LFixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-45"></a><a name="FixitySig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FixitySig</span> <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-conid'>Fixity</span>
-<a name="line-46"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-47"></a>
-<a name="line-48"></a><a name="TcSpecPrags"></a><span class='hs-comment'>-- | TsSpecPrags conveys pragmas from the type checker to the desugarer</span>
-<a name="line-49"></a><a name="TcSpecPrags"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrags</span>
-<a name="line-50"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IsDefaultMethod</span>     <span class='hs-comment'>-- ^ Super-specialised: a default method should</span>
-<a name="line-51"></a>                        <span class='hs-comment'>-- be macro-expanded at every call site</span>
-<a name="line-52"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LTcSpecPrag</span><span class='hs-keyglyph'>]</span>
-<a name="line-53"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-10"></a>        <span class='hs-comment'>--</span>
+<a name="line-11"></a>        <span class='hs-comment'>-- &gt; default eq :: (Representable0 a, GEq (Rep0 a)) =&gt; a -&gt; a -&gt; Bool</span>
+<a name="line-12"></a>        <span class='hs-comment'>--</span>
+<a name="line-13"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>GenericSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-14"></a>
+<a name="line-15"></a>        <span class='hs-comment'>-- | A type signature in generated code, notably the code</span>
+<a name="line-16"></a>        <span class='hs-comment'>-- generated for record selectors.  We simply record</span>
+<a name="line-17"></a>        <span class='hs-comment'>-- the desired Id itself, replete with its name, type</span>
+<a name="line-18"></a>        <span class='hs-comment'>-- and IdDetails.  Otherwise it's just like a type</span>
+<a name="line-19"></a>        <span class='hs-comment'>-- signature: there should be an accompanying binding</span>
+<a name="line-20"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IdSig</span> <span class='hs-conid'>Id</span>
+<a name="line-21"></a>
+<a name="line-22"></a>        <span class='hs-comment'>-- | An ordinary fixity declaration</span>
+<a name="line-23"></a>        <span class='hs-comment'>--</span>
+<a name="line-24"></a>        <span class='hs-comment'>-- &gt;     infixl *** 8</span>
+<a name="line-25"></a>        <span class='hs-comment'>--</span>
+<a name="line-26"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>FixSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-27"></a>
+<a name="line-28"></a>        <span class='hs-comment'>-- | An inline pragma</span>
+<a name="line-29"></a>        <span class='hs-comment'>--</span>
+<a name="line-30"></a>        <span class='hs-comment'>-- &gt; {#- INLINE f #-}</span>
+<a name="line-31"></a>        <span class='hs-comment'>--</span>
+<a name="line-32"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InlineSig</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Function name</span>
+<a name="line-33"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- Never defaultInlinePragma</span>
+<a name="line-34"></a>
+<a name="line-35"></a>        <span class='hs-comment'>-- | A specialisation pragma</span>
+<a name="line-36"></a>        <span class='hs-comment'>--</span>
+<a name="line-37"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE f :: Int -&gt; Int #-}</span>
+<a name="line-38"></a>        <span class='hs-comment'>--</span>
+<a name="line-39"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecSig</span>     <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Specialise a function or datatype  ...</span>
+<a name="line-40"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ... to these types</span>
+<a name="line-41"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- The pragma on SPECIALISE_INLINE form.</span>
+<a name="line-42"></a>                                <span class='hs-comment'>-- If it's just defaultInlinePragma, then we said</span>
+<a name="line-43"></a>                                <span class='hs-comment'>--    SPECIALISE, not SPECIALISE_INLINE</span>
+<a name="line-44"></a>
+<a name="line-45"></a>        <span class='hs-comment'>-- | A specialisation pragma for instance declarations only</span>
+<a name="line-46"></a>        <span class='hs-comment'>--</span>
+<a name="line-47"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE instance Eq [Int] #-}</span>
+<a name="line-48"></a>        <span class='hs-comment'>--</span>
+<a name="line-49"></a>        <span class='hs-comment'>-- (Class tys); should be a specialisation of the</span>
+<a name="line-50"></a>        <span class='hs-comment'>-- current instance declaration</span>
+<a name="line-51"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-52"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-53"></a>
 <a name="line-54"></a>
-<a name="line-55"></a><a name="LTcSpecPrag"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LTcSpecPrag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-conid'>TcSpecPrag</span>
-<a name="line-56"></a>
-<a name="line-57"></a><a name="TcSpecPrag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrag</span>
-<a name="line-58"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrag</span>
-<a name="line-59"></a>        <span class='hs-conid'>Id</span>              
-<a name="line-60"></a>        <span class='hs-conid'>HsWrapper</span>       
-<a name="line-61"></a>        <span class='hs-conid'>InlinePragma</span>    
-<a name="line-62"></a>  <span class='hs-comment'>-- ^ The Id to be specialised, an wrapper that specialises the</span>
-<a name="line-63"></a>  <span class='hs-comment'>-- polymorphic function, and inlining spec for the specialised function</span>
+<a name="line-55"></a><a name="LFixitySig"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LFixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-56"></a><a name="FixitySig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FixitySig</span> <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-conid'>Fixity</span>
+<a name="line-57"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-58"></a>
+<a name="line-59"></a><a name="TcSpecPrags"></a><span class='hs-comment'>-- | TsSpecPrags conveys pragmas from the type checker to the desugarer</span>
+<a name="line-60"></a><a name="TcSpecPrags"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrags</span>
+<a name="line-61"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IsDefaultMethod</span>     <span class='hs-comment'>-- ^ Super-specialised: a default method should</span>
+<a name="line-62"></a>                        <span class='hs-comment'>-- be macro-expanded at every call site</span>
+<a name="line-63"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LTcSpecPrag</span><span class='hs-keyglyph'>]</span>
 <a name="line-64"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-65"></a>
-<a name="line-66"></a><a name="noSpecPrags"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>
-<a name="line-67"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-conid'>[]</span>
-<a name="line-68"></a>
-<a name="line-69"></a><a name="hasSpecPrags"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-70"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span>
-<a name="line-71"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-72"></a>
-<a name="line-73"></a><a name="isDefaultMethod"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-74"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-75"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-66"></a><a name="LTcSpecPrag"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LTcSpecPrag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-conid'>TcSpecPrag</span>
+<a name="line-67"></a>
+<a name="line-68"></a><a name="TcSpecPrag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrag</span>
+<a name="line-69"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrag</span>
+<a name="line-70"></a>        <span class='hs-conid'>Id</span>              
+<a name="line-71"></a>        <span class='hs-conid'>HsWrapper</span>       
+<a name="line-72"></a>        <span class='hs-conid'>InlinePragma</span>    
+<a name="line-73"></a>  <span class='hs-comment'>-- ^ The Id to be specialised, an wrapper that specialises the</span>
+<a name="line-74"></a>  <span class='hs-comment'>-- polymorphic function, and inlining spec for the specialised function</span>
+<a name="line-75"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-76"></a>
-<a name="line-77"></a>
-<a name="line-78"></a><a name="isFixityLSig"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-79"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-80"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-81"></a>
-<a name="line-82"></a><a name="isVanillaLSig"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>       <span class='hs-comment'>-- User type signatures</span>
-<a name="line-83"></a><span class='hs-comment'>-- A badly-named function, but it's part of the GHCi (used</span>
-<a name="line-84"></a><span class='hs-comment'>-- by Haddock) so I don't want to change it gratuitously.</span>
-<a name="line-85"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-86"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-77"></a><a name="noSpecPrags"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>
+<a name="line-78"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-conid'>[]</span>
+<a name="line-79"></a>
+<a name="line-80"></a><a name="hasSpecPrags"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-81"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span>
+<a name="line-82"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-83"></a>
+<a name="line-84"></a><a name="isDefaultMethod"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-85"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-86"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-87"></a>
-<a name="line-88"></a><a name="isTypeLSig"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>  <span class='hs-comment'>-- Type signatures</span>
-<a name="line-89"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-90"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-91"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-92"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-93"></a>
-<a name="line-94"></a><a name="isSpecLSig"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-95"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-96"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-97"></a>
-<a name="line-98"></a><a name="isSpecInstLSig"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-99"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-100"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyword'>_</span>                      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-101"></a>
-<a name="line-102"></a><a name="isPragLSig"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-103"></a><span class='hs-comment'>-- Identifies pragmas</span>
-<a name="line-104"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-105"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-106"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-107"></a>
-<a name="line-108"></a><a name="isInlineLSig"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-109"></a><span class='hs-comment'>-- Identifies inline pragmas</span>
-<a name="line-110"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-111"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-88"></a>
+<a name="line-89"></a><a name="isFixityLSig"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-90"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-91"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-92"></a>
+<a name="line-93"></a><a name="isVanillaLSig"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>       <span class='hs-comment'>-- User type signatures</span>
+<a name="line-94"></a><span class='hs-comment'>-- A badly-named function, but it's part of the GHCi (used</span>
+<a name="line-95"></a><span class='hs-comment'>-- by Haddock) so I don't want to change it gratuitously.</span>
+<a name="line-96"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-97"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-98"></a>
+<a name="line-99"></a><a name="isTypeLSig"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>  <span class='hs-comment'>-- Type signatures</span>
+<a name="line-100"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-101"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-102"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-103"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-104"></a>
+<a name="line-105"></a><a name="isSpecLSig"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-106"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-107"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-108"></a>
+<a name="line-109"></a><a name="isSpecInstLSig"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-110"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-111"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyword'>_</span>                      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-112"></a>
-<a name="line-113"></a><a name="hsSigDoc"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
-<a name="line-114"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"type signature"</span><span class='hs-layout'>)</span>
-<a name="line-115"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"default type signature"</span><span class='hs-layout'>)</span>
-<a name="line-116"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>             <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"id signature"</span><span class='hs-layout'>)</span>
-<a name="line-117"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE pragma"</span><span class='hs-layout'>)</span>
-<a name="line-118"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>inlinePragmaSpec</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"pragma"</span><span class='hs-layout'>)</span>
-<a name="line-119"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE instance pragma"</span><span class='hs-layout'>)</span>
-<a name="line-120"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"fixity declaration"</span><span class='hs-layout'>)</span>
+<a name="line-113"></a><a name="isPragLSig"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-114"></a><span class='hs-comment'>-- Identifies pragmas</span>
+<a name="line-115"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-116"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-117"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-118"></a>
+<a name="line-119"></a><a name="isInlineLSig"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-120"></a><span class='hs-comment'>-- Identifies inline pragmas</span>
+<a name="line-121"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-122"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-123"></a>
+<a name="line-124"></a><a name="hsSigDoc"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
+<a name="line-125"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"type signature"</span><span class='hs-layout'>)</span>
+<a name="line-126"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"default type signature"</span><span class='hs-layout'>)</span>
+<a name="line-127"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>             <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"id signature"</span><span class='hs-layout'>)</span>
+<a name="line-128"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE pragma"</span><span class='hs-layout'>)</span>
+<a name="line-129"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>inlinePragmaSpec</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"pragma"</span><span class='hs-layout'>)</span>
+<a name="line-130"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE instance pragma"</span><span class='hs-layout'>)</span>
+<a name="line-131"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"fixity declaration"</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 Check if signatures overlap; this is used when checking for duplicate

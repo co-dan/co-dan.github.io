@@ -130,19 +130,19 @@ is Less Cool because
 \begin{code}
 <pre><a name="line-1"></a><a name="HsExpr"></a><span class='hs-comment'>-- | A Haskell expression.</span>
 <a name="line-2"></a><a name="HsExpr"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsExpr</span> <span class='hs-varid'>id</span>
-<a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsVar</span>     <span class='hs-varid'>id</span>                        <span class='hs-comment'>-- ^ variable</span>
-<a name="line-4"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIPVar</span>   <span class='hs-conid'>HsIPName</span>                  <span class='hs-comment'>-- ^ implicit parameter</span>
+<a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsVar</span>     <span class='hs-varid'>id</span>                        <span class='hs-comment'>-- ^ Variable</span>
+<a name="line-4"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIPVar</span>   <span class='hs-conid'>HsIPName</span>                  <span class='hs-comment'>-- ^ Implicit parameter</span>
 <a name="line-5"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsOverLit</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsOverLit</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>            <span class='hs-comment'>-- ^ Overloaded literals</span>
 <a name="line-6"></a>
 <a name="line-7"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLit</span>     <span class='hs-conid'>HsLit</span>                     <span class='hs-comment'>-- ^ Simple (non-overloaded) literals</span>
 <a name="line-8"></a>
-<a name="line-9"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLam</span>     <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Currently always a single match</span>
+<a name="line-9"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLam</span>     <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ^ Lambda abstraction. Currently always a single match</span>
 <a name="line-10"></a>
-<a name="line-11"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLamCase</span> <span class='hs-conid'>PostTcType</span> <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Lambda-case</span>
+<a name="line-11"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLamCase</span> <span class='hs-conid'>PostTcType</span> <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ^ Lambda-case</span>
 <a name="line-12"></a>
-<a name="line-13"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsApp</span>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Application</span>
+<a name="line-13"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsApp</span>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ^ Application</span>
 <a name="line-14"></a>
-<a name="line-15"></a>  <span class='hs-comment'>-- Operator applications:</span>
+<a name="line-15"></a>  <span class='hs-comment'>-- | Operator applications:</span>
 <a name="line-16"></a>  <span class='hs-comment'>-- NB Bracketed ops such as (+) come out as Vars.</span>
 <a name="line-17"></a>
 <a name="line-18"></a>  <span class='hs-comment'>-- NB We need an expr for the operator in an OpApp/Section since</span>
@@ -153,192 +153,204 @@ is Less Cool because
 <a name="line-23"></a>                <span class='hs-conid'>Fixity</span>          <span class='hs-comment'>-- Renamer adds fixity; bottom until then</span>
 <a name="line-24"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- right operand</span>
 <a name="line-25"></a>
-<a name="line-26"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NegApp</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- negated expr</span>
-<a name="line-27"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Name of 'negate'</span>
-<a name="line-28"></a>
-<a name="line-29"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsPar</span>       <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- Parenthesised expr; see Note [Parens in HsSyn]</span>
+<a name="line-26"></a>  <span class='hs-comment'>-- | Negation operator. Contains the negated expression and the name</span>
+<a name="line-27"></a>  <span class='hs-comment'>-- of 'negate'              </span>
+<a name="line-28"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NegApp</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> 
+<a name="line-29"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> 
 <a name="line-30"></a>
-<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SectionL</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operand; see Note [Sections in HsSyn]</span>
-<a name="line-32"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operator</span>
-<a name="line-33"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SectionR</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operator; see Note [Sections in HsSyn]</span>
-<a name="line-34"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operand</span>
-<a name="line-35"></a>
-<a name="line-36"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitTuple</span>               <span class='hs-comment'>-- Used for explicit tuples and sections thereof</span>
-<a name="line-37"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
-<a name="line-38"></a>        <span class='hs-conid'>Boxity</span>
-<a name="line-39"></a>
-<a name="line-40"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsCase</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-41"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsPar</span>       <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- ^ Parenthesised expr; see Note [Parens in HsSyn]</span>
+<a name="line-32"></a>
+<a name="line-33"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SectionL</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operand; see Note [Sections in HsSyn]</span>
+<a name="line-34"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operator</span>
+<a name="line-35"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SectionR</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operator; see Note [Sections in HsSyn]</span>
+<a name="line-36"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- operand</span>
+<a name="line-37"></a>
+<a name="line-38"></a>  <span class='hs-comment'>-- | Used for explicit tuples and sections thereof</span>
+<a name="line-39"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitTuple</span>               
+<a name="line-40"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
+<a name="line-41"></a>        <span class='hs-conid'>Boxity</span>
 <a name="line-42"></a>
-<a name="line-43"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIf</span>        <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- cond function</span>
-<a name="line-44"></a>                                        <span class='hs-comment'>-- Nothing =&gt; use the built-in 'if'</span>
-<a name="line-45"></a>                                        <span class='hs-comment'>-- See Note [Rebindable if]</span>
-<a name="line-46"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  predicate</span>
-<a name="line-47"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  then part</span>
-<a name="line-48"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  else part</span>
-<a name="line-49"></a>
-<a name="line-50"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsMultiIf</span>   <span class='hs-conid'>PostTcType</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LGRHS</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- Multi-way if</span>
-<a name="line-51"></a>
-<a name="line-52"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLet</span>       <span class='hs-layout'>(</span><span class='hs-conid'>HsLocalBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- let(rec)</span>
-<a name="line-53"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span>  <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-54"></a>
-<a name="line-55"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsDo</span>        <span class='hs-layout'>(</span><span class='hs-conid'>HsStmtContext</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- The parameterisation is unimportant</span>
-<a name="line-56"></a>                                     <span class='hs-comment'>-- because in this context we never use</span>
-<a name="line-57"></a>                                     <span class='hs-comment'>-- the PatGuard or ParStmt variant</span>
-<a name="line-58"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>ExprLStmt</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>-- "do":one or more stmts</span>
-<a name="line-59"></a>                <span class='hs-conid'>PostTcType</span>           <span class='hs-comment'>-- Type of the whole expression</span>
-<a name="line-60"></a>
-<a name="line-61"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitList</span>                        <span class='hs-comment'>-- syntactic list</span>
-<a name="line-62"></a>                <span class='hs-conid'>PostTcType</span>              <span class='hs-comment'>-- Gives type of components of list</span>
-<a name="line-63"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- For OverloadedLists, the fromListN witness</span>
-<a name="line-64"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
+<a name="line-43"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsCase</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-44"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-45"></a>
+<a name="line-46"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIf</span>        <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- cond function</span>
+<a name="line-47"></a>                                        <span class='hs-comment'>-- Nothing =&gt; use the built-in 'if'</span>
+<a name="line-48"></a>                                        <span class='hs-comment'>-- See Note [Rebindable if]</span>
+<a name="line-49"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  predicate</span>
+<a name="line-50"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  then part</span>
+<a name="line-51"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>--  else part</span>
+<a name="line-52"></a>
+<a name="line-53"></a>  <span class='hs-comment'>-- | Multi-way if</span>
+<a name="line-54"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsMultiIf</span>   <span class='hs-conid'>PostTcType</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LGRHS</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span> 
+<a name="line-55"></a>
+<a name="line-56"></a>  <span class='hs-comment'>-- | let(rec)</span>
+<a name="line-57"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsLet</span>       <span class='hs-layout'>(</span><span class='hs-conid'>HsLocalBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> 
+<a name="line-58"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span>  <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-59"></a>
+<a name="line-60"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsDo</span>        <span class='hs-layout'>(</span><span class='hs-conid'>HsStmtContext</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- The parameterisation is unimportant</span>
+<a name="line-61"></a>                                     <span class='hs-comment'>-- because in this context we never use</span>
+<a name="line-62"></a>                                     <span class='hs-comment'>-- the PatGuard or ParStmt variant</span>
+<a name="line-63"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>ExprLStmt</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>-- "do":one or more stmts</span>
+<a name="line-64"></a>                <span class='hs-conid'>PostTcType</span>           <span class='hs-comment'>-- Type of the whole expression</span>
 <a name="line-65"></a>
-<a name="line-66"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitPArr</span>                <span class='hs-comment'>-- syntactic parallel array: [:e1, ..., en:]</span>
-<a name="line-67"></a>                <span class='hs-conid'>PostTcType</span>      <span class='hs-comment'>-- type of elements of the parallel array</span>
-<a name="line-68"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
-<a name="line-69"></a>
-<a name="line-70"></a>  <span class='hs-comment'>-- Record construction</span>
-<a name="line-71"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>RecordCon</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>       <span class='hs-comment'>-- The constructor.  After type checking</span>
-<a name="line-72"></a>                                   <span class='hs-comment'>-- it's the dataConWrapId of the constructor</span>
-<a name="line-73"></a>                <span class='hs-conid'>PostTcExpr</span>         <span class='hs-comment'>-- Data con Id applied to type args</span>
-<a name="line-74"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsRecordBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-75"></a>
-<a name="line-76"></a>  <span class='hs-comment'>-- Record update</span>
-<a name="line-77"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>RecordUpd</span>   <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-78"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsRecordBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-79"></a><span class='hs-comment'>--              (HsMatchGroup Id)  -- Filled in by the type checker to be</span>
-<a name="line-80"></a><span class='hs-comment'>--                                 -- a match that does the job</span>
-<a name="line-81"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>DataCon</span><span class='hs-keyglyph'>]</span>          <span class='hs-comment'>-- Filled in by the type checker to the</span>
-<a name="line-82"></a>                                   <span class='hs-comment'>-- _non-empty_ list of DataCons that have</span>
-<a name="line-83"></a>                                   <span class='hs-comment'>-- all the upd'd fields</span>
-<a name="line-84"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>PostTcType</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>-- Argument types of *input* record type</span>
-<a name="line-85"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>PostTcType</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>--              and  *output* record type</span>
-<a name="line-86"></a>  <span class='hs-comment'>-- For a type family, the arg types are of the *instance* tycon,</span>
-<a name="line-87"></a>  <span class='hs-comment'>-- not the family tycon</span>
-<a name="line-88"></a>
-<a name="line-89"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExprWithTySig</span>                       <span class='hs-comment'>-- e :: type</span>
-<a name="line-90"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-91"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-92"></a>
-<a name="line-93"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExprWithTySigOut</span>                    <span class='hs-comment'>-- TRANSLATION</span>
-<a name="line-94"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-95"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span>          <span class='hs-comment'>-- Retain the signature for</span>
-<a name="line-96"></a>                                        <span class='hs-comment'>-- round-tripping purposes</span>
-<a name="line-97"></a>
-<a name="line-98"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ArithSeq</span>                            <span class='hs-comment'>-- Arithmetic sequence</span>
-<a name="line-99"></a>                <span class='hs-conid'>PostTcExpr</span>
-<a name="line-100"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-comment'>-- For OverloadedLists, the fromList witness</span>
-<a name="line-101"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>ArithSeqInfo</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-102"></a>
-<a name="line-103"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PArrSeq</span>                             <span class='hs-comment'>-- arith. sequence for parallel array</span>
-<a name="line-104"></a>                <span class='hs-conid'>PostTcExpr</span>              <span class='hs-comment'>-- [:e1..e2:] or [:e1, e2..e3:]</span>
-<a name="line-105"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>ArithSeqInfo</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-106"></a>
-<a name="line-107"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsSCC</span>       <span class='hs-conid'>FastString</span>              <span class='hs-comment'>-- "set cost centre" SCC pragma</span>
-<a name="line-108"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>            <span class='hs-comment'>-- expr whose cost is to be measured</span>
-<a name="line-109"></a>
-<a name="line-110"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsCoreAnn</span>   <span class='hs-conid'>FastString</span>              <span class='hs-comment'>-- hdaume: core annotation</span>
-<a name="line-111"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-112"></a>
-<a name="line-113"></a>  <span class='hs-comment'>-----------------------------------------------------------</span>
-<a name="line-114"></a>  <span class='hs-comment'>-- MetaHaskell Extensions</span>
-<a name="line-115"></a>
-<a name="line-116"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBracket</span>    <span class='hs-layout'>(</span><span class='hs-conid'>HsBracket</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-117"></a>
-<a name="line-118"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBracketOut</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsBracket</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span>       <span class='hs-comment'>-- Output of the type checker is</span>
-<a name="line-119"></a>                                        <span class='hs-comment'>-- the *original*</span>
-<a name="line-120"></a>                 <span class='hs-keyglyph'>[</span><span class='hs-conid'>PendingSplice</span><span class='hs-keyglyph'>]</span>        <span class='hs-comment'>-- renamed expression, plus</span>
-<a name="line-121"></a>                                        <span class='hs-comment'>-- _typechecked_ splices to be</span>
-<a name="line-122"></a>                                        <span class='hs-comment'>-- pasted back in by the desugarer</span>
-<a name="line-123"></a>
-<a name="line-124"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsSpliceE</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsSplice</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-66"></a>  <span class='hs-comment'>-- | Syntactic list: [a,b,c,...]</span>
+<a name="line-67"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitList</span>                        
+<a name="line-68"></a>                <span class='hs-conid'>PostTcType</span>              <span class='hs-comment'>-- Gives type of components of list</span>
+<a name="line-69"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- For OverloadedLists, the fromListN witness</span>
+<a name="line-70"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
+<a name="line-71"></a>
+<a name="line-72"></a>  <span class='hs-comment'>-- | Syntactic parallel array: [:e1, ..., en:]</span>
+<a name="line-73"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExplicitPArr</span>                
+<a name="line-74"></a>                <span class='hs-conid'>PostTcType</span>      <span class='hs-comment'>-- type of elements of the parallel array</span>
+<a name="line-75"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>
+<a name="line-76"></a>
+<a name="line-77"></a>  <span class='hs-comment'>-- | Record construction</span>
+<a name="line-78"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>RecordCon</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>       <span class='hs-comment'>-- The constructor.  After type checking</span>
+<a name="line-79"></a>                                   <span class='hs-comment'>-- it's the dataConWrapId of the constructor</span>
+<a name="line-80"></a>                <span class='hs-conid'>PostTcExpr</span>         <span class='hs-comment'>-- Data con Id applied to type args</span>
+<a name="line-81"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsRecordBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-82"></a>
+<a name="line-83"></a>  <span class='hs-comment'>-- | Record update</span>
+<a name="line-84"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>RecordUpd</span>   <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-85"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsRecordBinds</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-86"></a><span class='hs-comment'>--              (HsMatchGroup Id)  -- Filled in by the type checker to be</span>
+<a name="line-87"></a><span class='hs-comment'>--                                 -- a match that does the job</span>
+<a name="line-88"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>DataCon</span><span class='hs-keyglyph'>]</span>          <span class='hs-comment'>-- Filled in by the type checker to the</span>
+<a name="line-89"></a>                                   <span class='hs-comment'>-- _non-empty_ list of DataCons that have</span>
+<a name="line-90"></a>                                   <span class='hs-comment'>-- all the upd'd fields</span>
+<a name="line-91"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>PostTcType</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>-- Argument types of *input* record type</span>
+<a name="line-92"></a>                <span class='hs-keyglyph'>[</span><span class='hs-conid'>PostTcType</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>--              and  *output* record type</span>
+<a name="line-93"></a>  <span class='hs-comment'>-- For a type family, the arg types are of the *instance* tycon,</span>
+<a name="line-94"></a>  <span class='hs-comment'>-- not the family tycon</span>
+<a name="line-95"></a>
+<a name="line-96"></a>  <span class='hs-comment'>-- | Expression with an explicit type signature. @e :: type@  </span>
+<a name="line-97"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExprWithTySig</span>                       
+<a name="line-98"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-99"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-100"></a>
+<a name="line-101"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ExprWithTySigOut</span>                    <span class='hs-comment'>-- TRANSLATION</span>
+<a name="line-102"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-103"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span>          <span class='hs-comment'>-- Retain the signature for</span>
+<a name="line-104"></a>                                        <span class='hs-comment'>-- round-tripping purposes</span>
+<a name="line-105"></a>
+<a name="line-106"></a>  <span class='hs-comment'>-- | Arithmetic sequence</span>
+<a name="line-107"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ArithSeq</span>                            
+<a name="line-108"></a>                <span class='hs-conid'>PostTcExpr</span>
+<a name="line-109"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>SyntaxExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-comment'>-- For OverloadedLists, the fromList witness</span>
+<a name="line-110"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>ArithSeqInfo</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-111"></a>
+<a name="line-112"></a>  <span class='hs-comment'>-- | Arithmetic sequence for parallel array</span>
+<a name="line-113"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PArrSeq</span>                             
+<a name="line-114"></a>                <span class='hs-conid'>PostTcExpr</span>              <span class='hs-comment'>-- [:e1..e2:] or [:e1, e2..e3:]</span>
+<a name="line-115"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>ArithSeqInfo</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-116"></a>
+<a name="line-117"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsSCC</span>       <span class='hs-conid'>FastString</span>              <span class='hs-comment'>-- "set cost centre" SCC pragma</span>
+<a name="line-118"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>            <span class='hs-comment'>-- expr whose cost is to be measured</span>
+<a name="line-119"></a>
+<a name="line-120"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsCoreAnn</span>   <span class='hs-conid'>FastString</span>              <span class='hs-comment'>-- hdaume: core annotation</span>
+<a name="line-121"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-122"></a>
+<a name="line-123"></a>  <span class='hs-comment'>-----------------------------------------------------------</span>
+<a name="line-124"></a>  <span class='hs-comment'>-- MetaHaskell Extensions</span>
 <a name="line-125"></a>
-<a name="line-126"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsQuasiQuoteE</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsQuasiQuote</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-127"></a>        <span class='hs-comment'>-- See Note [Quasi-quote overview] in TcSplice</span>
-<a name="line-128"></a>
-<a name="line-129"></a>  <span class='hs-comment'>-----------------------------------------------------------</span>
-<a name="line-130"></a>  <span class='hs-comment'>-- Arrow notation extension</span>
-<a name="line-131"></a>
-<a name="line-132"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsProc</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LPat</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>               <span class='hs-comment'>-- arrow abstraction, proc</span>
-<a name="line-133"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsCmdTop</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>          <span class='hs-comment'>-- body of the abstraction</span>
-<a name="line-134"></a>                                        <span class='hs-comment'>-- always has an empty stack</span>
+<a name="line-126"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBracket</span>    <span class='hs-layout'>(</span><span class='hs-conid'>HsBracket</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-127"></a>
+<a name="line-128"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBracketOut</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsBracket</span> <span class='hs-conid'>Name</span><span class='hs-layout'>)</span>       <span class='hs-comment'>-- Output of the type checker is</span>
+<a name="line-129"></a>                                        <span class='hs-comment'>-- the *original*</span>
+<a name="line-130"></a>                 <span class='hs-keyglyph'>[</span><span class='hs-conid'>PendingSplice</span><span class='hs-keyglyph'>]</span>        <span class='hs-comment'>-- renamed expression, plus</span>
+<a name="line-131"></a>                                        <span class='hs-comment'>-- _typechecked_ splices to be</span>
+<a name="line-132"></a>                                        <span class='hs-comment'>-- pasted back in by the desugarer</span>
+<a name="line-133"></a>
+<a name="line-134"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsSpliceE</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsSplice</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
 <a name="line-135"></a>
-<a name="line-136"></a>  <span class='hs-comment'>---------------------------------------</span>
-<a name="line-137"></a>  <span class='hs-comment'>-- The following are commands, not expressions proper</span>
-<a name="line-138"></a>  <span class='hs-comment'>-- They are only used in the parsing stage and are removed</span>
-<a name="line-139"></a>  <span class='hs-comment'>--    immediately in parser.RdrHsSyn.checkCommand</span>
-<a name="line-140"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsArrApp</span>            <span class='hs-comment'>-- Arrow tail, or arrow application (f -&lt; arg)</span>
-<a name="line-141"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- arrow expression, f</span>
-<a name="line-142"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- input expression, arg</span>
-<a name="line-143"></a>        <span class='hs-conid'>PostTcType</span>      <span class='hs-comment'>-- type of the arrow expressions f,</span>
-<a name="line-144"></a>                        <span class='hs-comment'>-- of the form a t t', where arg :: t</span>
-<a name="line-145"></a>        <span class='hs-conid'>HsArrAppType</span>    <span class='hs-comment'>-- higher-order (-&lt;&lt;) or first-order (-&lt;)</span>
-<a name="line-146"></a>        <span class='hs-conid'>Bool</span>            <span class='hs-comment'>-- True =&gt; right-to-left (f -&lt; arg)</span>
-<a name="line-147"></a>                        <span class='hs-comment'>-- False =&gt; left-to-right (arg &gt;- f)</span>
-<a name="line-148"></a>
-<a name="line-149"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsArrForm</span>           <span class='hs-comment'>-- Command formation,  (| e cmd1 .. cmdn |)</span>
-<a name="line-150"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- the operator</span>
-<a name="line-151"></a>                        <span class='hs-comment'>-- after type-checking, a type abstraction to be</span>
-<a name="line-152"></a>                        <span class='hs-comment'>-- applied to the type of the local environment tuple</span>
-<a name="line-153"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-conid'>Fixity</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- fixity (filled in by the renamer), for forms that</span>
-<a name="line-154"></a>                        <span class='hs-comment'>-- were converted from OpApp's by the renamer</span>
-<a name="line-155"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsCmdTop</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>  <span class='hs-comment'>-- argument commands</span>
-<a name="line-156"></a>
-<a name="line-157"></a>  <span class='hs-comment'>---------------------------------------</span>
-<a name="line-158"></a>  <span class='hs-comment'>-- Haskell program coverage (Hpc) Support</span>
+<a name="line-136"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsQuasiQuoteE</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsQuasiQuote</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-137"></a>        <span class='hs-comment'>-- See Note [Quasi-quote overview] in TcSplice</span>
+<a name="line-138"></a>
+<a name="line-139"></a>  <span class='hs-comment'>-----------------------------------------------------------</span>
+<a name="line-140"></a>  <span class='hs-comment'>-- Arrow notation extension</span>
+<a name="line-141"></a>
+<a name="line-142"></a>  <span class='hs-comment'>-- | @proc@ notation for Arrows</span>
+<a name="line-143"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsProc</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LPat</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>               <span class='hs-comment'>-- arrow abstraction, proc</span>
+<a name="line-144"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsCmdTop</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>          <span class='hs-comment'>-- body of the abstraction</span>
+<a name="line-145"></a>                                        <span class='hs-comment'>-- always has an empty stack</span>
+<a name="line-146"></a>
+<a name="line-147"></a>  <span class='hs-comment'>---------------------------------------</span>
+<a name="line-148"></a>  <span class='hs-comment'>-- The following are commands, not expressions proper</span>
+<a name="line-149"></a>  <span class='hs-comment'>-- They are only used in the parsing stage and are removed</span>
+<a name="line-150"></a>  <span class='hs-comment'>--    immediately in parser.RdrHsSyn.checkCommand</span>
+<a name="line-151"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsArrApp</span>            <span class='hs-comment'>-- Arrow tail, or arrow application (f -&lt; arg)</span>
+<a name="line-152"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- arrow expression, f</span>
+<a name="line-153"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- input expression, arg</span>
+<a name="line-154"></a>        <span class='hs-conid'>PostTcType</span>      <span class='hs-comment'>-- type of the arrow expressions f,</span>
+<a name="line-155"></a>                        <span class='hs-comment'>-- of the form a t t', where arg :: t</span>
+<a name="line-156"></a>        <span class='hs-conid'>HsArrAppType</span>    <span class='hs-comment'>-- higher-order (-&lt;&lt;) or first-order (-&lt;)</span>
+<a name="line-157"></a>        <span class='hs-conid'>Bool</span>            <span class='hs-comment'>-- True =&gt; right-to-left (f -&lt; arg)</span>
+<a name="line-158"></a>                        <span class='hs-comment'>-- False =&gt; left-to-right (arg &gt;- f)</span>
 <a name="line-159"></a>
-<a name="line-160"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsTick</span>
-<a name="line-161"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-162"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>                       <span class='hs-comment'>-- sub-expression</span>
-<a name="line-163"></a>
-<a name="line-164"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBinTick</span>
-<a name="line-165"></a>     <span class='hs-conid'>Int</span>                                <span class='hs-comment'>-- module-local tick number for True</span>
-<a name="line-166"></a>     <span class='hs-conid'>Int</span>                                <span class='hs-comment'>-- module-local tick number for False</span>
-<a name="line-167"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>                       <span class='hs-comment'>-- sub-expression</span>
-<a name="line-168"></a>
-<a name="line-169"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsTickPragma</span>                        <span class='hs-comment'>-- A pragma introduced tick</span>
-<a name="line-170"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>FastString</span><span class='hs-layout'>,</span><span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span><span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-comment'>-- external span for this tick</span>
-<a name="line-171"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-172"></a>
-<a name="line-173"></a>  <span class='hs-comment'>---------------------------------------</span>
-<a name="line-174"></a>  <span class='hs-comment'>-- These constructors only appear temporarily in the parser.</span>
-<a name="line-175"></a>  <span class='hs-comment'>-- The renamer translates them into the Right Thing.</span>
-<a name="line-176"></a>
-<a name="line-177"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EWildPat</span>                 <span class='hs-comment'>-- wildcard</span>
-<a name="line-178"></a>
-<a name="line-179"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EAsPat</span>      <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- as pattern</span>
-<a name="line-180"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-181"></a>
-<a name="line-182"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EViewPat</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- view pattern</span>
-<a name="line-183"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-184"></a>
-<a name="line-185"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ELazyPat</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ~ pattern</span>
-<a name="line-186"></a>
-<a name="line-187"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsType</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Explicit type argument; e.g  f {| Int |} x y</span>
-<a name="line-188"></a>
-<a name="line-189"></a>  <span class='hs-comment'>---------------------------------------</span>
-<a name="line-190"></a>  <span class='hs-comment'>-- Finally, HsWrap appears only in typechecker output</span>
-<a name="line-191"></a>
-<a name="line-192"></a>  <span class='hs-keyglyph'>|</span>  <span class='hs-conid'>HsWrap</span>     <span class='hs-conid'>HsWrapper</span>    <span class='hs-comment'>-- TRANSLATION</span>
-<a name="line-193"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
-<a name="line-194"></a>  <span class='hs-keyglyph'>|</span>  <span class='hs-conid'>HsUnboundVar</span> <span class='hs-conid'>RdrName</span>
-<a name="line-195"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-196"></a>
-<a name="line-197"></a><a name="HsTupArg"></a><span class='hs-comment'>-- HsTupArg is used for tuple sections</span>
-<a name="line-198"></a><a name="HsTupArg"></a><span class='hs-comment'>--  (,a,) is represented by  ExplicitTuple [Mising ty1, Present a, Missing ty3]</span>
-<a name="line-199"></a><a name="HsTupArg"></a><span class='hs-comment'>--  Which in turn stands for (\x:ty1 \y:ty2. (x,a,y))</span>
-<a name="line-200"></a><a name="HsTupArg"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span>
-<a name="line-201"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Present</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>        <span class='hs-comment'>-- The argument</span>
-<a name="line-202"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Missing</span> <span class='hs-conid'>PostTcType</span>          <span class='hs-comment'>-- The argument is missing, but this is its type</span>
-<a name="line-203"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-204"></a>
-<a name="line-205"></a><a name="tupArgPresent"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-206"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-layout'>(</span><span class='hs-conid'>Present</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-207"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-layout'>(</span><span class='hs-conid'>Missing</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-208"></a>
-<a name="line-209"></a><a name="PendingSplice"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>PendingSplice</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>Name</span><span class='hs-layout'>,</span> <span class='hs-conid'>LHsExpr</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Typechecked splices, waiting to be</span>
-<a name="line-210"></a>                                        <span class='hs-comment'>-- pasted back in by the desugarer</span>
-<a name="line-211"></a>
+<a name="line-160"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsArrForm</span>           <span class='hs-comment'>-- Command formation,  (| e cmd1 .. cmdn |)</span>
+<a name="line-161"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- the operator</span>
+<a name="line-162"></a>                        <span class='hs-comment'>-- after type-checking, a type abstraction to be</span>
+<a name="line-163"></a>                        <span class='hs-comment'>-- applied to the type of the local environment tuple</span>
+<a name="line-164"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-conid'>Fixity</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- fixity (filled in by the renamer), for forms that</span>
+<a name="line-165"></a>                        <span class='hs-comment'>-- were converted from OpApp's by the renamer</span>
+<a name="line-166"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>LHsCmdTop</span> <span class='hs-varid'>id</span><span class='hs-keyglyph'>]</span>  <span class='hs-comment'>-- argument commands</span>
+<a name="line-167"></a>
+<a name="line-168"></a>  <span class='hs-comment'>---------------------------------------</span>
+<a name="line-169"></a>  <span class='hs-comment'>-- Haskell program coverage (Hpc) Support</span>
+<a name="line-170"></a>
+<a name="line-171"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsTick</span>
+<a name="line-172"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-173"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>                       <span class='hs-comment'>-- sub-expression</span>
+<a name="line-174"></a>
+<a name="line-175"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsBinTick</span>
+<a name="line-176"></a>     <span class='hs-conid'>Int</span>                                <span class='hs-comment'>-- module-local tick number for True</span>
+<a name="line-177"></a>     <span class='hs-conid'>Int</span>                                <span class='hs-comment'>-- module-local tick number for False</span>
+<a name="line-178"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>                       <span class='hs-comment'>-- sub-expression</span>
+<a name="line-179"></a>
+<a name="line-180"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsTickPragma</span>                        <span class='hs-comment'>-- A pragma introduced tick</span>
+<a name="line-181"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>FastString</span><span class='hs-layout'>,</span><span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span><span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span><span class='hs-conid'>Int</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-comment'>-- external span for this tick</span>
+<a name="line-182"></a>     <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-183"></a>
+<a name="line-184"></a>  <span class='hs-comment'>---------------------------------------</span>
+<a name="line-185"></a>  <span class='hs-comment'>-- These constructors only appear temporarily in the parser.</span>
+<a name="line-186"></a>  <span class='hs-comment'>-- The renamer translates them into the Right Thing.</span>
+<a name="line-187"></a>
+<a name="line-188"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EWildPat</span>                 <span class='hs-comment'>-- wildcard</span>
+<a name="line-189"></a>
+<a name="line-190"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EAsPat</span>      <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- as pattern</span>
+<a name="line-191"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-192"></a>
+<a name="line-193"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EViewPat</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- view pattern</span>
+<a name="line-194"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-195"></a>
+<a name="line-196"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ELazyPat</span>    <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ~ pattern</span>
+<a name="line-197"></a>
+<a name="line-198"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsType</span>      <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- Explicit type argument; e.g  f {| Int |} x y</span>
+<a name="line-199"></a>
+<a name="line-200"></a>  <span class='hs-comment'>---------------------------------------</span>
+<a name="line-201"></a>  <span class='hs-comment'>-- Finally, HsWrap appears only in typechecker output</span>
+<a name="line-202"></a>
+<a name="line-203"></a>  <span class='hs-keyglyph'>|</span>  <span class='hs-conid'>HsWrap</span>     <span class='hs-conid'>HsWrapper</span>    <span class='hs-comment'>-- TRANSLATION</span>
+<a name="line-204"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>HsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>
+<a name="line-205"></a>  <span class='hs-keyglyph'>|</span>  <span class='hs-conid'>HsUnboundVar</span> <span class='hs-conid'>RdrName</span>
+<a name="line-206"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-207"></a>
+<a name="line-208"></a><a name="HsTupArg"></a><span class='hs-comment'>-- | HsTupArg is used for tuple sections</span>
+<a name="line-209"></a><a name="HsTupArg"></a><span class='hs-comment'>--  (,a,) is represented by  ExplicitTuple [Mising ty1, Present a, Missing ty3]</span>
+<a name="line-210"></a><a name="HsTupArg"></a><span class='hs-comment'>--  Which in turn stands for (\x:ty1 \y:ty2. (x,a,y))</span>
+<a name="line-211"></a><a name="HsTupArg"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span>
+<a name="line-212"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Present</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>id</span><span class='hs-layout'>)</span>        <span class='hs-comment'>-- ^ The argument</span>
+<a name="line-213"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Missing</span> <span class='hs-conid'>PostTcType</span>          <span class='hs-comment'>-- ^ The argument is missing, but this is its type</span>
+<a name="line-214"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-215"></a>
+<a name="line-216"></a><a name="tupArgPresent"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsTupArg</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-217"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-layout'>(</span><span class='hs-conid'>Present</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-218"></a><span class='hs-definition'>tupArgPresent</span> <span class='hs-layout'>(</span><span class='hs-conid'>Missing</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-219"></a>
+<a name="line-220"></a><a name="PendingSplice"></a><span class='hs-comment'>-- | Typechecked splices, waiting to be</span>
+<a name="line-221"></a><a name="PendingSplice"></a><span class='hs-comment'>-- pasted back in by the desugarer</span>
+<a name="line-222"></a><a name="PendingSplice"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>PendingSplice</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>Name</span><span class='hs-layout'>,</span> <span class='hs-conid'>LHsExpr</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span> 
+<a name="line-223"></a>
 </pre>\end{code}
 
 Note [Parens in HsSyn]
