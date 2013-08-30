@@ -1109,7 +1109,7 @@ won't inline because 'e' is too big.
 <a name="line-14"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>any</span> <span class='hs-varid'>bad</span> <span class='hs-varid'>bndrs</span><span class='hs-layout'>)</span>
 <a name="line-15"></a>        <span class='hs-comment'>-- Note [Casts and lambdas]</span>
 <a name="line-16"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>lam</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkLam'</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>bndrs</span> <span class='hs-varid'>body</span>
-<a name="line-17"></a>           <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkCast</span> <span class='hs-varid'>lam</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPiCos</span> <span class='hs-varid'>bndrs</span> <span class='hs-varid'>co</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
+<a name="line-17"></a>           <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkCast</span> <span class='hs-varid'>lam</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPiCos</span> <span class='hs-conid'>Representational</span> <span class='hs-varid'>bndrs</span> <span class='hs-varid'>co</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
 <a name="line-18"></a>      <span class='hs-keyword'>where</span>
 <a name="line-19"></a>        <span class='hs-varid'>co_vars</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tyCoVarsOfCo</span> <span class='hs-varid'>co</span>
 <a name="line-20"></a>        <span class='hs-varid'>bad</span> <span class='hs-varid'>bndr</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>isCoVar</span> <span class='hs-varid'>bndr</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>bndr</span> <span class='hs-varop'>`elemVarSet`</span> <span class='hs-varid'>co_vars</span>
@@ -1519,7 +1519,7 @@ prepareAlts tries these things:
 
 Here "cannot match" includes knowledge from GADTs
 
-It's a good idea do do this stuff before simplifying the alternatives, to
+It's a good idea to do this stuff before simplifying the alternatives, to
 avoid simplifying alternatives we know can't happen, and to come up with
 the list of constructors that are handled, to put into the IdInfo of the
 case binder, for use when simplifying the alternatives.

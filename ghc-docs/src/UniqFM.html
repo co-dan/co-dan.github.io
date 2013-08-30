@@ -29,7 +29,7 @@ and ``addToUFM\_C'' and ``Data.IntMap.insertWith'' differ in the order
 of arguments of combining function.
 
 \begin{code}
-<pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE GeneralizedNewtypeDeriving #-}</span>
+<pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE DeriveTraversable, GeneralizedNewtypeDeriving #-}</span>
 <a name="line-2"></a>
 <a name="line-3"></a><span class='hs-comment'>{-# OPTIONS -Wall #-}</span>
 <a name="line-4"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>UniqFM</span> <span class='hs-layout'>(</span>

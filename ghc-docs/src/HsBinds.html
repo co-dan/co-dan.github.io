@@ -62,129 +62,138 @@ Global bindings (where clauses)
 <a name="line-6"></a>
 <a name="line-7"></a><a name="HsLocalBinds"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>HsLocalBinds</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsLocalBindsLR</span> <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
 <a name="line-8"></a>
-<a name="line-9"></a><a name="HsLocalBindsLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsLocalBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>    <span class='hs-comment'>-- Bindings in a 'let' expression</span>
-<a name="line-10"></a>                               <span class='hs-comment'>-- or a 'where' clause</span>
-<a name="line-11"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsValBinds</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
-<a name="line-12"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIPBinds</span>  <span class='hs-layout'>(</span><span class='hs-conid'>HsIPBinds</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
-<a name="line-13"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EmptyLocalBinds</span>
-<a name="line-14"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-15"></a>
-<a name="line-16"></a><a name="HsValBinds"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>HsValBinds</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
-<a name="line-17"></a>
-<a name="line-18"></a><a name="HsValBindsLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>  <span class='hs-comment'>-- Value bindings (not implicit parameters)</span>
-<a name="line-19"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ValBindsIn</span>             <span class='hs-comment'>-- Before renaming RHS; idR is always RdrName</span>
-<a name="line-20"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LSig</span> <span class='hs-varid'>idR</span><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- Not dependency analysed</span>
-<a name="line-21"></a>                                        <span class='hs-comment'>-- Recursive by default</span>
-<a name="line-22"></a>
-<a name="line-23"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ValBindsOut</span>            <span class='hs-comment'>-- After renaming RHS; idR can be Name or Id</span>
-<a name="line-24"></a>        <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>RecFlag</span><span class='hs-layout'>,</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>idL</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>       <span class='hs-comment'>-- Dependency analysed, later bindings</span>
-<a name="line-25"></a>                                        <span class='hs-comment'>-- in the list may depend on earlier</span>
-<a name="line-26"></a>                                        <span class='hs-comment'>-- ones.</span>
-<a name="line-27"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>LSig</span> <span class='hs-conid'>Name</span><span class='hs-keyglyph'>]</span>
-<a name="line-28"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-29"></a>
-<a name="line-30"></a><a name="LHsBind"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBind</span>  <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>LHsBindLR</span>  <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
-<a name="line-31"></a><a name="LHsBinds"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
-<a name="line-32"></a><a name="HsBind"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>HsBind</span>   <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsBindLR</span>   <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
-<a name="line-33"></a>
-<a name="line-34"></a><a name="LHsBindsLR"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bag</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
-<a name="line-35"></a><a name="LHsBindLR"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBindLR</span>  <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
-<a name="line-36"></a>
-<a name="line-37"></a><a name="HsBindLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>
-<a name="line-38"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-comment'>-- | FunBind is used for both functions   @f x = e@</span>
-<a name="line-39"></a>    <span class='hs-comment'>-- and variables                          @f = \x -&gt; e@</span>
-<a name="line-40"></a>    <span class='hs-comment'>--</span>
-<a name="line-41"></a>    <span class='hs-comment'>-- Reason 1: Special case for type inference: see 'TcBinds.tcMonoBinds'.</span>
-<a name="line-42"></a>    <span class='hs-comment'>--</span>
-<a name="line-43"></a>    <span class='hs-comment'>-- Reason 2: Instance decls can only have FunBinds, which is convenient.</span>
-<a name="line-44"></a>    <span class='hs-comment'>--           If you change this, you'll need to change e.g. rnMethodBinds</span>
-<a name="line-45"></a>    <span class='hs-comment'>--</span>
-<a name="line-46"></a>    <span class='hs-comment'>-- But note that the form                 @f :: a-&gt;a = ...@</span>
-<a name="line-47"></a>    <span class='hs-comment'>-- parses as a pattern binding, just like</span>
-<a name="line-48"></a>    <span class='hs-comment'>--                                        @(f :: a -&gt; a) = ... @</span>
-<a name="line-49"></a>    <span class='hs-conid'>FunBind</span> <span class='hs-layout'>{</span>
-<a name="line-50"></a>
-<a name="line-51"></a>        <span class='hs-varid'>fun_id</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Located</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>
-<a name="line-52"></a>
-<a name="line-53"></a>        <span class='hs-varid'>fun_infix</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ True =&gt; infix declaration</span>
-<a name="line-54"></a>
-<a name="line-55"></a>        <span class='hs-varid'>fun_matches</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>idR</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- ^ The payload</span>
+<a name="line-9"></a><a name="HsLocalBindsLR"></a><span class='hs-comment'>-- | Bindings in a 'let' expression</span>
+<a name="line-10"></a><a name="HsLocalBindsLR"></a><span class='hs-comment'>-- or a 'where' clause</span>
+<a name="line-11"></a><a name="HsLocalBindsLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsLocalBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>    
+<a name="line-12"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsValBinds</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
+<a name="line-13"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>HsIPBinds</span>  <span class='hs-layout'>(</span><span class='hs-conid'>HsIPBinds</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
+<a name="line-14"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EmptyLocalBinds</span>
+<a name="line-15"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-16"></a>
+<a name="line-17"></a><a name="HsValBinds"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>HsValBinds</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
+<a name="line-18"></a>
+<a name="line-19"></a><a name="HsValBindsLR"></a><span class='hs-comment'>-- | Value bindings (not implicit parameters)</span>
+<a name="line-20"></a><a name="HsValBindsLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsValBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>   
+<a name="line-21"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-comment'>-- | Before renaming RHS; idR is always RdrName</span>
+<a name="line-22"></a>    <span class='hs-comment'>-- Not dependency analysed</span>
+<a name="line-23"></a>    <span class='hs-comment'>-- Recursive by default</span>
+<a name="line-24"></a>    <span class='hs-conid'>ValBindsIn</span>
+<a name="line-25"></a>        <span class='hs-layout'>(</span><span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LSig</span> <span class='hs-varid'>idR</span><span class='hs-keyglyph'>]</span> 
+<a name="line-26"></a>
+<a name="line-27"></a>    <span class='hs-comment'>-- | After renaming RHS; idR can be Name or Id</span>
+<a name="line-28"></a>    <span class='hs-comment'>--  Dependency analysed,</span>
+<a name="line-29"></a>    <span class='hs-comment'>-- later bindings in the list may depend on earlier</span>
+<a name="line-30"></a>    <span class='hs-comment'>-- ones.</span>
+<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ValBindsOut</span>            
+<a name="line-32"></a>        <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>RecFlag</span><span class='hs-layout'>,</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>idL</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>       
+<a name="line-33"></a>        <span class='hs-keyglyph'>[</span><span class='hs-conid'>LSig</span> <span class='hs-conid'>Name</span><span class='hs-keyglyph'>]</span>
+<a name="line-34"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-35"></a>
+<a name="line-36"></a><a name="LHsBind"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBind</span>  <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>LHsBindLR</span>  <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
+<a name="line-37"></a><a name="LHsBinds"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
+<a name="line-38"></a><a name="HsBind"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>HsBind</span>   <span class='hs-varid'>id</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>HsBindLR</span>   <span class='hs-varid'>id</span> <span class='hs-varid'>id</span>
+<a name="line-39"></a>
+<a name="line-40"></a><a name="LHsBindsLR"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBindsLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bag</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
+<a name="line-41"></a><a name="LHsBindLR"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LHsBindLR</span>  <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>HsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span>
+<a name="line-42"></a>
+<a name="line-43"></a><a name="HsBindLR"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>HsBindLR</span> <span class='hs-varid'>idL</span> <span class='hs-varid'>idR</span>
+<a name="line-44"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-comment'>-- | FunBind is used for both functions   @f x = e@</span>
+<a name="line-45"></a>    <span class='hs-comment'>-- and variables                          @f = \x -&gt; e@</span>
+<a name="line-46"></a>    <span class='hs-comment'>--</span>
+<a name="line-47"></a>    <span class='hs-comment'>-- Reason 1: Special case for type inference: see 'TcBinds.tcMonoBinds'.</span>
+<a name="line-48"></a>    <span class='hs-comment'>--</span>
+<a name="line-49"></a>    <span class='hs-comment'>-- Reason 2: Instance decls can only have FunBinds, which is convenient.</span>
+<a name="line-50"></a>    <span class='hs-comment'>--           If you change this, you'll need to change e.g. rnMethodBinds</span>
+<a name="line-51"></a>    <span class='hs-comment'>--</span>
+<a name="line-52"></a>    <span class='hs-comment'>-- But note that the form                 @f :: a-&gt;a = ...@</span>
+<a name="line-53"></a>    <span class='hs-comment'>-- parses as a pattern binding, just like</span>
+<a name="line-54"></a>    <span class='hs-comment'>--                                        @(f :: a -&gt; a) = ... @</span>
+<a name="line-55"></a>    <span class='hs-conid'>FunBind</span> <span class='hs-layout'>{</span>
 <a name="line-56"></a>
-<a name="line-57"></a>        <span class='hs-varid'>fun_co_fn</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsWrapper</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- ^ Coercion from the type of the MatchGroup to the type of</span>
-<a name="line-58"></a>                                <span class='hs-comment'>-- the Id.  Example:</span>
-<a name="line-59"></a>                                <span class='hs-comment'>-- @</span>
-<a name="line-60"></a>                                <span class='hs-comment'>--      f :: Int -&gt; forall a. a -&gt; a</span>
-<a name="line-61"></a>                                <span class='hs-comment'>--      f x y = y</span>
-<a name="line-62"></a>                                <span class='hs-comment'>-- @</span>
-<a name="line-63"></a>                                <span class='hs-comment'>-- Then the MatchGroup will have type (Int -&gt; a' -&gt; a')</span>
-<a name="line-64"></a>                                <span class='hs-comment'>-- (with a free type variable a').  The coercion will take</span>
-<a name="line-65"></a>                                <span class='hs-comment'>-- a CoreExpr of this type and convert it to a CoreExpr of</span>
-<a name="line-66"></a>                                <span class='hs-comment'>-- type         Int -&gt; forall a'. a' -&gt; a'</span>
-<a name="line-67"></a>                                <span class='hs-comment'>-- Notice that the coercion captures the free a'.</span>
-<a name="line-68"></a>
-<a name="line-69"></a>        <span class='hs-varid'>bind_fvs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ After the renamer, this contains the locally-bound</span>
-<a name="line-70"></a>                                <span class='hs-comment'>-- free variables of this defn.</span>
-<a name="line-71"></a>                                <span class='hs-comment'>-- See Note [Bind free vars]</span>
-<a name="line-72"></a>
-<a name="line-73"></a>
-<a name="line-74"></a>        <span class='hs-varid'>fun_tick</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ^ Tick to put on the rhs, if any</span>
-<a name="line-75"></a>    <span class='hs-layout'>}</span>
-<a name="line-76"></a>
-<a name="line-77"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PatBind</span> <span class='hs-layout'>{</span>   <span class='hs-comment'>-- The pattern is never a simple variable;</span>
-<a name="line-78"></a>                <span class='hs-comment'>-- That case is done by FunBind</span>
-<a name="line-79"></a>        <span class='hs-varid'>pat_lhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LPat</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>
-<a name="line-80"></a>        <span class='hs-varid'>pat_rhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>GRHSs</span> <span class='hs-varid'>idR</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-81"></a>        <span class='hs-varid'>pat_rhs_ty</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>PostTcType</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- Type of the GRHSs</span>
-<a name="line-82"></a>        <span class='hs-varid'>bind_fvs</span>   <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>          <span class='hs-comment'>-- See Note [Bind free vars]</span>
-<a name="line-83"></a>        <span class='hs-varid'>pat_ticks</span>  <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
-<a name="line-84"></a>               <span class='hs-comment'>-- ^ Tick to put on the rhs, if any, and ticks to put on</span>
-<a name="line-85"></a>               <span class='hs-comment'>-- the bound variables.</span>
-<a name="line-86"></a>    <span class='hs-layout'>}</span>
-<a name="line-87"></a>
-<a name="line-88"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>VarBind</span> <span class='hs-layout'>{</span>   <span class='hs-comment'>-- Dictionary binding and suchlike</span>
-<a name="line-89"></a>        <span class='hs-varid'>var_id</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>           <span class='hs-comment'>-- All VarBinds are introduced by the type checker</span>
-<a name="line-90"></a>        <span class='hs-varid'>var_rhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- Located only for consistency</span>
-<a name="line-91"></a>        <span class='hs-varid'>var_inline</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>           <span class='hs-comment'>-- True &lt;=&gt; inline this binding regardless</span>
-<a name="line-92"></a>                                     <span class='hs-comment'>-- (used for implication constraints only)</span>
+<a name="line-57"></a>        <span class='hs-varid'>fun_id</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Located</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>
+<a name="line-58"></a>
+<a name="line-59"></a>        <span class='hs-varid'>fun_infix</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ True =&gt; infix declaration</span>
+<a name="line-60"></a>
+<a name="line-61"></a>        <span class='hs-varid'>fun_matches</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>MatchGroup</span> <span class='hs-varid'>idR</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- ^ The payload</span>
+<a name="line-62"></a>
+<a name="line-63"></a>        <span class='hs-varid'>fun_co_fn</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsWrapper</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- ^ Coercion from the type of the MatchGroup to the type of</span>
+<a name="line-64"></a>                                <span class='hs-comment'>-- the Id.  Example:</span>
+<a name="line-65"></a>                                <span class='hs-comment'>-- @</span>
+<a name="line-66"></a>                                <span class='hs-comment'>--      f :: Int -&gt; forall a. a -&gt; a</span>
+<a name="line-67"></a>                                <span class='hs-comment'>--      f x y = y</span>
+<a name="line-68"></a>                                <span class='hs-comment'>-- @</span>
+<a name="line-69"></a>                                <span class='hs-comment'>-- Then the MatchGroup will have type (Int -&gt; a' -&gt; a')</span>
+<a name="line-70"></a>                                <span class='hs-comment'>-- (with a free type variable a').  The coercion will take</span>
+<a name="line-71"></a>                                <span class='hs-comment'>-- a CoreExpr of this type and convert it to a CoreExpr of</span>
+<a name="line-72"></a>                                <span class='hs-comment'>-- type         Int -&gt; forall a'. a' -&gt; a'</span>
+<a name="line-73"></a>                                <span class='hs-comment'>-- Notice that the coercion captures the free a'.</span>
+<a name="line-74"></a>
+<a name="line-75"></a>        <span class='hs-varid'>bind_fvs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ After the renamer, this contains the locally-bound</span>
+<a name="line-76"></a>                                <span class='hs-comment'>-- free variables of this defn.</span>
+<a name="line-77"></a>                                <span class='hs-comment'>-- See Note [Bind free vars]</span>
+<a name="line-78"></a>
+<a name="line-79"></a>
+<a name="line-80"></a>        <span class='hs-varid'>fun_tick</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ^ Tick to put on the rhs, if any</span>
+<a name="line-81"></a>    <span class='hs-layout'>}</span>
+<a name="line-82"></a>
+<a name="line-83"></a>  <span class='hs-comment'>-- | The pattern is never a simple variable;</span>
+<a name="line-84"></a>  <span class='hs-comment'>-- That case is done by FunBind</span>
+<a name="line-85"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PatBind</span> <span class='hs-layout'>{</span>   
+<a name="line-86"></a>        <span class='hs-varid'>pat_lhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LPat</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>
+<a name="line-87"></a>        <span class='hs-varid'>pat_rhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>GRHSs</span> <span class='hs-varid'>idR</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-88"></a>        <span class='hs-varid'>pat_rhs_ty</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>PostTcType</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Type of the GRHSs</span>
+<a name="line-89"></a>        <span class='hs-varid'>bind_fvs</span>   <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>          <span class='hs-comment'>-- ^ See Note [Bind free vars]</span>
+<a name="line-90"></a>        <span class='hs-varid'>pat_ticks</span>  <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>Tickish</span> <span class='hs-conid'>Id</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
+<a name="line-91"></a>               <span class='hs-comment'>-- ^ Tick to put on the rhs, if any, and ticks to put on</span>
+<a name="line-92"></a>               <span class='hs-comment'>-- the bound variables.</span>
 <a name="line-93"></a>    <span class='hs-layout'>}</span>
 <a name="line-94"></a>
-<a name="line-95"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>AbsBinds</span> <span class='hs-layout'>{</span>                          <span class='hs-comment'>-- Binds abstraction; TRANSLATION</span>
-<a name="line-96"></a>        <span class='hs-varid'>abs_tvs</span>     <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyVar</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-97"></a>        <span class='hs-varid'>abs_ev_vars</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>EvVar</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- Includes equality constraints</span>
-<a name="line-98"></a>
-<a name="line-99"></a>       <span class='hs-comment'>-- AbsBinds only gets used when idL = idR after renaming,</span>
-<a name="line-100"></a>       <span class='hs-comment'>-- but these need to be idL's for the collect... code in HsUtil</span>
-<a name="line-101"></a>       <span class='hs-comment'>-- to have the right type</span>
-<a name="line-102"></a>        <span class='hs-varid'>abs_exports</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ABExport</span> <span class='hs-varid'>idL</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-95"></a>  <span class='hs-comment'>-- | Dictionary binding and suchlike.</span>
+<a name="line-96"></a>  <span class='hs-comment'>-- All VarBinds are introduced by the type checker</span>
+<a name="line-97"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>VarBind</span> <span class='hs-layout'>{</span>   
+<a name="line-98"></a>        <span class='hs-varid'>var_id</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varid'>idL</span><span class='hs-layout'>,</span>           
+<a name="line-99"></a>        <span class='hs-varid'>var_rhs</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LHsExpr</span> <span class='hs-varid'>idR</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Located only for consistency</span>
+<a name="line-100"></a>        <span class='hs-varid'>var_inline</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>           <span class='hs-comment'>-- ^ True &lt;=&gt; inline this binding regardless</span>
+<a name="line-101"></a>                                     <span class='hs-comment'>-- (used for implication constraints only)</span>
+<a name="line-102"></a>    <span class='hs-layout'>}</span>
 <a name="line-103"></a>
-<a name="line-104"></a>        <span class='hs-varid'>abs_ev_binds</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcEvBinds</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- Evidence bindings</span>
-<a name="line-105"></a>        <span class='hs-varid'>abs_binds</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>idL</span>   <span class='hs-comment'>-- Typechecked user bindings</span>
-<a name="line-106"></a>    <span class='hs-layout'>}</span>
+<a name="line-104"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>AbsBinds</span> <span class='hs-layout'>{</span>                      <span class='hs-comment'>-- Binds abstraction; TRANSLATION</span>
+<a name="line-105"></a>        <span class='hs-varid'>abs_tvs</span>     <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyVar</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-106"></a>        <span class='hs-varid'>abs_ev_vars</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>EvVar</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- ^ Includes equality constraints</span>
 <a name="line-107"></a>
-<a name="line-108"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-109"></a>        <span class='hs-comment'>-- Consider (AbsBinds tvs ds [(ftvs, poly_f, mono_f) binds]</span>
-<a name="line-110"></a>        <span class='hs-comment'>--</span>
-<a name="line-111"></a>        <span class='hs-comment'>-- Creates bindings for (polymorphic, overloaded) poly_f</span>
-<a name="line-112"></a>        <span class='hs-comment'>-- in terms of monomorphic, non-overloaded mono_f</span>
-<a name="line-113"></a>        <span class='hs-comment'>--</span>
-<a name="line-114"></a>        <span class='hs-comment'>-- Invariants:</span>
-<a name="line-115"></a>        <span class='hs-comment'>--      1. 'binds' binds mono_f</span>
-<a name="line-116"></a>        <span class='hs-comment'>--      2. ftvs is a subset of tvs</span>
-<a name="line-117"></a>        <span class='hs-comment'>--      3. ftvs includes all tyvars free in ds</span>
-<a name="line-118"></a>        <span class='hs-comment'>--</span>
-<a name="line-119"></a>        <span class='hs-comment'>-- See Note [AbsBinds]</span>
-<a name="line-120"></a>
-<a name="line-121"></a><a name="ABExport"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ABExport</span> <span class='hs-varid'>id</span>
-<a name="line-122"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ABE</span> <span class='hs-layout'>{</span> <span class='hs-varid'>abe_poly</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varid'>id</span>           <span class='hs-comment'>-- Any INLINE pragmas is attached to this Id</span>
-<a name="line-123"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_mono</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varid'>id</span>
-<a name="line-124"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_wrap</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsWrapper</span>    <span class='hs-comment'>-- See Note [AbsBinds wrappers]</span>
-<a name="line-125"></a>             <span class='hs-comment'>-- Shape: (forall abs_tvs. abs_ev_vars =&gt; abe_mono) ~ abe_poly</span>
-<a name="line-126"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_prags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>  <span class='hs-comment'>-- SPECIALISE pragmas</span>
-<a name="line-127"></a>  <span class='hs-layout'>}</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-128"></a>
-<a name="line-129"></a><a name="placeHolderNames"></a><span class='hs-definition'>placeHolderNames</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span>
-<a name="line-130"></a><span class='hs-comment'>-- Used for the NameSet in FunBind and PatBind prior to the renamer</span>
-<a name="line-131"></a><span class='hs-definition'>placeHolderNames</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"placeHolderNames"</span>
+<a name="line-108"></a>       <span class='hs-comment'>-- | AbsBinds only gets used when idL = idR after renaming,</span>
+<a name="line-109"></a>       <span class='hs-comment'>-- but these need to be idL's for the collect... code in HsUtil</span>
+<a name="line-110"></a>       <span class='hs-comment'>-- to have the right type</span>
+<a name="line-111"></a>        <span class='hs-varid'>abs_exports</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ABExport</span> <span class='hs-varid'>idL</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-112"></a>
+<a name="line-113"></a>        <span class='hs-varid'>abs_ev_binds</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcEvBinds</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- ^ Evidence bindings</span>
+<a name="line-114"></a>        <span class='hs-varid'>abs_binds</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LHsBinds</span> <span class='hs-varid'>idL</span>   <span class='hs-comment'>-- ^ Typechecked user bindings</span>
+<a name="line-115"></a>    <span class='hs-layout'>}</span>
+<a name="line-116"></a>
+<a name="line-117"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-118"></a>        <span class='hs-comment'>-- Consider (AbsBinds tvs ds [(ftvs, poly_f, mono_f) binds]</span>
+<a name="line-119"></a>        <span class='hs-comment'>--</span>
+<a name="line-120"></a>        <span class='hs-comment'>-- Creates bindings for (polymorphic, overloaded) poly_f</span>
+<a name="line-121"></a>        <span class='hs-comment'>-- in terms of monomorphic, non-overloaded mono_f</span>
+<a name="line-122"></a>        <span class='hs-comment'>--</span>
+<a name="line-123"></a>        <span class='hs-comment'>-- Invariants:</span>
+<a name="line-124"></a>        <span class='hs-comment'>--      1. 'binds' binds mono_f</span>
+<a name="line-125"></a>        <span class='hs-comment'>--      2. ftvs is a subset of tvs</span>
+<a name="line-126"></a>        <span class='hs-comment'>--      3. ftvs includes all tyvars free in ds</span>
+<a name="line-127"></a>        <span class='hs-comment'>--</span>
+<a name="line-128"></a>        <span class='hs-comment'>-- See Note [AbsBinds]</span>
+<a name="line-129"></a>
+<a name="line-130"></a><a name="ABExport"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ABExport</span> <span class='hs-varid'>id</span>
+<a name="line-131"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ABE</span> <span class='hs-layout'>{</span> <span class='hs-varid'>abe_poly</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varid'>id</span>           <span class='hs-comment'>-- ^ Any INLINE pragmas is attached to this Id</span>
+<a name="line-132"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_mono</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varid'>id</span>
+<a name="line-133"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_wrap</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>HsWrapper</span>    <span class='hs-comment'>-- ^ See Note [AbsBinds wrappers]</span>
+<a name="line-134"></a>             <span class='hs-comment'>-- Shape: (forall abs_tvs. abs_ev_vars =&gt; abe_mono) ~ abe_poly</span>
+<a name="line-135"></a>        <span class='hs-layout'>,</span> <span class='hs-varid'>abe_prags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>  <span class='hs-comment'>-- ^ SPECIALISE pragmas</span>
+<a name="line-136"></a>  <span class='hs-layout'>}</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-137"></a>
+<a name="line-138"></a><a name="placeHolderNames"></a><span class='hs-comment'>-- | Used for the NameSet in FunBind and PatBind prior to the renamer</span>
+<a name="line-139"></a><span class='hs-definition'>placeHolderNames</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>NameSet</span>
+<a name="line-140"></a><span class='hs-definition'>placeHolderNames</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"placeHolderNames"</span>
 </pre>\end{code}
 
 Note [AbsBinds]
@@ -510,123 +519,124 @@ serves for both.
 \begin{code}
 <pre><a name="line-1"></a><a name="LSig"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
 <a name="line-2"></a>
-<a name="line-3"></a><a name="Sig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span>   <span class='hs-comment'>-- Signatures and pragmas</span>
-<a name="line-4"></a>  <span class='hs-keyglyph'>=</span>     <span class='hs-comment'>-- An ordinary type signature</span>
-<a name="line-5"></a>        <span class='hs-comment'>-- f :: Num a =&gt; a -&gt; a</span>
-<a name="line-6"></a>    <span class='hs-conid'>TypeSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-7"></a>
-<a name="line-8"></a>        <span class='hs-comment'>-- A type signature for a default method inside a class</span>
-<a name="line-9"></a>        <span class='hs-comment'>-- default eq :: (Representable0 a, GEq (Rep0 a)) =&gt; a -&gt; a -&gt; Bool</span>
-<a name="line-10"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>GenericSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-11"></a>
-<a name="line-12"></a>        <span class='hs-comment'>-- A type signature in generated code, notably the code</span>
-<a name="line-13"></a>        <span class='hs-comment'>-- generated for record selectors.  We simply record</span>
-<a name="line-14"></a>        <span class='hs-comment'>-- the desired Id itself, replete with its name, type</span>
-<a name="line-15"></a>        <span class='hs-comment'>-- and IdDetails.  Otherwise it's just like a type</span>
-<a name="line-16"></a>        <span class='hs-comment'>-- signature: there should be an accompanying binding</span>
-<a name="line-17"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IdSig</span> <span class='hs-conid'>Id</span>
-<a name="line-18"></a>
-<a name="line-19"></a>        <span class='hs-comment'>-- An ordinary fixity declaration</span>
-<a name="line-20"></a>        <span class='hs-comment'>--      infixl *** 8</span>
-<a name="line-21"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>FixSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-22"></a>
-<a name="line-23"></a>        <span class='hs-comment'>-- An inline pragma</span>
-<a name="line-24"></a>        <span class='hs-comment'>-- {#- INLINE f #-}</span>
-<a name="line-25"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InlineSig</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Function name</span>
-<a name="line-26"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- Never defaultInlinePragma</span>
-<a name="line-27"></a>
-<a name="line-28"></a>        <span class='hs-comment'>-- A specialisation pragma</span>
-<a name="line-29"></a>        <span class='hs-comment'>-- {-# SPECIALISE f :: Int -&gt; Int #-}</span>
-<a name="line-30"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecSig</span>     <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Specialise a function or datatype ...</span>
-<a name="line-31"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ... to these types</span>
-<a name="line-32"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- The pragma on SPECIALISE_INLINE form</span>
-<a name="line-33"></a>                                <span class='hs-comment'>-- If it's just defaultInlinePragma, then we said</span>
-<a name="line-34"></a>                                <span class='hs-comment'>--    SPECIALISE, not SPECIALISE_INLINE</span>
-<a name="line-35"></a>
-<a name="line-36"></a>        <span class='hs-comment'>-- A specialisation pragma for instance declarations only</span>
-<a name="line-37"></a>        <span class='hs-comment'>-- {-# SPECIALISE instance Eq [Int] #-}</span>
-<a name="line-38"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- (Class tys); should be a specialisation of the</span>
-<a name="line-39"></a>                                <span class='hs-comment'>-- current instance decl</span>
-<a name="line-40"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-41"></a>
+<a name="line-3"></a><a name="Sig"></a><span class='hs-comment'>-- | Signatures and pragmas</span>
+<a name="line-4"></a><a name="Sig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span>   
+<a name="line-5"></a>  <span class='hs-keyglyph'>=</span>   <span class='hs-comment'>-- | An ordinary type signature</span>
+<a name="line-6"></a>      <span class='hs-comment'>-- @f :: Num a =&gt; a -&gt; a@</span>
+<a name="line-7"></a>    <span class='hs-conid'>TypeSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-8"></a>
+<a name="line-9"></a>        <span class='hs-comment'>-- | A type signature for a default method inside a class</span>
+<a name="line-10"></a>        <span class='hs-comment'>-- &gt; default eq :: (Representable0 a, GEq (Rep0 a)) =&gt; a -&gt; a -&gt; Bool</span>
+<a name="line-11"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>GenericSig</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-keyglyph'>]</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-12"></a>
+<a name="line-13"></a>        <span class='hs-comment'>-- | A type signature in generated code, notably the code</span>
+<a name="line-14"></a>        <span class='hs-comment'>-- generated for record selectors.  We simply record</span>
+<a name="line-15"></a>        <span class='hs-comment'>-- the desired Id itself, replete with its name, type</span>
+<a name="line-16"></a>        <span class='hs-comment'>-- and IdDetails.  Otherwise it's just like a type</span>
+<a name="line-17"></a>        <span class='hs-comment'>-- signature: there should be an accompanying binding</span>
+<a name="line-18"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IdSig</span> <span class='hs-conid'>Id</span>
+<a name="line-19"></a>
+<a name="line-20"></a>        <span class='hs-comment'>-- | An ordinary fixity declaration</span>
+<a name="line-21"></a>        <span class='hs-comment'>-- &gt;     infixl *** 8</span>
+<a name="line-22"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>FixSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-23"></a>
+<a name="line-24"></a>        <span class='hs-comment'>-- | An inline pragma</span>
+<a name="line-25"></a>        <span class='hs-comment'>-- &gt; {#- INLINE f #-}</span>
+<a name="line-26"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InlineSig</span>   <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Function name</span>
+<a name="line-27"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- Never defaultInlinePragma</span>
+<a name="line-28"></a>
+<a name="line-29"></a>        <span class='hs-comment'>-- | A specialisation pragma</span>
+<a name="line-30"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE f :: Int -&gt; Int #-}</span>
+<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecSig</span>     <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- Specialise a function or datatype  ...</span>
+<a name="line-32"></a>                <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ... to these types</span>
+<a name="line-33"></a>                <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- The pragma on SPECIALISE_INLINE form.</span>
+<a name="line-34"></a>                                <span class='hs-comment'>-- If it's just defaultInlinePragma, then we said</span>
+<a name="line-35"></a>                                <span class='hs-comment'>--    SPECIALISE, not SPECIALISE_INLINE</span>
+<a name="line-36"></a>
+<a name="line-37"></a>        <span class='hs-comment'>-- | A specialisation pragma for instance declarations only</span>
+<a name="line-38"></a>        <span class='hs-comment'>-- &gt; {-# SPECIALISE instance Eq [Int] #-}</span>
+<a name="line-39"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>LHsType</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>  <span class='hs-comment'>-- ^ (Class tys); should be a specialisation of the</span>
+<a name="line-40"></a>                                <span class='hs-comment'>-- current instance decl</span>
+<a name="line-41"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-42"></a>
-<a name="line-43"></a><a name="LFixitySig"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LFixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-44"></a><a name="FixitySig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FixitySig</span> <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-conid'>Fixity</span>
-<a name="line-45"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-46"></a>
-<a name="line-47"></a><a name="TcSpecPrags"></a><span class='hs-comment'>-- TsSpecPrags conveys pragmas from the type checker to the desugarer</span>
-<a name="line-48"></a><a name="TcSpecPrags"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrags</span>
-<a name="line-49"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IsDefaultMethod</span>     <span class='hs-comment'>-- Super-specialised: a default method should</span>
-<a name="line-50"></a>                        <span class='hs-comment'>-- be macro-expanded at every call site</span>
-<a name="line-51"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LTcSpecPrag</span><span class='hs-keyglyph'>]</span>
-<a name="line-52"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-53"></a>
-<a name="line-54"></a><a name="LTcSpecPrag"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LTcSpecPrag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-conid'>TcSpecPrag</span>
-<a name="line-55"></a>
-<a name="line-56"></a><a name="TcSpecPrag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrag</span>
-<a name="line-57"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrag</span>
-<a name="line-58"></a>        <span class='hs-conid'>Id</span>              <span class='hs-comment'>-- The Id to be specialised</span>
-<a name="line-59"></a>        <span class='hs-conid'>HsWrapper</span>       <span class='hs-comment'>-- An wrapper, that specialises the polymorphic function</span>
-<a name="line-60"></a>        <span class='hs-conid'>InlinePragma</span>    <span class='hs-comment'>-- Inlining spec for the specialised function</span>
-<a name="line-61"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-62"></a>
-<a name="line-63"></a><a name="noSpecPrags"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>
-<a name="line-64"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-conid'>[]</span>
+<a name="line-43"></a>
+<a name="line-44"></a><a name="LFixitySig"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LFixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-45"></a><a name="FixitySig"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixitySig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FixitySig</span> <span class='hs-layout'>(</span><span class='hs-conid'>Located</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-conid'>Fixity</span>
+<a name="line-46"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-47"></a>
+<a name="line-48"></a><a name="TcSpecPrags"></a><span class='hs-comment'>-- | TsSpecPrags conveys pragmas from the type checker to the desugarer</span>
+<a name="line-49"></a><a name="TcSpecPrags"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrags</span>
+<a name="line-50"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>IsDefaultMethod</span>     <span class='hs-comment'>-- ^ Super-specialised: a default method should</span>
+<a name="line-51"></a>                        <span class='hs-comment'>-- be macro-expanded at every call site</span>
+<a name="line-52"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>LTcSpecPrag</span><span class='hs-keyglyph'>]</span>
+<a name="line-53"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-54"></a>
+<a name="line-55"></a><a name="LTcSpecPrag"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>LTcSpecPrag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Located</span> <span class='hs-conid'>TcSpecPrag</span>
+<a name="line-56"></a>
+<a name="line-57"></a><a name="TcSpecPrag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>TcSpecPrag</span>
+<a name="line-58"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrag</span>
+<a name="line-59"></a>        <span class='hs-conid'>Id</span>              
+<a name="line-60"></a>        <span class='hs-conid'>HsWrapper</span>       
+<a name="line-61"></a>        <span class='hs-conid'>InlinePragma</span>    
+<a name="line-62"></a>  <span class='hs-comment'>-- ^ The Id to be specialised, an wrapper that specialises the</span>
+<a name="line-63"></a>  <span class='hs-comment'>-- polymorphic function, and inlining spec for the specialised function</span>
+<a name="line-64"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-65"></a>
-<a name="line-66"></a><a name="hasSpecPrags"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-67"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span>
-<a name="line-68"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-69"></a>
-<a name="line-70"></a><a name="isDefaultMethod"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-71"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-72"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-73"></a>
-</pre>\end{code}
-
-\begin{code}
-<pre><a name="line-1"></a><a name="isFixityLSig"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-2"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-3"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-4"></a>
-<a name="line-5"></a><a name="isVanillaLSig"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>       <span class='hs-comment'>-- User type signatures</span>
-<a name="line-6"></a><span class='hs-comment'>-- A badly-named function, but it's part of the GHCi (used</span>
-<a name="line-7"></a><span class='hs-comment'>-- by Haddock) so I don't want to change it gratuitously.</span>
-<a name="line-8"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-9"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-10"></a>
-<a name="line-11"></a><a name="isTypeLSig"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>  <span class='hs-comment'>-- Type signatures</span>
-<a name="line-12"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-13"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-14"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-15"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-16"></a>
-<a name="line-17"></a><a name="isSpecLSig"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-18"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-19"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-20"></a>
-<a name="line-21"></a><a name="isSpecInstLSig"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-22"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-23"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyword'>_</span>                      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-24"></a>
-<a name="line-25"></a><a name="isPragLSig"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-26"></a><span class='hs-comment'>-- Identifies pragmas</span>
-<a name="line-27"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-28"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-29"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-30"></a>
-<a name="line-31"></a><a name="isInlineLSig"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
-<a name="line-32"></a><span class='hs-comment'>-- Identifies inline pragmas</span>
-<a name="line-33"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-34"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
-<a name="line-35"></a>
-<a name="line-36"></a><a name="hsSigDoc"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
-<a name="line-37"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"type signature"</span><span class='hs-layout'>)</span>
-<a name="line-38"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"default type signature"</span><span class='hs-layout'>)</span>
-<a name="line-39"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>             <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"id signature"</span><span class='hs-layout'>)</span>
-<a name="line-40"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE pragma"</span><span class='hs-layout'>)</span>
-<a name="line-41"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>inlinePragmaSpec</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"pragma"</span><span class='hs-layout'>)</span>
-<a name="line-42"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE instance pragma"</span><span class='hs-layout'>)</span>
-<a name="line-43"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"fixity declaration"</span><span class='hs-layout'>)</span>
+<a name="line-66"></a><a name="noSpecPrags"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span>
+<a name="line-67"></a><span class='hs-definition'>noSpecPrags</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SpecPrags</span> <span class='hs-conid'>[]</span>
+<a name="line-68"></a>
+<a name="line-69"></a><a name="hasSpecPrags"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-70"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>ps</span><span class='hs-layout'>)</span>
+<a name="line-71"></a><span class='hs-definition'>hasSpecPrags</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-72"></a>
+<a name="line-73"></a><a name="isDefaultMethod"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TcSpecPrags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-74"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-conid'>IsDefaultMethod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-75"></a><span class='hs-definition'>isDefaultMethod</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecPrags</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-76"></a>
+<a name="line-77"></a>
+<a name="line-78"></a><a name="isFixityLSig"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-79"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-80"></a><span class='hs-definition'>isFixityLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-81"></a>
+<a name="line-82"></a><a name="isVanillaLSig"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>       <span class='hs-comment'>-- User type signatures</span>
+<a name="line-83"></a><span class='hs-comment'>-- A badly-named function, but it's part of the GHCi (used</span>
+<a name="line-84"></a><span class='hs-comment'>-- by Haddock) so I don't want to change it gratuitously.</span>
+<a name="line-85"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-86"></a><span class='hs-definition'>isVanillaLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-87"></a>
+<a name="line-88"></a><a name="isTypeLSig"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>  <span class='hs-comment'>-- Type signatures</span>
+<a name="line-89"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-90"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-91"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-92"></a><span class='hs-definition'>isTypeLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-93"></a>
+<a name="line-94"></a><a name="isSpecLSig"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-95"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span><span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-96"></a><span class='hs-definition'>isSpecLSig</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-97"></a>
+<a name="line-98"></a><a name="isSpecInstLSig"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-99"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-100"></a><span class='hs-definition'>isSpecInstLSig</span> <span class='hs-keyword'>_</span>                      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-101"></a>
+<a name="line-102"></a><a name="isPragLSig"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-103"></a><span class='hs-comment'>-- Identifies pragmas</span>
+<a name="line-104"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-105"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-106"></a><span class='hs-definition'>isPragLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-107"></a>
+<a name="line-108"></a><a name="isInlineLSig"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>LSig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
+<a name="line-109"></a><span class='hs-comment'>-- Identifies inline pragmas</span>
+<a name="line-110"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-layout'>(</span><span class='hs-conid'>L</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-111"></a><span class='hs-definition'>isInlineLSig</span> <span class='hs-keyword'>_</span>                    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-112"></a>
+<a name="line-113"></a><a name="hsSigDoc"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Sig</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
+<a name="line-114"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>TypeSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"type signature"</span><span class='hs-layout'>)</span>
+<a name="line-115"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>GenericSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"default type signature"</span><span class='hs-layout'>)</span>
+<a name="line-116"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>IdSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>             <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"id signature"</span><span class='hs-layout'>)</span>
+<a name="line-117"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE pragma"</span><span class='hs-layout'>)</span>
+<a name="line-118"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlineSig</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>inlinePragmaSpec</span> <span class='hs-varid'>prag</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"pragma"</span><span class='hs-layout'>)</span>
+<a name="line-119"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>SpecInstSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"SPECIALISE instance pragma"</span><span class='hs-layout'>)</span>
+<a name="line-120"></a><span class='hs-definition'>hsSigDoc</span> <span class='hs-layout'>(</span><span class='hs-conid'>FixSig</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"fixity declaration"</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 Check if signatures overlap; this is used when checking for duplicate

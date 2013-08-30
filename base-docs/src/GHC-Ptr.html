@@ -9,7 +9,7 @@
 <body>
 \begin{code}
 <pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE Unsafe #-}</span>
-<a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE CPP, NoImplicitPrelude, MagicHash #-}</span>
+<a name="line-2"></a><span class='hs-comment'>{-# LANGUAGE CPP, NoImplicitPrelude, MagicHash, RoleAnnotations #-}</span>
 <a name="line-3"></a><span class='hs-comment'>{-# OPTIONS_HADDOCK hide #-}</span>
 <a name="line-4"></a>
 <a name="line-5"></a><span class='hs-comment'>-----------------------------------------------------------------------------</span>
@@ -47,7 +47,7 @@
 <a name="line-37"></a><span class='hs-comment'>------------------------------------------------------------------------</span>
 <a name="line-38"></a><span class='hs-comment'>-- Data pointers.</span>
 <a name="line-39"></a>
-<a name="line-40"></a><a name="Ptr"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Ptr</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Ptr</span> <span class='hs-conid'>Addr</span><span class='hs-cpp'>#</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ord</span><span class='hs-layout'>)</span>
+<a name="line-40"></a><a name="Ptr"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Ptr</span> <span class='hs-varid'>a</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>R</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Ptr</span> <span class='hs-conid'>Addr</span><span class='hs-cpp'>#</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ord</span><span class='hs-layout'>)</span>
 <a name="line-41"></a><span class='hs-comment'>-- ^ A value of type @'Ptr' a@ represents a pointer to an object, or an</span>
 <a name="line-42"></a><span class='hs-comment'>-- array of objects, which may be marshalled to or from Haskell values</span>
 <a name="line-43"></a><span class='hs-comment'>-- of type @a@.</span>
@@ -91,7 +91,7 @@
 <a name="line-81"></a><span class='hs-comment'>------------------------------------------------------------------------</span>
 <a name="line-82"></a><span class='hs-comment'>-- Function pointers for the default calling convention.</span>
 <a name="line-83"></a>
-<a name="line-84"></a><a name="FunPtr"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FunPtr</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FunPtr</span> <span class='hs-conid'>Addr</span><span class='hs-cpp'>#</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ord</span><span class='hs-layout'>)</span>
+<a name="line-84"></a><a name="FunPtr"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FunPtr</span> <span class='hs-varid'>a</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>R</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FunPtr</span> <span class='hs-conid'>Addr</span><span class='hs-cpp'>#</span> <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Ord</span><span class='hs-layout'>)</span>
 <a name="line-85"></a><span class='hs-comment'>-- ^ A value of type @'FunPtr' a@ is a pointer to a function callable</span>
 <a name="line-86"></a><span class='hs-comment'>-- from foreign code.  The type @a@ will normally be a /foreign type/,</span>
 <a name="line-87"></a><span class='hs-comment'>-- a function type with zero or more arguments where</span>

@@ -731,7 +731,7 @@ See Note [Loop breaking and RULES] in OccAnal.
 
 \begin{code}
 <pre><a name="line-1"></a><a name="addBndrRules"></a><span class='hs-definition'>addBndrRules</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SimplEnv</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>InBndr</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>OutBndr</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>SimplEnv</span><span class='hs-layout'>,</span> <span class='hs-conid'>OutBndr</span><span class='hs-layout'>)</span>
-<a name="line-2"></a><span class='hs-comment'>-- Rules are added back in to to the bin</span>
+<a name="line-2"></a><span class='hs-comment'>-- Rules are added back into the bin</span>
 <a name="line-3"></a><span class='hs-definition'>addBndrRules</span> <span class='hs-varid'>env</span> <span class='hs-varid'>in_id</span> <span class='hs-varid'>out_id</span>
 <a name="line-4"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>isEmptySpecInfo</span> <span class='hs-varid'>old_rules</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>env</span><span class='hs-layout'>,</span> <span class='hs-varid'>out_id</span><span class='hs-layout'>)</span>
 <a name="line-5"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>modifyInScope</span> <span class='hs-varid'>env</span> <span class='hs-varid'>final_id</span><span class='hs-layout'>,</span> <span class='hs-varid'>final_id</span><span class='hs-layout'>)</span>

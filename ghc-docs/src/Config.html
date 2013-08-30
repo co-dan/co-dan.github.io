@@ -25,13 +25,13 @@
 <a name="line-16"></a><a name="cProjectName"></a><span class='hs-definition'>cProjectName</span>          <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
 <a name="line-17"></a><span class='hs-definition'>cProjectName</span>          <span class='hs-keyglyph'>=</span> <span class='hs-str'>"The Glorious Glasgow Haskell Compilation System"</span>
 <a name="line-18"></a><a name="cProjectVersion"></a><span class='hs-definition'>cProjectVersion</span>       <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
-<a name="line-19"></a><span class='hs-definition'>cProjectVersion</span>       <span class='hs-keyglyph'>=</span> <span class='hs-str'>"7.7.20130722"</span>
+<a name="line-19"></a><span class='hs-definition'>cProjectVersion</span>       <span class='hs-keyglyph'>=</span> <span class='hs-str'>"7.7.20130829"</span>
 <a name="line-20"></a><a name="cProjectVersionInt"></a><span class='hs-definition'>cProjectVersionInt</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
 <a name="line-21"></a><span class='hs-definition'>cProjectVersionInt</span>    <span class='hs-keyglyph'>=</span> <span class='hs-str'>"707"</span>
 <a name="line-22"></a><a name="cProjectPatchLevel"></a><span class='hs-definition'>cProjectPatchLevel</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
-<a name="line-23"></a><span class='hs-definition'>cProjectPatchLevel</span>    <span class='hs-keyglyph'>=</span> <span class='hs-str'>"20130722"</span>
+<a name="line-23"></a><span class='hs-definition'>cProjectPatchLevel</span>    <span class='hs-keyglyph'>=</span> <span class='hs-str'>"20130829"</span>
 <a name="line-24"></a><a name="cBooterVersion"></a><span class='hs-definition'>cBooterVersion</span>        <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
-<a name="line-25"></a><span class='hs-definition'>cBooterVersion</span>        <span class='hs-keyglyph'>=</span> <span class='hs-str'>"7.6.3"</span>
+<a name="line-25"></a><span class='hs-definition'>cBooterVersion</span>        <span class='hs-keyglyph'>=</span> <span class='hs-str'>"7.7.20130826"</span>
 <a name="line-26"></a><a name="cStage"></a><span class='hs-definition'>cStage</span>                <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
 <a name="line-27"></a><span class='hs-definition'>cStage</span>                <span class='hs-keyglyph'>=</span> <span class='hs-varid'>show</span> <span class='hs-layout'>(</span><span class='hs-conid'>STAGE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span><span class='hs-layout'>)</span>
 <a name="line-28"></a><a name="cIntegerLibrary"></a><span class='hs-definition'>cIntegerLibrary</span>       <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
@@ -47,7 +47,7 @@
 <a name="line-38"></a><a name="cGhcWithSMP"></a><span class='hs-definition'>cGhcWithSMP</span>           <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
 <a name="line-39"></a><span class='hs-definition'>cGhcWithSMP</span>           <span class='hs-keyglyph'>=</span> <span class='hs-str'>"YES"</span>
 <a name="line-40"></a><a name="cGhcRTSWays"></a><span class='hs-definition'>cGhcRTSWays</span>           <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
-<a name="line-41"></a><span class='hs-definition'>cGhcRTSWays</span>           <span class='hs-keyglyph'>=</span> <span class='hs-str'>"l debug  thr thr_debug thr_l  "</span>
+<a name="line-41"></a><span class='hs-definition'>cGhcRTSWays</span>           <span class='hs-keyglyph'>=</span> <span class='hs-str'>"l debug thr thr_debug thr_l  dyn debug_dyn thr_dyn thr_debug_dyn l_dyn thr_l_dyn"</span>
 <a name="line-42"></a><a name="cGhcEnableTablesNextToCode"></a><span class='hs-definition'>cGhcEnableTablesNextToCode</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
 <a name="line-43"></a><span class='hs-definition'>cGhcEnableTablesNextToCode</span> <span class='hs-keyglyph'>=</span> <span class='hs-str'>"YES"</span>
 <a name="line-44"></a><a name="cLeadingUnderscore"></a><span class='hs-definition'>cLeadingUnderscore</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>String</span>
@@ -61,7 +61,7 @@
 <a name="line-52"></a><a name="cLibFFI"></a><span class='hs-definition'>cLibFFI</span>               <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>
 <a name="line-53"></a><span class='hs-definition'>cLibFFI</span>               <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-54"></a><a name="cDYNAMIC_GHC_PROGRAMS"></a><span class='hs-definition'>cDYNAMIC_GHC_PROGRAMS</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>
-<a name="line-55"></a><span class='hs-definition'>cDYNAMIC_GHC_PROGRAMS</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-55"></a><span class='hs-definition'>cDYNAMIC_GHC_PROGRAMS</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-56"></a><a name="cGhcThreaded"></a><span class='hs-definition'>cGhcThreaded</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>
 <a name="line-57"></a><span class='hs-definition'>cGhcThreaded</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-58"></a><a name="cGhcDebugged"></a><span class='hs-definition'>cGhcDebugged</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span>

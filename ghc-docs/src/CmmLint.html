@@ -187,7 +187,7 @@
 <a name="line-178"></a>          <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>lintCmmExpr</span> <span class='hs-varid'>target</span>
 <a name="line-179"></a>          <span class='hs-varid'>maybe</span> <span class='hs-layout'>(</span><span class='hs-varid'>return</span> <span class='hs-conid'>()</span><span class='hs-layout'>)</span> <span class='hs-varid'>checkTarget</span> <span class='hs-varid'>cont</span>
 <a name="line-180"></a>
-<a name="line-181"></a>  <span class='hs-conid'>CmmForeignCall</span> <span class='hs-varid'>tgt</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>args</span> <span class='hs-varid'>succ</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-181"></a>  <span class='hs-conid'>CmmForeignCall</span> <span class='hs-varid'>tgt</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>args</span> <span class='hs-varid'>succ</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
 <a name="line-182"></a>          <span class='hs-varid'>lintTarget</span> <span class='hs-varid'>tgt</span>
 <a name="line-183"></a>          <span class='hs-varid'>mapM_</span> <span class='hs-varid'>lintCmmExpr</span> <span class='hs-varid'>args</span>
 <a name="line-184"></a>          <span class='hs-varid'>checkTarget</span> <span class='hs-varid'>succ</span>

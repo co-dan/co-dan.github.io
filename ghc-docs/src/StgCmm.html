@@ -59,12 +59,12 @@
 <a name="line-50"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Util</span>
 <a name="line-51"></a>
 <a name="line-52"></a><a name="codeGen"></a><span class='hs-definition'>codeGen</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span>
-<a name="line-53"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
-<a name="line-54"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span>
-<a name="line-55"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>CollectedCCs</span>                <span class='hs-comment'>-- (Local/global) cost-centres needing declaring/registering.</span>
-<a name="line-56"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>StgBinding</span><span class='hs-keyglyph'>]</span>                <span class='hs-comment'>-- Bindings to convert</span>
-<a name="line-57"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HpcInfo</span>
-<a name="line-58"></a>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Stream</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>CmmGroup</span> <span class='hs-conid'>()</span>       <span class='hs-comment'>-- Output as a stream, so codegen can</span>
+<a name="line-53"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
+<a name="line-54"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span>
+<a name="line-55"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>CollectedCCs</span>                <span class='hs-comment'>-- (Local/global) cost-centres needing declaring/registering.</span>
+<a name="line-56"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>StgBinding</span><span class='hs-keyglyph'>]</span>                <span class='hs-comment'>-- Bindings to convert</span>
+<a name="line-57"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HpcInfo</span>
+<a name="line-58"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Stream</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>CmmGroup</span> <span class='hs-conid'>()</span>       <span class='hs-comment'>-- Output as a stream, so codegen can</span>
 <a name="line-59"></a>                                        <span class='hs-comment'>-- be interleaved with output</span>
 <a name="line-60"></a>
 <a name="line-61"></a><span class='hs-definition'>codeGen</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>this_mod</span> <span class='hs-varid'>data_tycons</span>
@@ -127,33 +127,33 @@
 <a name="line-118"></a><a name="cgTopBinding"></a><span class='hs-definition'>cgTopBinding</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgBinding</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FCode</span> <span class='hs-conid'>()</span>
 <a name="line-119"></a><span class='hs-definition'>cgTopBinding</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgNonRec</span> <span class='hs-varid'>id</span> <span class='hs-varid'>rhs</span><span class='hs-layout'>)</span>
 <a name="line-120"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>  <span class='hs-layout'>{</span> <span class='hs-varid'>id'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>maybeExternaliseId</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>id</span>
-<a name="line-121"></a>        <span class='hs-layout'>;</span> <span class='hs-layout'>(</span><span class='hs-varid'>info</span><span class='hs-layout'>,</span> <span class='hs-varid'>fcode</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>cgTopRhs</span> <span class='hs-conid'>NonRecursive</span> <span class='hs-varid'>id'</span> <span class='hs-varid'>rhs</span>
+<a name="line-121"></a>        <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>info</span><span class='hs-layout'>,</span> <span class='hs-varid'>fcode</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>cgTopRhs</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>NonRecursive</span> <span class='hs-varid'>id'</span> <span class='hs-varid'>rhs</span>
 <a name="line-122"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>fcode</span>
-<a name="line-123"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>addBindC</span> <span class='hs-layout'>(</span><span class='hs-varid'>cg_id</span> <span class='hs-varid'>info</span><span class='hs-layout'>)</span> <span class='hs-varid'>info</span> <span class='hs-comment'>-- Add the *un-externalised* Id to the envt,</span>
-<a name="line-124"></a>                                     <span class='hs-comment'>-- so we find it when we look up occurrences</span>
+<a name="line-123"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>addBindC</span> <span class='hs-varid'>info</span> <span class='hs-comment'>-- Add the *un-externalised* Id to the envt,</span>
+<a name="line-124"></a>                        <span class='hs-comment'>-- so we find it when we look up occurrences</span>
 <a name="line-125"></a>        <span class='hs-layout'>}</span>
 <a name="line-126"></a>
 <a name="line-127"></a><span class='hs-definition'>cgTopBinding</span> <span class='hs-varid'>dflags</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgRec</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span>
 <a name="line-128"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>  <span class='hs-layout'>{</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>bndrs</span><span class='hs-layout'>,</span> <span class='hs-varid'>rhss</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unzip</span> <span class='hs-varid'>pairs</span>
 <a name="line-129"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>bndrs'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-conid'>Prelude</span><span class='hs-varop'>.</span><span class='hs-varid'>mapM</span> <span class='hs-layout'>(</span><span class='hs-varid'>maybeExternaliseId</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varid'>bndrs</span>
 <a name="line-130"></a>        <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>pairs'</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>zip</span> <span class='hs-varid'>bndrs'</span> <span class='hs-varid'>rhss</span>
-<a name="line-131"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>r</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>sequence</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unzipWith</span> <span class='hs-layout'>(</span><span class='hs-varid'>cgTopRhs</span> <span class='hs-conid'>Recursive</span><span class='hs-layout'>)</span> <span class='hs-varid'>pairs'</span>
-<a name="line-132"></a>        <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>infos</span><span class='hs-layout'>,</span> <span class='hs-varid'>fcodes</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unzip</span> <span class='hs-varid'>r</span>
+<a name="line-131"></a>              <span class='hs-varid'>r</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unzipWith</span> <span class='hs-layout'>(</span><span class='hs-varid'>cgTopRhs</span> <span class='hs-varid'>dflags</span> <span class='hs-conid'>Recursive</span><span class='hs-layout'>)</span> <span class='hs-varid'>pairs'</span>
+<a name="line-132"></a>              <span class='hs-layout'>(</span><span class='hs-varid'>infos</span><span class='hs-layout'>,</span> <span class='hs-varid'>fcodes</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unzip</span> <span class='hs-varid'>r</span>
 <a name="line-133"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>addBindsC</span> <span class='hs-varid'>infos</span>
 <a name="line-134"></a>        <span class='hs-layout'>;</span> <span class='hs-varid'>sequence_</span> <span class='hs-varid'>fcodes</span>
 <a name="line-135"></a>        <span class='hs-layout'>}</span>
 <a name="line-136"></a>
 <a name="line-137"></a>
-<a name="line-138"></a><a name="cgTopRhs"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>RecFlag</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgRhs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FCode</span> <span class='hs-layout'>(</span><span class='hs-conid'>CgIdInfo</span><span class='hs-layout'>,</span> <span class='hs-conid'>FCode</span> <span class='hs-conid'>()</span><span class='hs-layout'>)</span>
+<a name="line-138"></a><a name="cgTopRhs"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>RecFlag</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgRhs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>CgIdInfo</span><span class='hs-layout'>,</span> <span class='hs-conid'>FCode</span> <span class='hs-conid'>()</span><span class='hs-layout'>)</span>
 <a name="line-139"></a>        <span class='hs-comment'>-- The Id is passed along for setting up a binding...</span>
 <a name="line-140"></a>        <span class='hs-comment'>-- It's already been externalised if necessary</span>
 <a name="line-141"></a>
-<a name="line-142"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-sel'>_rec</span> <span class='hs-varid'>bndr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgRhsCon</span> <span class='hs-sel'>_cc</span> <span class='hs-varid'>con</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
-<a name="line-143"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>forkStatics</span> <span class='hs-layout'>(</span><span class='hs-varid'>cgTopRhsCon</span> <span class='hs-varid'>bndr</span> <span class='hs-varid'>con</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
+<a name="line-142"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-varid'>dflags</span> <span class='hs-sel'>_rec</span> <span class='hs-varid'>bndr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgRhsCon</span> <span class='hs-sel'>_cc</span> <span class='hs-varid'>con</span> <span class='hs-varid'>args</span><span class='hs-layout'>)</span>
+<a name="line-143"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>cgTopRhsCon</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>bndr</span> <span class='hs-varid'>con</span> <span class='hs-varid'>args</span>
 <a name="line-144"></a>
-<a name="line-145"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-varid'>rec</span> <span class='hs-varid'>bndr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgRhsClosure</span> <span class='hs-varid'>cc</span> <span class='hs-varid'>bi</span> <span class='hs-varid'>fvs</span> <span class='hs-varid'>upd_flag</span> <span class='hs-sel'>_srt</span> <span class='hs-varid'>args</span> <span class='hs-varid'>body</span><span class='hs-layout'>)</span>
+<a name="line-145"></a><span class='hs-definition'>cgTopRhs</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>rec</span> <span class='hs-varid'>bndr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgRhsClosure</span> <span class='hs-varid'>cc</span> <span class='hs-varid'>bi</span> <span class='hs-varid'>fvs</span> <span class='hs-varid'>upd_flag</span> <span class='hs-sel'>_srt</span> <span class='hs-varid'>args</span> <span class='hs-varid'>body</span><span class='hs-layout'>)</span>
 <a name="line-146"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>fvs</span><span class='hs-layout'>)</span>    <span class='hs-comment'>-- There should be no free variables</span>
-<a name="line-147"></a>    <span class='hs-varid'>forkStatics</span> <span class='hs-layout'>(</span><span class='hs-varid'>cgTopRhsClosure</span> <span class='hs-varid'>rec</span> <span class='hs-varid'>bndr</span> <span class='hs-varid'>cc</span> <span class='hs-varid'>bi</span> <span class='hs-varid'>upd_flag</span> <span class='hs-varid'>args</span> <span class='hs-varid'>body</span><span class='hs-layout'>)</span>
+<a name="line-147"></a>    <span class='hs-varid'>cgTopRhsClosure</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>rec</span> <span class='hs-varid'>bndr</span> <span class='hs-varid'>cc</span> <span class='hs-varid'>bi</span> <span class='hs-varid'>upd_flag</span> <span class='hs-varid'>args</span> <span class='hs-varid'>body</span>
 <a name="line-148"></a>
 <a name="line-149"></a>
 <a name="line-150"></a><span class='hs-comment'>---------------------------------------------------------------</span>
@@ -187,13 +187,13 @@
 <a name="line-178"></a>   module in the program, and we don't want to require that this name
 <a name="line-179"></a>   has the version and way info appended to it.
 <a name="line-180"></a>
-<a name="line-181"></a>We initialise the module tree by keeping a work-stack, 
+<a name="line-181"></a>We initialise the module tree by keeping a work-stack,
 <a name="line-182"></a>        * pointed to by Sp
 <a name="line-183"></a>        * that grows downward
 <a name="line-184"></a>        * Sp points to the last occupied slot
 <a name="line-185"></a>-}</span>
 <a name="line-186"></a>
-<a name="line-187"></a><a name="mkModuleInit"></a><span class='hs-definition'>mkModuleInit</span> 
+<a name="line-187"></a><a name="mkModuleInit"></a><span class='hs-definition'>mkModuleInit</span>
 <a name="line-188"></a>        <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CollectedCCs</span>         <span class='hs-comment'>-- cost centre info</span>
 <a name="line-189"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Module</span>
 <a name="line-190"></a>        <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>HpcInfo</span>
@@ -266,25 +266,22 @@
 <a name="line-257"></a><span class='hs-comment'>--      Stuff to support splitting</span>
 <a name="line-258"></a><span class='hs-comment'>---------------------------------------------------------------</span>
 <a name="line-259"></a>
-<a name="line-260"></a><span class='hs-comment'>-- If we're splitting the object, we need to externalise all the</span>
-<a name="line-261"></a><span class='hs-comment'>-- top-level names (and then make sure we only use the externalised</span>
-<a name="line-262"></a><span class='hs-comment'>-- one in any C label we use which refers to this name).</span>
-<a name="line-263"></a>
-<a name="line-264"></a><a name="maybeExternaliseId"></a><span class='hs-definition'>maybeExternaliseId</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FCode</span> <span class='hs-conid'>Id</span>
-<a name="line-265"></a><span class='hs-definition'>maybeExternaliseId</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>id</span>
-<a name="line-266"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_SplitObjs</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- Externalise the name for -split-objs</span>
-<a name="line-267"></a>    <span class='hs-varid'>isInternalName</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mod</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getModuleName</span>
-<a name="line-268"></a>                             <span class='hs-layout'>;</span> <span class='hs-varid'>returnFC</span> <span class='hs-layout'>(</span><span class='hs-varid'>setIdName</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-varid'>externalise</span> <span class='hs-varid'>mod</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
-<a name="line-269"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>returnFC</span> <span class='hs-varid'>id</span>
-<a name="line-270"></a>  <span class='hs-keyword'>where</span>
-<a name="line-271"></a>    <span class='hs-varid'>externalise</span> <span class='hs-varid'>mod</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkExternalName</span> <span class='hs-varid'>uniq</span> <span class='hs-varid'>mod</span> <span class='hs-varid'>new_occ</span> <span class='hs-varid'>loc</span>
-<a name="line-272"></a>    <span class='hs-varid'>name</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>idName</span> <span class='hs-varid'>id</span>
-<a name="line-273"></a>    <span class='hs-varid'>uniq</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nameUnique</span> <span class='hs-varid'>name</span>
-<a name="line-274"></a>    <span class='hs-varid'>new_occ</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkLocalOcc</span> <span class='hs-varid'>uniq</span> <span class='hs-layout'>(</span><span class='hs-varid'>nameOccName</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
-<a name="line-275"></a>    <span class='hs-varid'>loc</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nameSrcSpan</span> <span class='hs-varid'>name</span>
-<a name="line-276"></a>        <span class='hs-comment'>-- We want to conjure up a name that can't clash with any</span>
-<a name="line-277"></a>        <span class='hs-comment'>-- existing name.  So we generate</span>
-<a name="line-278"></a>        <span class='hs-comment'>--      Mod_$L243foo</span>
-<a name="line-279"></a>        <span class='hs-comment'>-- where 243 is the unique.</span>
+<a name="line-260"></a><a name="maybeExternaliseId"></a><span class='hs-definition'>maybeExternaliseId</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Id</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>FCode</span> <span class='hs-conid'>Id</span>
+<a name="line-261"></a><span class='hs-definition'>maybeExternaliseId</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>id</span>
+<a name="line-262"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_SplitObjs</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- See Note [Externalise when splitting]</span>
+<a name="line-263"></a>                                <span class='hs-comment'>-- in StgCmmMonad</span>
+<a name="line-264"></a>    <span class='hs-varid'>isInternalName</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mod</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getModuleName</span>
+<a name="line-265"></a>                             <span class='hs-layout'>;</span> <span class='hs-varid'>returnFC</span> <span class='hs-layout'>(</span><span class='hs-varid'>setIdName</span> <span class='hs-varid'>id</span> <span class='hs-layout'>(</span><span class='hs-varid'>externalise</span> <span class='hs-varid'>mod</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
+<a name="line-266"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>returnFC</span> <span class='hs-varid'>id</span>
+<a name="line-267"></a>  <span class='hs-keyword'>where</span>
+<a name="line-268"></a>    <span class='hs-varid'>externalise</span> <span class='hs-varid'>mod</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkExternalName</span> <span class='hs-varid'>uniq</span> <span class='hs-varid'>mod</span> <span class='hs-varid'>new_occ</span> <span class='hs-varid'>loc</span>
+<a name="line-269"></a>    <span class='hs-varid'>name</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>idName</span> <span class='hs-varid'>id</span>
+<a name="line-270"></a>    <span class='hs-varid'>uniq</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nameUnique</span> <span class='hs-varid'>name</span>
+<a name="line-271"></a>    <span class='hs-varid'>new_occ</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkLocalOcc</span> <span class='hs-varid'>uniq</span> <span class='hs-layout'>(</span><span class='hs-varid'>nameOccName</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span>
+<a name="line-272"></a>    <span class='hs-varid'>loc</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nameSrcSpan</span> <span class='hs-varid'>name</span>
+<a name="line-273"></a>        <span class='hs-comment'>-- We want to conjure up a name that can't clash with any</span>
+<a name="line-274"></a>        <span class='hs-comment'>-- existing name.  So we generate</span>
+<a name="line-275"></a>        <span class='hs-comment'>--      Mod_$L243foo</span>
+<a name="line-276"></a>        <span class='hs-comment'>-- where 243 is the unique.</span>
 </pre></body>
 </html>

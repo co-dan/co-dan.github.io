@@ -227,7 +227,7 @@
 <a name="line-218"></a>      <span class='hs-varid'>pdata_co</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkBuiltinCo</span> <span class='hs-varid'>pdataTyCon</span>
 <a name="line-219"></a>      <span class='hs-keyword'>let</span> <span class='hs-varid'>co</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAppCo</span> <span class='hs-varid'>pdata_co</span>
 <a name="line-220"></a>                       <span class='hs-varop'>.</span> <span class='hs-varid'>mkSymCo</span>
-<a name="line-221"></a>                       <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>ty_args</span>
+<a name="line-221"></a>                       <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-conid'>Nominal</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>ty_args</span>
 <a name="line-222"></a>
 <a name="line-223"></a>          <span class='hs-varid'>scrut</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unwrapFamInstScrut</span> <span class='hs-varid'>pdata_tc</span> <span class='hs-varid'>ty_args</span> <span class='hs-layout'>(</span><span class='hs-conid'>Var</span> <span class='hs-varid'>arg</span><span class='hs-layout'>)</span>
 <a name="line-224"></a>
@@ -291,7 +291,7 @@
 <a name="line-282"></a>
 <a name="line-283"></a>      <span class='hs-varid'>pdata_co</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkBuiltinCo</span> <span class='hs-varid'>pdataTyCon</span>
 <a name="line-284"></a>      <span class='hs-keyword'>let</span> <span class='hs-varid'>co</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAppCo</span> <span class='hs-varid'>pdata_co</span>
-<a name="line-285"></a>                       <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>var_tys</span>
+<a name="line-285"></a>                       <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-conid'>Nominal</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>var_tys</span>
 <a name="line-286"></a>
 <a name="line-287"></a>      <span class='hs-keyword'>let</span> <span class='hs-varid'>scrut</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkCast</span> <span class='hs-layout'>(</span><span class='hs-conid'>Var</span> <span class='hs-varid'>arg</span><span class='hs-layout'>)</span> <span class='hs-varid'>co</span>
 <a name="line-288"></a>
@@ -377,7 +377,7 @@
 <a name="line-368"></a>    <span class='hs-varid'>pdatas_co</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkBuiltinCo</span> <span class='hs-varid'>pdatasTyCon</span>
 <a name="line-369"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>co</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAppCo</span> <span class='hs-varid'>pdatas_co</span>
 <a name="line-370"></a>                     <span class='hs-varop'>.</span> <span class='hs-varid'>mkSymCo</span>
-<a name="line-371"></a>                     <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>ty_args</span>
+<a name="line-371"></a>                     <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-conid'>Nominal</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>ty_args</span>
 <a name="line-372"></a>
 <a name="line-373"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>scrut</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unwrapFamInstScrut</span> <span class='hs-varid'>pdatas_tc</span> <span class='hs-varid'>ty_args</span> <span class='hs-layout'>(</span><span class='hs-conid'>Var</span> <span class='hs-varid'>varg</span><span class='hs-layout'>)</span>
 <a name="line-374"></a>    <span class='hs-layout'>(</span><span class='hs-varid'>vars</span><span class='hs-layout'>,</span> <span class='hs-varid'>result</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>to_sum</span> <span class='hs-varid'>r</span>
@@ -467,7 +467,7 @@
 <a name="line-458"></a>    <span class='hs-comment'>-- Build the coercion between PRepr and the instance type</span>
 <a name="line-459"></a>    <span class='hs-varid'>pdatas_co</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>mkBuiltinCo</span> <span class='hs-varid'>pdatasTyCon</span>
 <a name="line-460"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>co</span>           <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAppCo</span> <span class='hs-varid'>pdatas_co</span>
-<a name="line-461"></a>                     <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>var_tys</span>
+<a name="line-461"></a>                     <span class='hs-varop'>$</span> <span class='hs-varid'>mkUnbranchedAxInstCo</span> <span class='hs-conid'>Nominal</span> <span class='hs-varid'>repr_co</span> <span class='hs-varid'>var_tys</span>
 <a name="line-462"></a>
 <a name="line-463"></a>    <span class='hs-keyword'>let</span> <span class='hs-varid'>scrut</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkCast</span> <span class='hs-layout'>(</span><span class='hs-conid'>Var</span> <span class='hs-varid'>varg</span><span class='hs-layout'>)</span> <span class='hs-varid'>co</span>
 <a name="line-464"></a>

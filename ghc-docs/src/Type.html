@@ -57,7 +57,7 @@ Type - public interface
 <a name="line-40"></a>        <span class='hs-comment'>-- Pred types</span>
 <a name="line-41"></a>        <span class='hs-varid'>mkFamilyTyConApp</span><span class='hs-layout'>,</span>
 <a name="line-42"></a>        <span class='hs-varid'>isDictLikeTy</span><span class='hs-layout'>,</span>
-<a name="line-43"></a>        <span class='hs-varid'>mkEqPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkPrimEqPred</span><span class='hs-layout'>,</span>
+<a name="line-43"></a>        <span class='hs-varid'>mkEqPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkPrimEqPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkReprPrimEqPred</span><span class='hs-layout'>,</span>
 <a name="line-44"></a>        <span class='hs-varid'>mkClassPred</span><span class='hs-layout'>,</span>
 <a name="line-45"></a>        <span class='hs-varid'>noParenPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>isClassPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>isEqPred</span><span class='hs-layout'>,</span>
 <a name="line-46"></a>        <span class='hs-varid'>isIPPred</span><span class='hs-layout'>,</span> <span class='hs-varid'>isIPPred_maybe</span><span class='hs-layout'>,</span> <span class='hs-varid'>isIPTyCon</span><span class='hs-layout'>,</span> <span class='hs-varid'>isIPClass</span><span class='hs-layout'>,</span>
@@ -889,6 +889,13 @@ Make PredTypes
 <a name="line-12"></a>    <span class='hs-conid'>TyConApp</span> <span class='hs-varid'>eqPrimTyCon</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>k</span><span class='hs-layout'>,</span> <span class='hs-varid'>ty1</span><span class='hs-layout'>,</span> <span class='hs-varid'>ty2</span><span class='hs-keyglyph'>]</span>
 <a name="line-13"></a>  <span class='hs-keyword'>where</span>
 <a name="line-14"></a>    <span class='hs-varid'>k</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>typeKind</span> <span class='hs-varid'>ty1</span>
+<a name="line-15"></a>
+<a name="line-16"></a><a name="mkReprPrimEqPred"></a><span class='hs-definition'>mkReprPrimEqPred</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Type</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Type</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Type</span>
+<a name="line-17"></a><span class='hs-definition'>mkReprPrimEqPred</span> <span class='hs-varid'>ty1</span>  <span class='hs-varid'>ty2</span>
+<a name="line-18"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WARN</span><span class='hs-layout'>(</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>k</span> <span class='hs-varop'>`eqKind`</span> <span class='hs-varid'>typeKind</span> <span class='hs-varid'>ty2</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>ty1</span> <span class='hs-varop'>$$</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>ty2</span> <span class='hs-layout'>)</span>
+<a name="line-19"></a>    <span class='hs-conid'>TyConApp</span> <span class='hs-varid'>eqReprPrimTyCon</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>k</span><span class='hs-layout'>,</span> <span class='hs-varid'>ty1</span><span class='hs-layout'>,</span> <span class='hs-varid'>ty2</span><span class='hs-keyglyph'>]</span>
+<a name="line-20"></a>  <span class='hs-keyword'>where</span>
+<a name="line-21"></a>    <span class='hs-varid'>k</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>typeKind</span> <span class='hs-varid'>ty1</span>
 </pre>\end{code}
 
 --------------------- Dictionary types ---------------------------------

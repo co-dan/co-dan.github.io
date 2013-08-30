@@ -28,58 +28,56 @@ TcInstDecls: Typechecking instance declarations
 <a name="line-11"></a>
 <a name="line-12"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>HsSyn</span>
 <a name="line-13"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcBinds</span>
-<a name="line-14"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcTyClsDecls</span><span class='hs-layout'>(</span> <span class='hs-varid'>tcAddImplicits</span><span class='hs-layout'>,</span> <span class='hs-varid'>tcAddTyFamInstCtxt</span><span class='hs-layout'>,</span> <span class='hs-varid'>tcAddDataFamInstCtxt</span><span class='hs-layout'>,</span>
-<a name="line-15"></a>                     <span class='hs-varid'>tcSynFamInstDecl</span><span class='hs-layout'>,</span> 
-<a name="line-16"></a>                     <span class='hs-varid'>wrongKindOfFamily</span><span class='hs-layout'>,</span> <span class='hs-varid'>tcFamTyPats</span><span class='hs-layout'>,</span> <span class='hs-varid'>kcDataDefn</span><span class='hs-layout'>,</span> <span class='hs-varid'>dataDeclChecks</span><span class='hs-layout'>,</span>
-<a name="line-17"></a>                     <span class='hs-varid'>tcConDecls</span><span class='hs-layout'>,</span> <span class='hs-varid'>checkValidTyCon</span> <span class='hs-layout'>)</span>
-<a name="line-18"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcClassDcl</span><span class='hs-layout'>(</span> <span class='hs-varid'>tcClassDecl2</span><span class='hs-layout'>,</span> 
-<a name="line-19"></a>                   <span class='hs-conid'>HsSigFun</span><span class='hs-layout'>,</span> <span class='hs-varid'>lookupHsSig</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkHsSigFun</span><span class='hs-layout'>,</span> <span class='hs-varid'>emptyHsSigs</span><span class='hs-layout'>,</span>
-<a name="line-20"></a>                   <span class='hs-varid'>findMethodBind</span><span class='hs-layout'>,</span> <span class='hs-varid'>instantiateMethod</span><span class='hs-layout'>,</span> <span class='hs-varid'>tcInstanceMethodBody</span> <span class='hs-layout'>)</span>
-<a name="line-21"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcPat</span>      <span class='hs-layout'>(</span> <span class='hs-varid'>addInlinePrags</span> <span class='hs-layout'>)</span>
-<a name="line-22"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcRnMonad</span>
-<a name="line-23"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcValidity</span>
-<a name="line-24"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcMType</span>
-<a name="line-25"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcType</span>
-<a name="line-26"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>BuildTyCl</span>
-<a name="line-27"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Inst</span>
-<a name="line-28"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>InstEnv</span>
-<a name="line-29"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FamInst</span>
-<a name="line-30"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FamInstEnv</span>
-<a name="line-31"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcDeriv</span>
-<a name="line-32"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcEnv</span>
-<a name="line-33"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcHsType</span>
-<a name="line-34"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcUnify</span>
-<a name="line-35"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>MkCore</span>     <span class='hs-layout'>(</span> <span class='hs-varid'>nO_METHOD_BINDING_ERROR_ID</span> <span class='hs-layout'>)</span>
-<a name="line-36"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Type</span>
-<a name="line-37"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcEvidence</span>
-<a name="line-38"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TyCon</span>
-<a name="line-39"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoAxiom</span>
-<a name="line-40"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DataCon</span>
-<a name="line-41"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Class</span>
-<a name="line-42"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Var</span>
-<a name="line-43"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>VarEnv</span>
-<a name="line-44"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>VarSet</span> 
-<a name="line-45"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Pair</span>
-<a name="line-46"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoreUnfold</span> <span class='hs-layout'>(</span> <span class='hs-varid'>mkDFunUnfolding</span> <span class='hs-layout'>)</span>
-<a name="line-47"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoreSyn</span>    <span class='hs-layout'>(</span> <span class='hs-conid'>Expr</span><span class='hs-layout'>(</span><span class='hs-conid'>Var</span><span class='hs-layout'>,</span> <span class='hs-conid'>Type</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreExpr</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkTyApps</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkVarApps</span> <span class='hs-layout'>)</span>
-<a name="line-48"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>PrelNames</span>  <span class='hs-layout'>(</span> <span class='hs-varid'>tYPEABLE_INTERNAL</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeableClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>oldTypeableClassNames</span> <span class='hs-layout'>)</span>
-<a name="line-49"></a>
-<a name="line-50"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Bag</span>
-<a name="line-51"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>BasicTypes</span>
-<a name="line-52"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DynFlags</span>
-<a name="line-53"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>ErrUtils</span>
-<a name="line-54"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
-<a name="line-55"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>HscTypes</span> <span class='hs-layout'>(</span> <span class='hs-varid'>isHsBoot</span> <span class='hs-layout'>)</span>
-<a name="line-56"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Id</span>
-<a name="line-57"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>MkId</span>
-<a name="line-58"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Name</span>
-<a name="line-59"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>NameSet</span>
-<a name="line-60"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
-<a name="line-61"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>SrcLoc</span>
-<a name="line-62"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Util</span>
-<a name="line-63"></a>
-<a name="line-64"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Monad</span>
-<a name="line-65"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Maybes</span>     <span class='hs-layout'>(</span> <span class='hs-varid'>orElse</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNothing</span> <span class='hs-layout'>)</span>
+<a name="line-14"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcTyClsDecls</span>
+<a name="line-15"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcClassDcl</span><span class='hs-layout'>(</span> <span class='hs-varid'>tcClassDecl2</span><span class='hs-layout'>,</span> 
+<a name="line-16"></a>                   <span class='hs-conid'>HsSigFun</span><span class='hs-layout'>,</span> <span class='hs-varid'>lookupHsSig</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkHsSigFun</span><span class='hs-layout'>,</span> <span class='hs-varid'>emptyHsSigs</span><span class='hs-layout'>,</span>
+<a name="line-17"></a>                   <span class='hs-varid'>findMethodBind</span><span class='hs-layout'>,</span> <span class='hs-varid'>instantiateMethod</span><span class='hs-layout'>,</span> <span class='hs-varid'>tcInstanceMethodBody</span> <span class='hs-layout'>)</span>
+<a name="line-18"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcPat</span>      <span class='hs-layout'>(</span> <span class='hs-varid'>addInlinePrags</span> <span class='hs-layout'>)</span>
+<a name="line-19"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcRnMonad</span>
+<a name="line-20"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcValidity</span>
+<a name="line-21"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcMType</span>
+<a name="line-22"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcType</span>
+<a name="line-23"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>BuildTyCl</span>
+<a name="line-24"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Inst</span>
+<a name="line-25"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>InstEnv</span>
+<a name="line-26"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FamInst</span>
+<a name="line-27"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FamInstEnv</span>
+<a name="line-28"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcDeriv</span>
+<a name="line-29"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcEnv</span>
+<a name="line-30"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcHsType</span>
+<a name="line-31"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcUnify</span>
+<a name="line-32"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>MkCore</span>     <span class='hs-layout'>(</span> <span class='hs-varid'>nO_METHOD_BINDING_ERROR_ID</span> <span class='hs-layout'>)</span>
+<a name="line-33"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Type</span>
+<a name="line-34"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TcEvidence</span>
+<a name="line-35"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>TyCon</span>
+<a name="line-36"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoAxiom</span>
+<a name="line-37"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DataCon</span>
+<a name="line-38"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Class</span>
+<a name="line-39"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Var</span>
+<a name="line-40"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>VarEnv</span>
+<a name="line-41"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>VarSet</span> 
+<a name="line-42"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Pair</span>
+<a name="line-43"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoreUnfold</span> <span class='hs-layout'>(</span> <span class='hs-varid'>mkDFunUnfolding</span> <span class='hs-layout'>)</span>
+<a name="line-44"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>CoreSyn</span>    <span class='hs-layout'>(</span> <span class='hs-conid'>Expr</span><span class='hs-layout'>(</span><span class='hs-conid'>Var</span><span class='hs-layout'>,</span> <span class='hs-conid'>Type</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>CoreExpr</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkTyApps</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkVarApps</span> <span class='hs-layout'>)</span>
+<a name="line-45"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>PrelNames</span>  <span class='hs-layout'>(</span> <span class='hs-varid'>tYPEABLE_INTERNAL</span><span class='hs-layout'>,</span> <span class='hs-varid'>typeableClassName</span><span class='hs-layout'>,</span> <span class='hs-varid'>oldTypeableClassNames</span> <span class='hs-layout'>)</span>
+<a name="line-46"></a>
+<a name="line-47"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Bag</span>
+<a name="line-48"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>BasicTypes</span>
+<a name="line-49"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DynFlags</span>
+<a name="line-50"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>ErrUtils</span>
+<a name="line-51"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
+<a name="line-52"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>HscTypes</span> <span class='hs-layout'>(</span> <span class='hs-varid'>isHsBoot</span> <span class='hs-layout'>)</span>
+<a name="line-53"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Id</span>
+<a name="line-54"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>MkId</span>
+<a name="line-55"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Name</span>
+<a name="line-56"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>NameSet</span>
+<a name="line-57"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>NameEnv</span>
+<a name="line-58"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
+<a name="line-59"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>SrcLoc</span>
+<a name="line-60"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Util</span>
+<a name="line-61"></a>
+<a name="line-62"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Monad</span>
+<a name="line-63"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Maybes</span>     <span class='hs-layout'>(</span> <span class='hs-varid'>orElse</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNothing</span> <span class='hs-layout'>)</span>
 </pre>\end{code}
 
 Typechecking instance declarations is done in two passes. The first
@@ -673,64 +671,67 @@ GADTs).
 <a name="line-64"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkTc</span> <span class='hs-layout'>(</span><span class='hs-varid'>isAlgTyCon</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>wrongKindOfFamily</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span>
 <a name="line-65"></a>
 <a name="line-66"></a>         <span class='hs-comment'>-- Kind check type patterns</span>
-<a name="line-67"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>tcFamTyPats</span> <span class='hs-layout'>(</span><span class='hs-varid'>unLoc</span> <span class='hs-varid'>fam_tc_name</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConKind</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>pats</span> <span class='hs-layout'>(</span><span class='hs-varid'>kcDataDefn</span> <span class='hs-varid'>defn</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> 
-<a name="line-68"></a>           <span class='hs-keyglyph'>\</span><span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span> <span class='hs-varid'>res_kind</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
-<a name="line-69"></a>
-<a name="line-70"></a>       <span class='hs-layout'>{</span> <span class='hs-comment'>-- Check that left-hand side contains no type family applications</span>
-<a name="line-71"></a>         <span class='hs-comment'>-- (vanilla synonyms are fine, though, and we checked for</span>
-<a name="line-72"></a>         <span class='hs-comment'>--  foralls earlier)</span>
-<a name="line-73"></a>         <span class='hs-varid'>checkValidFamPats</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
-<a name="line-74"></a>         <span class='hs-comment'>-- Check that type patterns match class instance head, if any</span>
-<a name="line-75"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkConsistentFamInst</span> <span class='hs-varid'>mb_clsinfo</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
-<a name="line-76"></a>         
-<a name="line-77"></a>         <span class='hs-comment'>-- Result kind must be '*' (otherwise, we have too few patterns)</span>
-<a name="line-78"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkTc</span> <span class='hs-layout'>(</span><span class='hs-varid'>isLiftedTypeKind</span> <span class='hs-varid'>res_kind</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-varid'>tooFewParmsErr</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConArity</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span>
-<a name="line-79"></a>
-<a name="line-80"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>tcHsContext</span> <span class='hs-varid'>ctxt</span>
-<a name="line-81"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>h98_syntax</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>dataDeclChecks</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConName</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>new_or_data</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>cons</span>
-<a name="line-82"></a>
-<a name="line-83"></a>         <span class='hs-comment'>-- Construct representation tycon</span>
-<a name="line-84"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newFamInstTyConName</span> <span class='hs-varid'>fam_tc_name</span> <span class='hs-varid'>pats'</span>
-<a name="line-85"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>axiom_name</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newImplicitBinder</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>mkInstTyCoOcc</span>
-<a name="line-86"></a>       <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>orig_res_ty</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTyConApp</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>pats'</span>
-<a name="line-87"></a>
-<a name="line-88"></a>       <span class='hs-layout'>;</span> <span class='hs-layout'>(</span><span class='hs-varid'>rep_tc</span><span class='hs-layout'>,</span> <span class='hs-varid'>fam_inst</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>fixM</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span> <span class='hs-keyglyph'>~</span><span class='hs-layout'>(</span><span class='hs-varid'>rec_rep_tc</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span>
-<a name="line-89"></a>           <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>data_cons</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>tcConDecls</span> <span class='hs-varid'>new_or_data</span> <span class='hs-varid'>rec_rep_tc</span>
-<a name="line-90"></a>                                       <span class='hs-layout'>(</span><span class='hs-varid'>tvs'</span><span class='hs-layout'>,</span> <span class='hs-varid'>orig_res_ty</span><span class='hs-layout'>)</span> <span class='hs-varid'>cons</span>
-<a name="line-91"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>tc_rhs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>new_or_data</span> <span class='hs-keyword'>of</span>
-<a name="line-92"></a>                     <span class='hs-conid'>DataType</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkDataTyConRhs</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span>
-<a name="line-93"></a>                     <span class='hs-conid'>NewType</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span> <span class='hs-layout'>)</span>
-<a name="line-94"></a>                                 <span class='hs-varid'>mkNewTyConRhs</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>rec_rep_tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>head</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span>
-<a name="line-95"></a>              <span class='hs-comment'>-- freshen tyvars</span>
-<a name="line-96"></a>              <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>eta_tvs</span><span class='hs-layout'>,</span> <span class='hs-varid'>eta_pats</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>eta_reduce</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
-<a name="line-97"></a>                    <span class='hs-varid'>axiom</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkSingleCoAxiom</span> <span class='hs-varid'>axiom_name</span> <span class='hs-varid'>eta_tvs</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>eta_pats</span> 
-<a name="line-98"></a>                                               <span class='hs-layout'>(</span><span class='hs-varid'>mkTyConApp</span> <span class='hs-varid'>rep_tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTys</span> <span class='hs-varid'>eta_tvs</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-99"></a>                    <span class='hs-varid'>parent</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FamInstTyCon</span> <span class='hs-varid'>axiom</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>pats'</span>
-<a name="line-100"></a>                    <span class='hs-varid'>rep_tc</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>buildAlgTyCon</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>tc_rhs</span> 
-<a name="line-101"></a>                                             <span class='hs-conid'>Recursive</span> 
-<a name="line-102"></a>                                             <span class='hs-conid'>False</span>      <span class='hs-comment'>-- No promotable to the kind level</span>
-<a name="line-103"></a>                                             <span class='hs-varid'>h98_syntax</span> <span class='hs-varid'>parent</span>
-<a name="line-104"></a>                 <span class='hs-comment'>-- We always assume that indexed types are recursive.  Why?</span>
-<a name="line-105"></a>                 <span class='hs-comment'>-- (1) Due to their open nature, we can never be sure that a</span>
-<a name="line-106"></a>                 <span class='hs-comment'>-- further instance might not introduce a new recursive</span>
-<a name="line-107"></a>                 <span class='hs-comment'>-- dependency.  (2) They are always valid loop breakers as</span>
-<a name="line-108"></a>                 <span class='hs-comment'>-- they involve a coercion.</span>
-<a name="line-109"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>fam_inst</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newFamInst</span> <span class='hs-layout'>(</span><span class='hs-conid'>DataFamilyInst</span> <span class='hs-varid'>rep_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>axiom</span>
-<a name="line-110"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>rep_tc</span><span class='hs-layout'>,</span> <span class='hs-varid'>fam_inst</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
-<a name="line-111"></a>
-<a name="line-112"></a>         <span class='hs-comment'>-- Remember to check validity; no recursion to worry about here</span>
-<a name="line-113"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkValidTyCon</span> <span class='hs-varid'>rep_tc</span>
-<a name="line-114"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>fam_inst</span> <span class='hs-layout'>}</span> <span class='hs-layout'>}</span>
-<a name="line-115"></a>  <span class='hs-keyword'>where</span>
-<a name="line-116"></a>    <span class='hs-comment'>-- See Note [Eta reduction for data family axioms]</span>
-<a name="line-117"></a>    <span class='hs-comment'>--  [a,b,c,d].T [a] c Int c d  ==&gt;  [a,b,c]. T [a] c Int c</span>
-<a name="line-118"></a>    <span class='hs-varid'>eta_reduce</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>go</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>tvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
-<a name="line-119"></a>    <span class='hs-varid'>go</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span><span class='hs-conop'>:</span><span class='hs-varid'>tvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>pat</span><span class='hs-conop'>:</span><span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
-<a name="line-120"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>tv'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getTyVar_maybe</span> <span class='hs-varid'>pat</span>
-<a name="line-121"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>tv</span> <span class='hs-varop'>==</span> <span class='hs-varid'>tv'</span>
-<a name="line-122"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span> <span class='hs-varop'>`elemVarSet`</span> <span class='hs-varid'>tyVarsOfTypes</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
-<a name="line-123"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>go</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span>
-<a name="line-124"></a>    <span class='hs-varid'>go</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>tvs</span><span class='hs-layout'>,</span> <span class='hs-varid'>reverse</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
+<a name="line-67"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>tcFamTyPats</span> <span class='hs-layout'>(</span><span class='hs-varid'>unLoc</span> <span class='hs-varid'>fam_tc_name</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConKind</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>pats</span>
+<a name="line-68"></a>                     <span class='hs-layout'>(</span><span class='hs-varid'>kcDataDefn</span> <span class='hs-layout'>(</span><span class='hs-varid'>unLoc</span> <span class='hs-varid'>fam_tc_name</span><span class='hs-layout'>)</span> <span class='hs-varid'>defn</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> 
+<a name="line-69"></a>           <span class='hs-keyglyph'>\</span><span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span> <span class='hs-varid'>res_kind</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-70"></a>
+<a name="line-71"></a>       <span class='hs-layout'>{</span> <span class='hs-comment'>-- Check that left-hand side contains no type family applications</span>
+<a name="line-72"></a>         <span class='hs-comment'>-- (vanilla synonyms are fine, though, and we checked for</span>
+<a name="line-73"></a>         <span class='hs-comment'>--  foralls earlier)</span>
+<a name="line-74"></a>         <span class='hs-varid'>checkValidFamPats</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
+<a name="line-75"></a>         <span class='hs-comment'>-- Check that type patterns match class instance head, if any</span>
+<a name="line-76"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkConsistentFamInst</span> <span class='hs-varid'>mb_clsinfo</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
+<a name="line-77"></a>         
+<a name="line-78"></a>         <span class='hs-comment'>-- Result kind must be '*' (otherwise, we have too few patterns)</span>
+<a name="line-79"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkTc</span> <span class='hs-layout'>(</span><span class='hs-varid'>isLiftedTypeKind</span> <span class='hs-varid'>res_kind</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-varid'>tooFewParmsErr</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConArity</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span>
+<a name="line-80"></a>
+<a name="line-81"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>tcHsContext</span> <span class='hs-varid'>ctxt</span>
+<a name="line-82"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>h98_syntax</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>dataDeclChecks</span> <span class='hs-layout'>(</span><span class='hs-varid'>tyConName</span> <span class='hs-varid'>fam_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>new_or_data</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>cons</span>
+<a name="line-83"></a>
+<a name="line-84"></a>         <span class='hs-comment'>-- Construct representation tycon</span>
+<a name="line-85"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newFamInstTyConName</span> <span class='hs-varid'>fam_tc_name</span> <span class='hs-varid'>pats'</span>
+<a name="line-86"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>axiom_name</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newImplicitBinder</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>mkInstTyCoOcc</span>
+<a name="line-87"></a>       <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>orig_res_ty</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkTyConApp</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>pats'</span>
+<a name="line-88"></a>
+<a name="line-89"></a>       <span class='hs-layout'>;</span> <span class='hs-layout'>(</span><span class='hs-varid'>rep_tc</span><span class='hs-layout'>,</span> <span class='hs-varid'>fam_inst</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>fixM</span> <span class='hs-varop'>$</span> <span class='hs-keyglyph'>\</span> <span class='hs-keyglyph'>~</span><span class='hs-layout'>(</span><span class='hs-varid'>rec_rep_tc</span><span class='hs-layout'>,</span> <span class='hs-keyword'>_</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span>
+<a name="line-90"></a>           <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>data_cons</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>tcConDecls</span> <span class='hs-varid'>new_or_data</span> <span class='hs-layout'>(</span><span class='hs-varid'>unLoc</span> <span class='hs-varid'>fam_tc_name</span><span class='hs-layout'>)</span> <span class='hs-varid'>rec_rep_tc</span>
+<a name="line-91"></a>                                       <span class='hs-layout'>(</span><span class='hs-varid'>tvs'</span><span class='hs-layout'>,</span> <span class='hs-varid'>orig_res_ty</span><span class='hs-layout'>)</span> <span class='hs-varid'>cons</span>
+<a name="line-92"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>tc_rhs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>new_or_data</span> <span class='hs-keyword'>of</span>
+<a name="line-93"></a>                     <span class='hs-conid'>DataType</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkDataTyConRhs</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span>
+<a name="line-94"></a>                     <span class='hs-conid'>NewType</span>  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>null</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span> <span class='hs-layout'>)</span>
+<a name="line-95"></a>                                 <span class='hs-varid'>mkNewTyConRhs</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>rec_rep_tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>head</span> <span class='hs-varid'>data_cons</span><span class='hs-layout'>)</span>
+<a name="line-96"></a>              <span class='hs-comment'>-- freshen tyvars</span>
+<a name="line-97"></a>              <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-layout'>(</span><span class='hs-varid'>eta_tvs</span><span class='hs-layout'>,</span> <span class='hs-varid'>eta_pats</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>eta_reduce</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>pats'</span>
+<a name="line-98"></a>                    <span class='hs-varid'>axiom</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkSingleCoAxiom</span> <span class='hs-varid'>axiom_name</span> <span class='hs-varid'>eta_tvs</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>eta_pats</span> 
+<a name="line-99"></a>                                               <span class='hs-layout'>(</span><span class='hs-varid'>mkTyConApp</span> <span class='hs-varid'>rep_tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTys</span> <span class='hs-varid'>eta_tvs</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-100"></a>                    <span class='hs-varid'>parent</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>FamInstTyCon</span> <span class='hs-varid'>axiom</span> <span class='hs-varid'>fam_tc</span> <span class='hs-varid'>pats'</span>
+<a name="line-101"></a>                    <span class='hs-varid'>roles</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-varid'>const</span> <span class='hs-conid'>Nominal</span><span class='hs-layout'>)</span> <span class='hs-varid'>tvs'</span>
+<a name="line-102"></a>                    <span class='hs-varid'>rep_tc</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>buildAlgTyCon</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-varid'>tvs'</span> <span class='hs-varid'>roles</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>tc_rhs</span> 
+<a name="line-103"></a>                                             <span class='hs-conid'>Recursive</span> 
+<a name="line-104"></a>                                             <span class='hs-conid'>False</span>      <span class='hs-comment'>-- No promotable to the kind level</span>
+<a name="line-105"></a>                                             <span class='hs-varid'>h98_syntax</span> <span class='hs-varid'>parent</span>
+<a name="line-106"></a>                 <span class='hs-comment'>-- We always assume that indexed types are recursive.  Why?</span>
+<a name="line-107"></a>                 <span class='hs-comment'>-- (1) Due to their open nature, we can never be sure that a</span>
+<a name="line-108"></a>                 <span class='hs-comment'>-- further instance might not introduce a new recursive</span>
+<a name="line-109"></a>                 <span class='hs-comment'>-- dependency.  (2) They are always valid loop breakers as</span>
+<a name="line-110"></a>                 <span class='hs-comment'>-- they involve a coercion.</span>
+<a name="line-111"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>fam_inst</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>newFamInst</span> <span class='hs-layout'>(</span><span class='hs-conid'>DataFamilyInst</span> <span class='hs-varid'>rep_tc</span><span class='hs-layout'>)</span> <span class='hs-varid'>axiom</span>
+<a name="line-112"></a>              <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-varid'>rep_tc</span><span class='hs-layout'>,</span> <span class='hs-varid'>fam_inst</span><span class='hs-layout'>)</span> <span class='hs-layout'>}</span>
+<a name="line-113"></a>
+<a name="line-114"></a>         <span class='hs-comment'>-- Remember to check validity; no recursion to worry about here</span>
+<a name="line-115"></a>       <span class='hs-layout'>;</span> <span class='hs-keyword'>let</span> <span class='hs-varid'>role_annots</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unitNameEnv</span> <span class='hs-varid'>rep_tc_name</span> <span class='hs-layout'>(</span><span class='hs-varid'>repeat</span> <span class='hs-conid'>Nothing</span><span class='hs-layout'>)</span>
+<a name="line-116"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>checkValidTyCon</span> <span class='hs-varid'>rep_tc</span> <span class='hs-varid'>role_annots</span>
+<a name="line-117"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varid'>fam_inst</span> <span class='hs-layout'>}</span> <span class='hs-layout'>}</span>
+<a name="line-118"></a>  <span class='hs-keyword'>where</span>
+<a name="line-119"></a>    <span class='hs-comment'>-- See Note [Eta reduction for data family axioms]</span>
+<a name="line-120"></a>    <span class='hs-comment'>--  [a,b,c,d].T [a] c Int c d  ==&gt;  [a,b,c]. T [a] c Int c</span>
+<a name="line-121"></a>    <span class='hs-varid'>eta_reduce</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>go</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>tvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
+<a name="line-122"></a>    <span class='hs-varid'>go</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span><span class='hs-conop'>:</span><span class='hs-varid'>tvs</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>pat</span><span class='hs-conop'>:</span><span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
+<a name="line-123"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>tv'</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getTyVar_maybe</span> <span class='hs-varid'>pat</span>
+<a name="line-124"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>tv</span> <span class='hs-varop'>==</span> <span class='hs-varid'>tv'</span>
+<a name="line-125"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span> <span class='hs-varop'>`elemVarSet`</span> <span class='hs-varid'>tyVarsOfTypes</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
+<a name="line-126"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>go</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span>
+<a name="line-127"></a>    <span class='hs-varid'>go</span> <span class='hs-varid'>tvs</span> <span class='hs-varid'>pats</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-varid'>reverse</span> <span class='hs-varid'>tvs</span><span class='hs-layout'>,</span> <span class='hs-varid'>reverse</span> <span class='hs-varid'>pats</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 Note [Eta reduction for data family axioms]

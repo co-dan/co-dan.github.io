@@ -25,86 +25,79 @@ types that
 \begin{code}
 <pre><a name="line-1"></a><span class='hs-comment'>{-# LANGUAGE DeriveDataTypeable #-}</span>
 <a name="line-2"></a>
-<a name="line-3"></a><span class='hs-comment'>{-# OPTIONS -fno-warn-tabs #-}</span>
-<a name="line-4"></a><span class='hs-comment'>-- The above warning supression flag is a temporary kludge.</span>
-<a name="line-5"></a><span class='hs-comment'>-- While working on this module you are encouraged to remove it and</span>
-<a name="line-6"></a><span class='hs-comment'>-- detab the module (please do the detabbing in a separate patch). See</span>
-<a name="line-7"></a><span class='hs-comment'>--     <a href="http://hackage.haskell.org/trac/ghc/wiki/Commentary/CodingStyle#TabsvsSpaces">http://hackage.haskell.org/trac/ghc/wiki/Commentary/CodingStyle#TabsvsSpaces</a></span>
-<a name="line-8"></a><span class='hs-comment'>-- for details</span>
+<a name="line-3"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>BasicTypes</span><span class='hs-layout'>(</span>
+<a name="line-4"></a>        <span class='hs-conid'>Version</span><span class='hs-layout'>,</span> <span class='hs-varid'>bumpVersion</span><span class='hs-layout'>,</span> <span class='hs-varid'>initialVersion</span><span class='hs-layout'>,</span>
+<a name="line-5"></a>
+<a name="line-6"></a>        <span class='hs-conid'>ConTag</span><span class='hs-layout'>,</span> <span class='hs-varid'>fIRST_TAG</span><span class='hs-layout'>,</span>
+<a name="line-7"></a>
+<a name="line-8"></a>        <span class='hs-conid'>Arity</span><span class='hs-layout'>,</span> <span class='hs-conid'>RepArity</span><span class='hs-layout'>,</span>
 <a name="line-9"></a>
-<a name="line-10"></a><span class='hs-keyword'>module</span> <span class='hs-conid'>BasicTypes</span><span class='hs-layout'>(</span>
-<a name="line-11"></a>	<span class='hs-conid'>Version</span><span class='hs-layout'>,</span> <span class='hs-varid'>bumpVersion</span><span class='hs-layout'>,</span> <span class='hs-varid'>initialVersion</span><span class='hs-layout'>,</span>
-<a name="line-12"></a>
-<a name="line-13"></a>        <span class='hs-conid'>ConTag</span><span class='hs-layout'>,</span> <span class='hs-varid'>fIRST_TAG</span><span class='hs-layout'>,</span>
-<a name="line-14"></a>
-<a name="line-15"></a>	<span class='hs-conid'>Arity</span><span class='hs-layout'>,</span> <span class='hs-conid'>RepArity</span><span class='hs-layout'>,</span>
-<a name="line-16"></a>	
-<a name="line-17"></a>	<span class='hs-conid'>Alignment</span><span class='hs-layout'>,</span>
-<a name="line-18"></a>
-<a name="line-19"></a>        <span class='hs-conid'>FunctionOrData</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-20"></a>	
-<a name="line-21"></a>	<span class='hs-conid'>WarningTxt</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-10"></a>        <span class='hs-conid'>Alignment</span><span class='hs-layout'>,</span>
+<a name="line-11"></a>
+<a name="line-12"></a>        <span class='hs-conid'>FunctionOrData</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-13"></a>
+<a name="line-14"></a>        <span class='hs-conid'>WarningTxt</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-15"></a>
+<a name="line-16"></a>        <span class='hs-conid'>Fixity</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>FixityDirection</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-17"></a>        <span class='hs-varid'>defaultFixity</span><span class='hs-layout'>,</span> <span class='hs-varid'>maxPrecedence</span><span class='hs-layout'>,</span> <span class='hs-varid'>minPrecedence</span><span class='hs-layout'>,</span>
+<a name="line-18"></a>        <span class='hs-varid'>negateFixity</span><span class='hs-layout'>,</span> <span class='hs-varid'>funTyFixity</span><span class='hs-layout'>,</span>
+<a name="line-19"></a>        <span class='hs-varid'>compareFixity</span><span class='hs-layout'>,</span>
+<a name="line-20"></a>
+<a name="line-21"></a>        <span class='hs-conid'>RecFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isRec</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNonRec</span><span class='hs-layout'>,</span> <span class='hs-varid'>boolToRecFlag</span><span class='hs-layout'>,</span>
 <a name="line-22"></a>
-<a name="line-23"></a>	<span class='hs-conid'>Fixity</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>FixityDirection</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-24"></a>	<span class='hs-varid'>defaultFixity</span><span class='hs-layout'>,</span> <span class='hs-varid'>maxPrecedence</span><span class='hs-layout'>,</span> <span class='hs-varid'>minPrecedence</span><span class='hs-layout'>,</span>
-<a name="line-25"></a>	<span class='hs-varid'>negateFixity</span><span class='hs-layout'>,</span> <span class='hs-varid'>funTyFixity</span><span class='hs-layout'>,</span>
-<a name="line-26"></a>	<span class='hs-varid'>compareFixity</span><span class='hs-layout'>,</span>
-<a name="line-27"></a>
-<a name="line-28"></a>	<span class='hs-conid'>RecFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isRec</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNonRec</span><span class='hs-layout'>,</span> <span class='hs-varid'>boolToRecFlag</span><span class='hs-layout'>,</span>
-<a name="line-29"></a>
-<a name="line-30"></a>	<span class='hs-conid'>RuleName</span><span class='hs-layout'>,</span>
-<a name="line-31"></a>
-<a name="line-32"></a>	<span class='hs-conid'>TopLevelFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isTopLevel</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNotTopLevel</span><span class='hs-layout'>,</span>
+<a name="line-23"></a>        <span class='hs-conid'>RuleName</span><span class='hs-layout'>,</span>
+<a name="line-24"></a>
+<a name="line-25"></a>        <span class='hs-conid'>TopLevelFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isTopLevel</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNotTopLevel</span><span class='hs-layout'>,</span>
+<a name="line-26"></a>
+<a name="line-27"></a>        <span class='hs-conid'>OverlapFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-28"></a>
+<a name="line-29"></a>        <span class='hs-conid'>Boxity</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isBoxed</span><span class='hs-layout'>,</span>
+<a name="line-30"></a>
+<a name="line-31"></a>        <span class='hs-conid'>TupleSort</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>tupleSortBoxity</span><span class='hs-layout'>,</span> <span class='hs-varid'>boxityNormalTupleSort</span><span class='hs-layout'>,</span>
+<a name="line-32"></a>        <span class='hs-varid'>tupleParens</span><span class='hs-layout'>,</span>
 <a name="line-33"></a>
-<a name="line-34"></a>	<span class='hs-conid'>OverlapFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> 
-<a name="line-35"></a>
-<a name="line-36"></a>	<span class='hs-conid'>Boxity</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isBoxed</span><span class='hs-layout'>,</span> 
+<a name="line-34"></a>        <span class='hs-conid'>OccInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>seqOccInfo</span><span class='hs-layout'>,</span> <span class='hs-varid'>zapFragileOcc</span><span class='hs-layout'>,</span> <span class='hs-varid'>isOneOcc</span><span class='hs-layout'>,</span>
+<a name="line-35"></a>        <span class='hs-varid'>isDeadOcc</span><span class='hs-layout'>,</span> <span class='hs-varid'>isStrongLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>isWeakLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNoOcc</span><span class='hs-layout'>,</span>
+<a name="line-36"></a>        <span class='hs-varid'>strongLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>weakLoopBreaker</span><span class='hs-layout'>,</span>
 <a name="line-37"></a>
-<a name="line-38"></a>        <span class='hs-conid'>TupleSort</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>tupleSortBoxity</span><span class='hs-layout'>,</span> <span class='hs-varid'>boxityNormalTupleSort</span><span class='hs-layout'>,</span>
-<a name="line-39"></a>        <span class='hs-varid'>tupleParens</span><span class='hs-layout'>,</span>
-<a name="line-40"></a>
-<a name="line-41"></a>	<span class='hs-conid'>OccInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>seqOccInfo</span><span class='hs-layout'>,</span> <span class='hs-varid'>zapFragileOcc</span><span class='hs-layout'>,</span> <span class='hs-varid'>isOneOcc</span><span class='hs-layout'>,</span> 
-<a name="line-42"></a>	<span class='hs-varid'>isDeadOcc</span><span class='hs-layout'>,</span> <span class='hs-varid'>isStrongLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>isWeakLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>isNoOcc</span><span class='hs-layout'>,</span>
-<a name="line-43"></a>        <span class='hs-varid'>strongLoopBreaker</span><span class='hs-layout'>,</span> <span class='hs-varid'>weakLoopBreaker</span><span class='hs-layout'>,</span> 
-<a name="line-44"></a>
-<a name="line-45"></a>	<span class='hs-conid'>InsideLam</span><span class='hs-layout'>,</span> <span class='hs-varid'>insideLam</span><span class='hs-layout'>,</span> <span class='hs-varid'>notInsideLam</span><span class='hs-layout'>,</span>
-<a name="line-46"></a>	<span class='hs-conid'>OneBranch</span><span class='hs-layout'>,</span> <span class='hs-varid'>oneBranch</span><span class='hs-layout'>,</span> <span class='hs-varid'>notOneBranch</span><span class='hs-layout'>,</span>
-<a name="line-47"></a>	<span class='hs-conid'>InterestingCxt</span><span class='hs-layout'>,</span>
-<a name="line-48"></a>
-<a name="line-49"></a>        <span class='hs-conid'>EP</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-50"></a>
-<a name="line-51"></a>	<span class='hs-conid'>DefMethSpec</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
-<a name="line-52"></a>        <span class='hs-conid'>SwapFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>flipSwap</span><span class='hs-layout'>,</span> <span class='hs-varid'>unSwap</span><span class='hs-layout'>,</span>
-<a name="line-53"></a>
-<a name="line-54"></a>        <span class='hs-conid'>CompilerPhase</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>PhaseNum</span><span class='hs-layout'>,</span>
-<a name="line-55"></a>        <span class='hs-conid'>Activation</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isActiveIn</span><span class='hs-layout'>,</span>
-<a name="line-56"></a>        <span class='hs-varid'>isNeverActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isAlwaysActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isEarlyActive</span><span class='hs-layout'>,</span>
-<a name="line-57"></a>        <span class='hs-conid'>RuleMatchInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isConLike</span><span class='hs-layout'>,</span> <span class='hs-varid'>isFunLike</span><span class='hs-layout'>,</span> 
-<a name="line-58"></a>        <span class='hs-conid'>InlineSpec</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isEmptyInlineSpec</span><span class='hs-layout'>,</span>
-<a name="line-59"></a>        <span class='hs-conid'>InlinePragma</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>defaultInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>alwaysInlinePragma</span><span class='hs-layout'>,</span> 
-<a name="line-60"></a>        <span class='hs-varid'>neverInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>dfunInlinePragma</span><span class='hs-layout'>,</span> 
-<a name="line-61"></a>	<span class='hs-varid'>isDefaultInlinePragma</span><span class='hs-layout'>,</span> 
-<a name="line-62"></a>        <span class='hs-varid'>isInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>isInlinablePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>isAnyInlinePragma</span><span class='hs-layout'>,</span>
-<a name="line-63"></a>        <span class='hs-varid'>inlinePragmaSpec</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlinePragmaSat</span><span class='hs-layout'>,</span>
-<a name="line-64"></a>        <span class='hs-varid'>inlinePragmaActivation</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlinePragmaRuleMatchInfo</span><span class='hs-layout'>,</span>
-<a name="line-65"></a>        <span class='hs-varid'>setInlinePragmaActivation</span><span class='hs-layout'>,</span> <span class='hs-varid'>setInlinePragmaRuleMatchInfo</span><span class='hs-layout'>,</span>
-<a name="line-66"></a>
-<a name="line-67"></a>	<span class='hs-conid'>SuccessFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>succeeded</span><span class='hs-layout'>,</span> <span class='hs-varid'>failed</span><span class='hs-layout'>,</span> <span class='hs-varid'>successIf</span><span class='hs-layout'>,</span>
-<a name="line-68"></a>	
-<a name="line-69"></a>	<span class='hs-conid'>FractionalLit</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>negateFractionalLit</span><span class='hs-layout'>,</span> <span class='hs-varid'>integralFractionalLit</span>
-<a name="line-70"></a>   <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-71"></a>
-<a name="line-72"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
-<a name="line-73"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
-<a name="line-74"></a>
-<a name="line-75"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Data</span> <span class='hs-varid'>hiding</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span><span class='hs-layout'>)</span>
-<a name="line-76"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Function</span> <span class='hs-layout'>(</span><span class='hs-varid'>on</span><span class='hs-layout'>)</span>
+<a name="line-38"></a>        <span class='hs-conid'>InsideLam</span><span class='hs-layout'>,</span> <span class='hs-varid'>insideLam</span><span class='hs-layout'>,</span> <span class='hs-varid'>notInsideLam</span><span class='hs-layout'>,</span>
+<a name="line-39"></a>        <span class='hs-conid'>OneBranch</span><span class='hs-layout'>,</span> <span class='hs-varid'>oneBranch</span><span class='hs-layout'>,</span> <span class='hs-varid'>notOneBranch</span><span class='hs-layout'>,</span>
+<a name="line-40"></a>        <span class='hs-conid'>InterestingCxt</span><span class='hs-layout'>,</span>
+<a name="line-41"></a>
+<a name="line-42"></a>        <span class='hs-conid'>EP</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-43"></a>
+<a name="line-44"></a>        <span class='hs-conid'>DefMethSpec</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span>
+<a name="line-45"></a>        <span class='hs-conid'>SwapFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>flipSwap</span><span class='hs-layout'>,</span> <span class='hs-varid'>unSwap</span><span class='hs-layout'>,</span>
+<a name="line-46"></a>
+<a name="line-47"></a>        <span class='hs-conid'>CompilerPhase</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>PhaseNum</span><span class='hs-layout'>,</span>
+<a name="line-48"></a>        <span class='hs-conid'>Activation</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isActiveIn</span><span class='hs-layout'>,</span>
+<a name="line-49"></a>        <span class='hs-varid'>isNeverActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isAlwaysActive</span><span class='hs-layout'>,</span> <span class='hs-varid'>isEarlyActive</span><span class='hs-layout'>,</span>
+<a name="line-50"></a>        <span class='hs-conid'>RuleMatchInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isConLike</span><span class='hs-layout'>,</span> <span class='hs-varid'>isFunLike</span><span class='hs-layout'>,</span>
+<a name="line-51"></a>        <span class='hs-conid'>InlineSpec</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>isEmptyInlineSpec</span><span class='hs-layout'>,</span>
+<a name="line-52"></a>        <span class='hs-conid'>InlinePragma</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>defaultInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>alwaysInlinePragma</span><span class='hs-layout'>,</span>
+<a name="line-53"></a>        <span class='hs-varid'>neverInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>dfunInlinePragma</span><span class='hs-layout'>,</span>
+<a name="line-54"></a>        <span class='hs-varid'>isDefaultInlinePragma</span><span class='hs-layout'>,</span>
+<a name="line-55"></a>        <span class='hs-varid'>isInlinePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>isInlinablePragma</span><span class='hs-layout'>,</span> <span class='hs-varid'>isAnyInlinePragma</span><span class='hs-layout'>,</span>
+<a name="line-56"></a>        <span class='hs-varid'>inlinePragmaSpec</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlinePragmaSat</span><span class='hs-layout'>,</span>
+<a name="line-57"></a>        <span class='hs-varid'>inlinePragmaActivation</span><span class='hs-layout'>,</span> <span class='hs-varid'>inlinePragmaRuleMatchInfo</span><span class='hs-layout'>,</span>
+<a name="line-58"></a>        <span class='hs-varid'>setInlinePragmaActivation</span><span class='hs-layout'>,</span> <span class='hs-varid'>setInlinePragmaRuleMatchInfo</span><span class='hs-layout'>,</span>
+<a name="line-59"></a>
+<a name="line-60"></a>        <span class='hs-conid'>SuccessFlag</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>succeeded</span><span class='hs-layout'>,</span> <span class='hs-varid'>failed</span><span class='hs-layout'>,</span> <span class='hs-varid'>successIf</span><span class='hs-layout'>,</span>
+<a name="line-61"></a>
+<a name="line-62"></a>        <span class='hs-conid'>FractionalLit</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-varid'>negateFractionalLit</span><span class='hs-layout'>,</span> <span class='hs-varid'>integralFractionalLit</span>
+<a name="line-63"></a>   <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-64"></a>
+<a name="line-65"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
+<a name="line-66"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
+<a name="line-67"></a>
+<a name="line-68"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Data</span> <span class='hs-varid'>hiding</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span><span class='hs-layout'>)</span>
+<a name="line-69"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Function</span> <span class='hs-layout'>(</span><span class='hs-varid'>on</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Arity]{Arity}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -123,9 +116,9 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
               Constructor tags
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -138,9 +131,9 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Alignment]{Alignment}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -148,14 +141,14 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
            Swap flag
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
-<pre><a name="line-1"></a><a name="SwapFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>SwapFlag</span> 
-<a name="line-2"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NotSwapped</span>	<span class='hs-comment'>-- Args are: actual,   expected</span>
+<pre><a name="line-1"></a><a name="SwapFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>SwapFlag</span>
+<a name="line-2"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NotSwapped</span>  <span class='hs-comment'>-- Args are: actual,   expected</span>
 <a name="line-3"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IsSwapped</span>   <span class='hs-comment'>-- Args are: expected, actual</span>
 <a name="line-4"></a>
 <a name="line-5"></a><a name="instance%20Outputable%20SwapFlag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>SwapFlag</span> <span class='hs-keyword'>where</span>
@@ -173,9 +166,9 @@ types that
 
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[FunctionOrData]{FunctionOrData}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -189,15 +182,15 @@ types that
 
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Version]{Module and identifier version numbers}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
 <pre><a name="line-1"></a><a name="Version"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>Version</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Int</span>
 <a name="line-2"></a>
-<a name="line-3"></a><a name="bumpVersion"></a><span class='hs-definition'>bumpVersion</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Version</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Version</span> 
+<a name="line-3"></a><a name="bumpVersion"></a><span class='hs-definition'>bumpVersion</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Version</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Version</span>
 <a name="line-4"></a><span class='hs-definition'>bumpVersion</span> <span class='hs-varid'>v</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>v</span><span class='hs-varop'>+</span><span class='hs-num'>1</span>
 <a name="line-5"></a>
 <a name="line-6"></a><a name="initialVersion"></a><span class='hs-definition'>initialVersion</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Version</span>
@@ -205,9 +198,9 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
-		Deprecations
-%*									*
+%*                                                                      *
+                Deprecations
+%*                                                                      *
 %************************************************************************
 
 
@@ -224,9 +217,9 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
-		Rules
-%*									*
+%*                                                                      *
+                Rules
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -234,9 +227,9 @@ types that
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Fixity]{Fixity info}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -247,12 +240,12 @@ types that
 <a name="line-5"></a><a name="instance%20Outputable%20Fixity"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>Fixity</span> <span class='hs-keyword'>where</span>
 <a name="line-6"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span> <span class='hs-varid'>prec</span> <span class='hs-varid'>dir</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hcat</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>ppr</span> <span class='hs-varid'>dir</span><span class='hs-layout'>,</span> <span class='hs-varid'>space</span><span class='hs-layout'>,</span> <span class='hs-varid'>int</span> <span class='hs-varid'>prec</span><span class='hs-keyglyph'>]</span>
 <a name="line-7"></a>
-<a name="line-8"></a><a name="instance%20Eq%20Fixity"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Eq</span> <span class='hs-conid'>Fixity</span> <span class='hs-keyword'>where</span>		<span class='hs-comment'>-- Used to determine if two fixities conflict</span>
+<a name="line-8"></a><a name="instance%20Eq%20Fixity"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Eq</span> <span class='hs-conid'>Fixity</span> <span class='hs-keyword'>where</span> <span class='hs-comment'>-- Used to determine if two fixities conflict</span>
 <a name="line-9"></a>  <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span> <span class='hs-varid'>p1</span> <span class='hs-varid'>dir1</span><span class='hs-layout'>)</span> <span class='hs-varop'>==</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span> <span class='hs-varid'>p2</span> <span class='hs-varid'>dir2</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>p1</span><span class='hs-varop'>==</span><span class='hs-varid'>p2</span> <span class='hs-varop'>&amp;&amp;</span> <span class='hs-varid'>dir1</span> <span class='hs-varop'>==</span> <span class='hs-varid'>dir2</span>
 <a name="line-10"></a>
 <a name="line-11"></a><a name="FixityDirection"></a><span class='hs-comment'>------------------------</span>
-<a name="line-12"></a><a name="FixityDirection"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixityDirection</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>InfixL</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InfixR</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InfixN</span> 
-<a name="line-13"></a>		     <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-12"></a><a name="FixityDirection"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>FixityDirection</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>InfixL</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InfixR</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>InfixN</span>
+<a name="line-13"></a>                     <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-14"></a>
 <a name="line-15"></a><a name="instance%20Outputable%20FixityDirection"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>FixityDirection</span> <span class='hs-keyword'>where</span>
 <a name="line-16"></a>    <span class='hs-varid'>ppr</span> <span class='hs-conid'>InfixL</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"infixl"</span><span class='hs-layout'>)</span>
@@ -269,41 +262,41 @@ types that
 <a name="line-27"></a>
 <a name="line-28"></a><a name="negateFixity"></a><span class='hs-definition'>negateFixity</span><span class='hs-layout'>,</span> <span class='hs-varid'>funTyFixity</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fixity</span>
 <a name="line-29"></a><span class='hs-comment'>-- Wired-in fixities</span>
-<a name="line-30"></a><span class='hs-definition'>negateFixity</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Fixity</span> <span class='hs-num'>6</span> <span class='hs-conid'>InfixL</span> 	<span class='hs-comment'>-- Fixity of unary negate</span>
-<a name="line-31"></a><a name="funTyFixity"></a><span class='hs-definition'>funTyFixity</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Fixity</span> <span class='hs-num'>0</span>	<span class='hs-conid'>InfixR</span>	<span class='hs-comment'>-- Fixity of '-&gt;'</span>
+<a name="line-30"></a><span class='hs-definition'>negateFixity</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Fixity</span> <span class='hs-num'>6</span> <span class='hs-conid'>InfixL</span>  <span class='hs-comment'>-- Fixity of unary negate</span>
+<a name="line-31"></a><a name="funTyFixity"></a><span class='hs-definition'>funTyFixity</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Fixity</span> <span class='hs-num'>0</span> <span class='hs-conid'>InfixR</span>  <span class='hs-comment'>-- Fixity of '-&gt;'</span>
 </pre>\end{code}
 
 Consider
 
 \begin{verbatim}
-	a `op1` b `op2` c
+        a `op1` b `op2` c
 \end{verbatim}
 @(compareFixity op1 op2)@ tells which way to arrange appication, or
 whether there's an error.
 
 \begin{code}
 <pre><a name="line-1"></a><a name="compareFixity"></a><span class='hs-definition'>compareFixity</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fixity</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Fixity</span>
-<a name="line-2"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>		<span class='hs-comment'>-- Error please</span>
-<a name="line-3"></a>		  <span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>		<span class='hs-comment'>-- Associate to the right: a op1 (b op2 c)</span>
+<a name="line-2"></a>              <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>         <span class='hs-comment'>-- Error please</span>
+<a name="line-3"></a>                  <span class='hs-conid'>Bool</span><span class='hs-layout'>)</span>         <span class='hs-comment'>-- Associate to the right: a op1 (b op2 c)</span>
 <a name="line-4"></a><span class='hs-definition'>compareFixity</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span> <span class='hs-varid'>prec1</span> <span class='hs-varid'>dir1</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-conid'>Fixity</span> <span class='hs-varid'>prec2</span> <span class='hs-varid'>dir2</span><span class='hs-layout'>)</span>
 <a name="line-5"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>prec1</span> <span class='hs-varop'>`compare`</span> <span class='hs-varid'>prec2</span> <span class='hs-keyword'>of</span>
-<a name="line-6"></a>	<span class='hs-conid'>GT</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>left</span>
-<a name="line-7"></a>	<span class='hs-conid'>LT</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>right</span>
-<a name="line-8"></a>	<span class='hs-conid'>EQ</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>case</span> <span class='hs-layout'>(</span><span class='hs-varid'>dir1</span><span class='hs-layout'>,</span> <span class='hs-varid'>dir2</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
-<a name="line-9"></a>			<span class='hs-layout'>(</span><span class='hs-conid'>InfixR</span><span class='hs-layout'>,</span> <span class='hs-conid'>InfixR</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>right</span>
-<a name="line-10"></a>			<span class='hs-layout'>(</span><span class='hs-conid'>InfixL</span><span class='hs-layout'>,</span> <span class='hs-conid'>InfixL</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>left</span>
-<a name="line-11"></a>			<span class='hs-keyword'>_</span>		 <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>error_please</span>
+<a name="line-6"></a>        <span class='hs-conid'>GT</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>left</span>
+<a name="line-7"></a>        <span class='hs-conid'>LT</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>right</span>
+<a name="line-8"></a>        <span class='hs-conid'>EQ</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>case</span> <span class='hs-layout'>(</span><span class='hs-varid'>dir1</span><span class='hs-layout'>,</span> <span class='hs-varid'>dir2</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
+<a name="line-9"></a>                        <span class='hs-layout'>(</span><span class='hs-conid'>InfixR</span><span class='hs-layout'>,</span> <span class='hs-conid'>InfixR</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>right</span>
+<a name="line-10"></a>                        <span class='hs-layout'>(</span><span class='hs-conid'>InfixL</span><span class='hs-layout'>,</span> <span class='hs-conid'>InfixL</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>left</span>
+<a name="line-11"></a>                        <span class='hs-keyword'>_</span>                <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>error_please</span>
 <a name="line-12"></a>  <span class='hs-keyword'>where</span>
-<a name="line-13"></a>    <span class='hs-varid'>right</span>	 <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>False</span><span class='hs-layout'>,</span> <span class='hs-conid'>True</span><span class='hs-layout'>)</span>
+<a name="line-13"></a>    <span class='hs-varid'>right</span>        <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>False</span><span class='hs-layout'>,</span> <span class='hs-conid'>True</span><span class='hs-layout'>)</span>
 <a name="line-14"></a>    <span class='hs-varid'>left</span>         <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>False</span><span class='hs-layout'>,</span> <span class='hs-conid'>False</span><span class='hs-layout'>)</span>
 <a name="line-15"></a>    <span class='hs-varid'>error_please</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>True</span><span class='hs-layout'>,</span>  <span class='hs-conid'>False</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Top-level/local]{Top-level/not-top level flag}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -316,7 +309,7 @@ whether there's an error.
 <a name="line-7"></a><a name="isNotTopLevel"></a><span class='hs-definition'>isNotTopLevel</span> <span class='hs-conid'>NotTopLevel</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-8"></a><span class='hs-definition'>isNotTopLevel</span> <span class='hs-conid'>TopLevel</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-9"></a>
-<a name="line-10"></a><span class='hs-definition'>isTopLevel</span> <span class='hs-conid'>TopLevel</span>	<span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
+<a name="line-10"></a><span class='hs-definition'>isTopLevel</span> <span class='hs-conid'>TopLevel</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-11"></a><span class='hs-definition'>isTopLevel</span> <span class='hs-conid'>NotTopLevel</span>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-12"></a>
 <a name="line-13"></a><a name="instance%20Outputable%20TopLevelFlag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>TopLevelFlag</span> <span class='hs-keyword'>where</span>
@@ -326,9 +319,9 @@ whether there's an error.
 
 
 %************************************************************************
-%*									*
-		Boxity flag
-%*									*
+%*                                                                      *
+                Boxity flag
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -344,15 +337,15 @@ whether there's an error.
 
 
 %************************************************************************
-%*									*
-		Recursive/Non-Recursive flag
-%*									*
+%*                                                                      *
+                Recursive/Non-Recursive flag
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
-<pre><a name="line-1"></a><a name="RecFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RecFlag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Recursive</span> 
-<a name="line-2"></a>	     <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NonRecursive</span>
-<a name="line-3"></a>	     <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>
+<pre><a name="line-1"></a><a name="RecFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RecFlag</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Recursive</span>
+<a name="line-2"></a>             <span class='hs-keyglyph'>|</span> <span class='hs-conid'>NonRecursive</span>
+<a name="line-3"></a>             <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>
 <a name="line-4"></a>
 <a name="line-5"></a><a name="isRec"></a><span class='hs-definition'>isRec</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>RecFlag</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>
 <a name="line-6"></a><span class='hs-definition'>isRec</span> <span class='hs-conid'>Recursive</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
@@ -372,56 +365,59 @@ whether there's an error.
 </pre>\end{code}
 
 %************************************************************************
-%*									*
-		Instance overlap flag
-%*									*
+%*                                                                      *
+                Instance overlap flag
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
-<pre><a name="line-1"></a><a name="OverlapFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>OverlapFlag</span>
-<a name="line-2"></a>  <span class='hs-comment'>-- | This instance must not overlap another</span>
-<a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoOverlap</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
-<a name="line-4"></a>
-<a name="line-5"></a>  <span class='hs-comment'>-- | Silently ignore this instance if you find a </span>
-<a name="line-6"></a>  <span class='hs-comment'>-- more specific one that matches the constraint</span>
-<a name="line-7"></a>  <span class='hs-comment'>-- you are trying to resolve</span>
-<a name="line-8"></a>  <span class='hs-comment'>--</span>
-<a name="line-9"></a>  <span class='hs-comment'>-- Example: constraint (Foo [Int])</span>
-<a name="line-10"></a>  <span class='hs-comment'>-- 	    instances  (Foo [Int])</span>
-<a name="line-11"></a>  <span class='hs-comment'>--		       (Foo [a])	OverlapOk</span>
-<a name="line-12"></a>  <span class='hs-comment'>-- Since the second instance has the OverlapOk flag,</span>
-<a name="line-13"></a>  <span class='hs-comment'>-- the first instance will be chosen (otherwise </span>
-<a name="line-14"></a>  <span class='hs-comment'>-- its ambiguous which to choose)</span>
-<a name="line-15"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>OverlapOk</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
-<a name="line-16"></a>
-<a name="line-17"></a>  <span class='hs-comment'>-- | Like OverlapOk, but also ignore this instance </span>
-<a name="line-18"></a>  <span class='hs-comment'>-- if it doesn't match the constraint you are</span>
-<a name="line-19"></a>  <span class='hs-comment'>-- trying to resolve, but could match if the type variables</span>
-<a name="line-20"></a>  <span class='hs-comment'>-- in the constraint were instantiated</span>
-<a name="line-21"></a>  <span class='hs-comment'>--</span>
-<a name="line-22"></a>  <span class='hs-comment'>-- Example: constraint (Foo [b])</span>
-<a name="line-23"></a>  <span class='hs-comment'>--	    instances  (Foo [Int])	Incoherent</span>
-<a name="line-24"></a>  <span class='hs-comment'>--		       (Foo [a])</span>
-<a name="line-25"></a>  <span class='hs-comment'>-- Without the Incoherent flag, we'd complain that</span>
-<a name="line-26"></a>  <span class='hs-comment'>-- instantiating 'b' would change which instance </span>
-<a name="line-27"></a>  <span class='hs-comment'>-- was chosen</span>
-<a name="line-28"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Incoherent</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
-<a name="line-29"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
-<a name="line-30"></a>
-<a name="line-31"></a><a name="instance%20Outputable%20OverlapFlag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>OverlapFlag</span> <span class='hs-keyword'>where</span>
-<a name="line-32"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>NoOverlap</span>  <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
-<a name="line-33"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>OverlapOk</span>  <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"[overlap ok]"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
-<a name="line-34"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>Incoherent</span> <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"[incoherent]"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
-<a name="line-35"></a>
-<a name="line-36"></a><a name="pprSafeOverlap"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
-<a name="line-37"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-conid'>True</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-varop'>$</span> <span class='hs-varid'>sLit</span> <span class='hs-str'>"[safe]"</span>
-<a name="line-38"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-conid'>False</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
+<pre><a name="line-1"></a><a name="OverlapFlag"></a><span class='hs-comment'>-- | The semantics allowed for overlapping instances for a particular</span>
+<a name="line-2"></a><a name="OverlapFlag"></a><span class='hs-comment'>-- instance. See Note [Safe Haskell isSafeOverlap] (in `InstEnv.lhs`) for a</span>
+<a name="line-3"></a><a name="OverlapFlag"></a><span class='hs-comment'>-- explanation of the `isSafeOverlap` field.</span>
+<a name="line-4"></a><a name="OverlapFlag"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>OverlapFlag</span>
+<a name="line-5"></a>  <span class='hs-comment'>-- | This instance must not overlap another</span>
+<a name="line-6"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoOverlap</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
+<a name="line-7"></a>
+<a name="line-8"></a>  <span class='hs-comment'>-- | Silently ignore this instance if you find a</span>
+<a name="line-9"></a>  <span class='hs-comment'>-- more specific one that matches the constraint</span>
+<a name="line-10"></a>  <span class='hs-comment'>-- you are trying to resolve</span>
+<a name="line-11"></a>  <span class='hs-comment'>--</span>
+<a name="line-12"></a>  <span class='hs-comment'>-- Example: constraint (Foo [Int])</span>
+<a name="line-13"></a>  <span class='hs-comment'>--        instances  (Foo [Int])</span>
+<a name="line-14"></a>  <span class='hs-comment'>--                   (Foo [a])        OverlapOk</span>
+<a name="line-15"></a>  <span class='hs-comment'>-- Since the second instance has the OverlapOk flag,</span>
+<a name="line-16"></a>  <span class='hs-comment'>-- the first instance will be chosen (otherwise</span>
+<a name="line-17"></a>  <span class='hs-comment'>-- its ambiguous which to choose)</span>
+<a name="line-18"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>OverlapOk</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
+<a name="line-19"></a>
+<a name="line-20"></a>  <span class='hs-comment'>-- | Like OverlapOk, but also ignore this instance</span>
+<a name="line-21"></a>  <span class='hs-comment'>-- if it doesn't match the constraint you are</span>
+<a name="line-22"></a>  <span class='hs-comment'>-- trying to resolve, but could match if the type variables</span>
+<a name="line-23"></a>  <span class='hs-comment'>-- in the constraint were instantiated</span>
+<a name="line-24"></a>  <span class='hs-comment'>--</span>
+<a name="line-25"></a>  <span class='hs-comment'>-- Example: constraint (Foo [b])</span>
+<a name="line-26"></a>  <span class='hs-comment'>--        instances  (Foo [Int])      Incoherent</span>
+<a name="line-27"></a>  <span class='hs-comment'>--                   (Foo [a])</span>
+<a name="line-28"></a>  <span class='hs-comment'>-- Without the Incoherent flag, we'd complain that</span>
+<a name="line-29"></a>  <span class='hs-comment'>-- instantiating 'b' would change which instance</span>
+<a name="line-30"></a>  <span class='hs-comment'>-- was chosen</span>
+<a name="line-31"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>Incoherent</span> <span class='hs-layout'>{</span> <span class='hs-varid'>isSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-layout'>}</span>
+<a name="line-32"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
+<a name="line-33"></a>
+<a name="line-34"></a><a name="instance%20Outputable%20OverlapFlag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>OverlapFlag</span> <span class='hs-keyword'>where</span>
+<a name="line-35"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>NoOverlap</span>  <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
+<a name="line-36"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>OverlapOk</span>  <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"[overlap ok]"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
+<a name="line-37"></a>   <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>Incoherent</span> <span class='hs-varid'>b</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"[incoherent]"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pprSafeOverlap</span> <span class='hs-varid'>b</span>
+<a name="line-38"></a>
+<a name="line-39"></a><a name="pprSafeOverlap"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
+<a name="line-40"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-conid'>True</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-varop'>$</span> <span class='hs-varid'>sLit</span> <span class='hs-str'>"[safe]"</span>
+<a name="line-41"></a><span class='hs-definition'>pprSafeOverlap</span> <span class='hs-conid'>False</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 </pre>\end{code}
 
 %************************************************************************
-%*									*
-		Tuples
-%*									*
+%*                                                                      *
+                Tuples
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -442,36 +438,36 @@ whether there's an error.
 <a name="line-15"></a>
 <a name="line-16"></a><a name="tupleParens"></a><span class='hs-definition'>tupleParens</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>TupleSort</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span>
 <a name="line-17"></a><span class='hs-definition'>tupleParens</span> <span class='hs-conid'>BoxedTuple</span>      <span class='hs-varid'>p</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>parens</span> <span class='hs-varid'>p</span>
-<a name="line-18"></a><span class='hs-definition'>tupleParens</span> <span class='hs-conid'>ConstraintTuple</span> <span class='hs-varid'>p</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>parens</span> <span class='hs-varid'>p</span> <span class='hs-comment'>-- The user can't write fact tuples </span>
+<a name="line-18"></a><span class='hs-definition'>tupleParens</span> <span class='hs-conid'>ConstraintTuple</span> <span class='hs-varid'>p</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>parens</span> <span class='hs-varid'>p</span> <span class='hs-comment'>-- The user can't write fact tuples</span>
 <a name="line-19"></a>                                         <span class='hs-comment'>-- directly, we overload the (,,) syntax</span>
 <a name="line-20"></a><span class='hs-definition'>tupleParens</span> <span class='hs-conid'>UnboxedTuple</span> <span class='hs-varid'>p</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"(#"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>p</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"#)"</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection[Generic]{Generic flag}
-%*									*
+%*                                                                      *
 %************************************************************************
 
-This is the "Embedding-Projection pair" datatype, it contains 
+This is the "Embedding-Projection pair" datatype, it contains
 two pieces of code (normally either RenamedExpr's or Id's)
 If we have a such a pair (EP from to), the idea is that 'from' and 'to'
-represents functions of type 
+represents functions of type
 
-	from :: T -> Tring
-	to   :: Tring -> T
+        from :: T -> Tring
+        to   :: Tring -> T
 
-And we should have 
+And we should have
 
-	to (from x) = x
+        to (from x) = x
 
 T and Tring are arbitrary, but typically T is the 'main' type while
-Tring is the 'representation' type.  (This just helps us remember 
+Tring is the 'representation' type.  (This just helps us remember
 whether to use 'from' or 'to'.
 
 \begin{code}
-<pre><a name="line-1"></a><a name="EP"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>EP</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>EP</span> <span class='hs-layout'>{</span> <span class='hs-varid'>fromEP</span> <span class='hs-keyglyph'>::</span> <span class='hs-varid'>a</span><span class='hs-layout'>,</span>	<span class='hs-comment'>-- :: T -&gt; Tring</span>
-<a name="line-2"></a>		 <span class='hs-varid'>toEP</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varid'>a</span> <span class='hs-layout'>}</span>	<span class='hs-comment'>-- :: Tring -&gt; T</span>
+<pre><a name="line-1"></a><a name="EP"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>EP</span> <span class='hs-varid'>a</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>EP</span> <span class='hs-layout'>{</span> <span class='hs-varid'>fromEP</span> <span class='hs-keyglyph'>::</span> <span class='hs-varid'>a</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- :: T -&gt; Tring</span>
+<a name="line-2"></a>                 <span class='hs-varid'>toEP</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varid'>a</span> <span class='hs-layout'>}</span>  <span class='hs-comment'>-- :: Tring -&gt; T</span>
 </pre>\end{code}
 
 Embedding-projection pairs are used in several places:
@@ -479,15 +475,15 @@ Embedding-projection pairs are used in several places:
 First of all, each type constructor has an EP associated with it, the
 code in EP converts (datatype T) from T to Tring and back again.
 
-Secondly, when we are filling in Generic methods (in the typechecker, 
+Secondly, when we are filling in Generic methods (in the typechecker,
 tcMethodBinds), we are constructing bimaps by induction on the structure
 of the type of the method signature.
 
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection{Occurrence information}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 This data type is used exclusively by the simplifier, but it appears in a
@@ -497,21 +493,21 @@ defn of OccInfo here, safely at the bottom
 
 \begin{code}
 <pre><a name="line-1"></a><a name="OccInfo"></a><span class='hs-comment'>-- | Identifier occurrence information</span>
-<a name="line-2"></a><a name="OccInfo"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>OccInfo</span> 
-<a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoOccInfo</span>		<span class='hs-comment'>-- ^ There are many occurrences, or unknown occurences</span>
+<a name="line-2"></a><a name="OccInfo"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>OccInfo</span>
+<a name="line-3"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoOccInfo</span>           <span class='hs-comment'>-- ^ There are many occurrences, or unknown occurences</span>
 <a name="line-4"></a>
-<a name="line-5"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IAmDead</span>		<span class='hs-comment'>-- ^ Marks unused variables.  Sometimes useful for</span>
-<a name="line-6"></a>			<span class='hs-comment'>-- lambda and case-bound variables.</span>
+<a name="line-5"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IAmDead</span>             <span class='hs-comment'>-- ^ Marks unused variables.  Sometimes useful for</span>
+<a name="line-6"></a>                        <span class='hs-comment'>-- lambda and case-bound variables.</span>
 <a name="line-7"></a>
 <a name="line-8"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>OneOcc</span>
-<a name="line-9"></a>	<span class='hs-varop'>!</span><span class='hs-conid'>InsideLam</span>
-<a name="line-10"></a> 	<span class='hs-varop'>!</span><span class='hs-conid'>OneBranch</span>
-<a name="line-11"></a>	<span class='hs-varop'>!</span><span class='hs-conid'>InterestingCxt</span> <span class='hs-comment'>-- ^ Occurs exactly once, not inside a rule</span>
+<a name="line-9"></a>        <span class='hs-varop'>!</span><span class='hs-conid'>InsideLam</span>
+<a name="line-10"></a>        <span class='hs-varop'>!</span><span class='hs-conid'>OneBranch</span>
+<a name="line-11"></a>        <span class='hs-varop'>!</span><span class='hs-conid'>InterestingCxt</span> <span class='hs-comment'>-- ^ Occurs exactly once, not inside a rule</span>
 <a name="line-12"></a>
 <a name="line-13"></a>  <span class='hs-comment'>-- | This identifier breaks a loop of mutually recursive functions. The field</span>
 <a name="line-14"></a>  <span class='hs-comment'>-- marks whether it is only a loop breaker due to a reference in a rule</span>
-<a name="line-15"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IAmALoopBreaker</span>	<span class='hs-comment'>-- Note [LoopBreaker OccInfo]</span>
-<a name="line-16"></a>	<span class='hs-varop'>!</span><span class='hs-conid'>RulesOnly</span>
+<a name="line-15"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>IAmALoopBreaker</span>     <span class='hs-comment'>-- Note [LoopBreaker OccInfo]</span>
+<a name="line-16"></a>        <span class='hs-varop'>!</span><span class='hs-conid'>RulesOnly</span>
 <a name="line-17"></a>
 <a name="line-18"></a><a name="RulesOnly"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>RulesOnly</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>
 </pre>\end{code}
@@ -519,7 +515,7 @@ defn of OccInfo here, safely at the bottom
 Note [LoopBreaker OccInfo]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
    IAmALoopBreaker True  <=> A "weak" or rules-only loop breaker
-   		   	     Do not preInlineUnconditionally
+                             Do not preInlineUnconditionally
 
    IAmALoopBreaker False <=> A "strong" loop breaker
                              Do not inline at all
@@ -536,21 +532,21 @@ See OccurAnal Note [Weak loop breakers]
 <a name="line-6"></a><span class='hs-definition'>seqOccInfo</span> <span class='hs-varid'>occ</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>occ</span> <span class='hs-varop'>`seq`</span> <span class='hs-conid'>()</span>
 <a name="line-7"></a>
 <a name="line-8"></a><a name="InterestingCxt"></a><span class='hs-comment'>-----------------</span>
-<a name="line-9"></a><a name="InterestingCxt"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>InterestingCxt</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>	<span class='hs-comment'>-- True &lt;=&gt; Function: is applied</span>
-<a name="line-10"></a>				<span class='hs-comment'>--	    Data value: scrutinised by a case with</span>
-<a name="line-11"></a>				<span class='hs-comment'>--			at least one non-DEFAULT branch</span>
+<a name="line-9"></a><a name="InterestingCxt"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>InterestingCxt</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>      <span class='hs-comment'>-- True &lt;=&gt; Function: is applied</span>
+<a name="line-10"></a>                                <span class='hs-comment'>--          Data value: scrutinised by a case with</span>
+<a name="line-11"></a>                                <span class='hs-comment'>--                      at least one non-DEFAULT branch</span>
 <a name="line-12"></a>
 <a name="line-13"></a><a name="InsideLam"></a><span class='hs-comment'>-----------------</span>
-<a name="line-14"></a><a name="InsideLam"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>InsideLam</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>	<span class='hs-comment'>-- True &lt;=&gt; Occurs inside a non-linear lambda</span>
-<a name="line-15"></a>			<span class='hs-comment'>-- Substituting a redex for this occurrence is</span>
-<a name="line-16"></a>			<span class='hs-comment'>-- dangerous because it might duplicate work.</span>
+<a name="line-14"></a><a name="InsideLam"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>InsideLam</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>   <span class='hs-comment'>-- True &lt;=&gt; Occurs inside a non-linear lambda</span>
+<a name="line-15"></a>                        <span class='hs-comment'>-- Substituting a redex for this occurrence is</span>
+<a name="line-16"></a>                        <span class='hs-comment'>-- dangerous because it might duplicate work.</span>
 <a name="line-17"></a><a name="insideLam"></a><span class='hs-definition'>insideLam</span><span class='hs-layout'>,</span> <span class='hs-varid'>notInsideLam</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InsideLam</span>
 <a name="line-18"></a><span class='hs-definition'>insideLam</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-19"></a><a name="notInsideLam"></a><span class='hs-definition'>notInsideLam</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 <a name="line-20"></a>
 <a name="line-21"></a><a name="OneBranch"></a><span class='hs-comment'>-----------------</span>
-<a name="line-22"></a><a name="OneBranch"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>OneBranch</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>	<span class='hs-comment'>-- True &lt;=&gt; Occurs in only one case branch</span>
-<a name="line-23"></a>			<span class='hs-comment'>--	so no code-duplication issue to worry about</span>
+<a name="line-22"></a><a name="OneBranch"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>OneBranch</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Bool</span>   <span class='hs-comment'>-- True &lt;=&gt; Occurs in only one case branch</span>
+<a name="line-23"></a>                        <span class='hs-comment'>--      so no code-duplication issue to worry about</span>
 <a name="line-24"></a><a name="oneBranch"></a><span class='hs-definition'>oneBranch</span><span class='hs-layout'>,</span> <span class='hs-varid'>notOneBranch</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>OneBranch</span>
 <a name="line-25"></a><span class='hs-definition'>oneBranch</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-26"></a><a name="notOneBranch"></a><span class='hs-definition'>notOneBranch</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
@@ -583,29 +579,29 @@ See OccurAnal Note [Weak loop breakers]
 \begin{code}
 <pre><a name="line-1"></a><a name="instance%20Outputable%20OccInfo"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>OccInfo</span> <span class='hs-keyword'>where</span>
 <a name="line-2"></a>  <span class='hs-comment'>-- only used for debugging; never parsed.  KSW 1999-07</span>
-<a name="line-3"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>NoOccInfo</span>  	   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
+<a name="line-3"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>NoOccInfo</span>            <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 <a name="line-4"></a>  <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>IAmALoopBreaker</span> <span class='hs-varid'>ro</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"LoopBreaker"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-keyword'>if</span> <span class='hs-varid'>ro</span> <span class='hs-keyword'>then</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'!'</span> <span class='hs-keyword'>else</span> <span class='hs-varid'>empty</span>
-<a name="line-5"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>IAmDead</span>		   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"Dead"</span><span class='hs-layout'>)</span>
+<a name="line-5"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>IAmDead</span>              <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"Dead"</span><span class='hs-layout'>)</span>
 <a name="line-6"></a>  <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>OneOcc</span> <span class='hs-varid'>inside_lam</span> <span class='hs-varid'>one_branch</span> <span class='hs-varid'>int_cxt</span><span class='hs-layout'>)</span>
-<a name="line-7"></a>	<span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"Once"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_lam</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_br</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_args</span>
-<a name="line-8"></a>	<span class='hs-keyword'>where</span>
-<a name="line-9"></a>	  <span class='hs-varid'>pp_lam</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>inside_lam</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'L'</span>
-<a name="line-10"></a>		 <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
-<a name="line-11"></a>	  <span class='hs-varid'>pp_br</span>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>one_branch</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
-<a name="line-12"></a>		 <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'*'</span>
-<a name="line-13"></a>	  <span class='hs-varid'>pp_args</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>int_cxt</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'!'</span>
-<a name="line-14"></a>		  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
+<a name="line-7"></a>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"Once"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_lam</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_br</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_args</span>
+<a name="line-8"></a>        <span class='hs-keyword'>where</span>
+<a name="line-9"></a>          <span class='hs-varid'>pp_lam</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>inside_lam</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'L'</span>
+<a name="line-10"></a>                 <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
+<a name="line-11"></a>          <span class='hs-varid'>pp_br</span>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>one_branch</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
+<a name="line-12"></a>                 <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'*'</span>
+<a name="line-13"></a>          <span class='hs-varid'>pp_args</span> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>int_cxt</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>char</span> <span class='hs-chr'>'!'</span>
+<a name="line-14"></a>                  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 </pre>\end{code}
 
 %************************************************************************
-%*									*
-		Default method specfication
-%*									*
+%*                                                                      *
+                Default method specfication
+%*                                                                      *
 %************************************************************************
 
 The DefMethSpec enumeration just indicates what sort of default method
-is used for a class. It is generated from source code, and present in 
-interface files; it is converted to Class.DefMeth before begin put in a 
+is used for a class. It is generated from source code, and present in
+interface files; it is converted to Class.DefMeth before begin put in a
 Class object.
 
 \begin{code}
@@ -620,9 +616,9 @@ Class object.
 </pre>\end{code}
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection{Success flag}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 \begin{code}
@@ -646,9 +642,9 @@ Class object.
 
 
 %************************************************************************
-%*									*
+%*                                                                      *
 \subsection{Activation}
-%*									*
+%*                                                                      *
 %************************************************************************
 
 When a rule or inlining is active
@@ -667,26 +663,26 @@ When a rule or inlining is active
 <a name="line-11"></a>   <span class='hs-varid'>ppr</span> <span class='hs-conid'>InitialPhase</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"InitialPhase"</span><span class='hs-layout'>)</span>
 <a name="line-12"></a>
 <a name="line-13"></a><a name="Activation"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Activation</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NeverActive</span>
-<a name="line-14"></a>		<span class='hs-keyglyph'>|</span> <span class='hs-conid'>AlwaysActive</span>
+<a name="line-14"></a>                <span class='hs-keyglyph'>|</span> <span class='hs-conid'>AlwaysActive</span>
 <a name="line-15"></a>                <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ActiveBefore</span> <span class='hs-conid'>PhaseNum</span> <span class='hs-comment'>-- Active only *before* this phase</span>
 <a name="line-16"></a>                <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ActiveAfter</span> <span class='hs-conid'>PhaseNum</span>  <span class='hs-comment'>-- Active in this phase and later</span>
-<a name="line-17"></a>		<span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>	<span class='hs-comment'>-- Eq used in comparing rules in HsDecls</span>
+<a name="line-17"></a>                <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>  <span class='hs-comment'>-- Eq used in comparing rules in HsDecls</span>
 <a name="line-18"></a>
-<a name="line-19"></a><a name="RuleMatchInfo"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RuleMatchInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ConLike</span> 			<span class='hs-comment'>-- See Note [CONLIKE pragma]</span>
+<a name="line-19"></a><a name="RuleMatchInfo"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>RuleMatchInfo</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ConLike</span>                    <span class='hs-comment'>-- See Note [CONLIKE pragma]</span>
 <a name="line-20"></a>                   <span class='hs-keyglyph'>|</span> <span class='hs-conid'>FunLike</span>
 <a name="line-21"></a>                   <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>,</span> <span class='hs-conid'>Show</span> <span class='hs-layout'>)</span>
-<a name="line-22"></a>	<span class='hs-comment'>-- Show needed for Lexer.x</span>
+<a name="line-22"></a>        <span class='hs-comment'>-- Show needed for Lexer.x</span>
 <a name="line-23"></a>
-<a name="line-24"></a><a name="InlinePragma"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>InlinePragma</span>  	     <span class='hs-comment'>-- Note [InlinePragma]</span>
+<a name="line-24"></a><a name="InlinePragma"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>InlinePragma</span>            <span class='hs-comment'>-- Note [InlinePragma]</span>
 <a name="line-25"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>InlinePragma</span>
 <a name="line-26"></a>      <span class='hs-layout'>{</span> <span class='hs-varid'>inl_inline</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InlineSpec</span>
 <a name="line-27"></a>
-<a name="line-28"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>inl_sat</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>Arity</span>    <span class='hs-comment'>-- Just n &lt;=&gt; Inline only when applied to n </span>
-<a name="line-29"></a>      		      	    	     <span class='hs-comment'>--            explicit (non-type, non-dictionary) args</span>
-<a name="line-30"></a>				     <span class='hs-comment'>--   That is, inl_sat describes the number of *source-code*</span>
-<a name="line-31"></a>                                     <span class='hs-comment'>--   arguments the thing must be applied to.  We add on the </span>
+<a name="line-28"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>inl_sat</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>Arity</span>    <span class='hs-comment'>-- Just n &lt;=&gt; Inline only when applied to n</span>
+<a name="line-29"></a>                                     <span class='hs-comment'>--            explicit (non-type, non-dictionary) args</span>
+<a name="line-30"></a>                                     <span class='hs-comment'>--   That is, inl_sat describes the number of *source-code*</span>
+<a name="line-31"></a>                                     <span class='hs-comment'>--   arguments the thing must be applied to.  We add on the</span>
 <a name="line-32"></a>                                     <span class='hs-comment'>--   number of implicit, dictionary arguments when making</span>
-<a name="line-33"></a>			             <span class='hs-comment'>--   the InlineRule, and don't look at inl_sat further</span>
+<a name="line-33"></a>                                     <span class='hs-comment'>--   the InlineRule, and don't look at inl_sat further</span>
 <a name="line-34"></a>
 <a name="line-35"></a>      <span class='hs-layout'>,</span> <span class='hs-varid'>inl_act</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Activation</span>     <span class='hs-comment'>-- Says during which phases inlining is allowed</span>
 <a name="line-36"></a>
@@ -700,12 +696,12 @@ When a rule or inlining is active
 <a name="line-44"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>EmptyInlineSpec</span>  <span class='hs-comment'>-- Used in a place-holder InlinePragma in SpecPrag or IdInfo,</span>
 <a name="line-45"></a>                     <span class='hs-comment'>-- where there isn't any real inline pragma at all</span>
 <a name="line-46"></a>  <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>,</span> <span class='hs-conid'>Show</span> <span class='hs-layout'>)</span>
-<a name="line-47"></a>	<span class='hs-comment'>-- Show needed for Lexer.x</span>
+<a name="line-47"></a>        <span class='hs-comment'>-- Show needed for Lexer.x</span>
 </pre>\end{code}
 
 Note [InlinePragma]
 ~~~~~~~~~~~~~~~~~~~
-This data type mirrors what you can write in an INLINE or NOINLINE pragma in 
+This data type mirrors what you can write in an INLINE or NOINLINE pragma in
 the source program.
 
 If you write nothing at all, you get defaultInlinePragma:
@@ -713,7 +709,7 @@ If you write nothing at all, you get defaultInlinePragma:
    inl_act    = AlwaysActive
    inl_rule   = FunLike
 
-It's not possible to get that combination by *writing* something, so 
+It's not possible to get that combination by *writing* something, so
 if an Id has defaultInlinePragma it means the user didn't specify anything.
 
 If inl_inline = True, then the Id should have an InlineRule unfolding.
@@ -724,7 +720,7 @@ The ConLike constructor of a RuleMatchInfo is aimed at the following.
 Consider first
     {-# RULE "r/cons" forall a as. r (a:as) = f (a+1) #-}
     g b bs = let x = b:bs in ..x...x...(r x)...
-Now, the rule applies to the (r x) term, because GHC "looks through" 
+Now, the rule applies to the (r x) term, because GHC "looks through"
 the definition of 'x' to see that it is (b:bs).
 
 Now consider
@@ -732,7 +728,7 @@ Now consider
     g v = let x = f v in ..x...x...(r x)...
 Normally the (r x) would *not* match the rule, because GHC would be
 scared about duplicating the redex (f v), so it does not "look
-through" the bindings.  
+through" the bindings.
 
 However the CONLIKE modifier says to treat 'f' like a constructor in
 this situation, and "look through" the unfolding for x.  So (r x)
@@ -780,7 +776,7 @@ The main effects of CONLIKE are:
 <a name="line-23"></a><a name="inlinePragmaSpec"></a><span class='hs-definition'>inlinePragmaSpec</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InlinePragma</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>InlineSpec</span>
 <a name="line-24"></a><span class='hs-definition'>inlinePragmaSpec</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>inl_inline</span>
 <a name="line-25"></a>
-<a name="line-26"></a><a name="dfunInlinePragma"></a><span class='hs-comment'>-- A DFun has an always-active inline activation so that </span>
+<a name="line-26"></a><a name="dfunInlinePragma"></a><span class='hs-comment'>-- A DFun has an always-active inline activation so that</span>
 <a name="line-27"></a><span class='hs-comment'>-- exprIsConApp_maybe can "see" its unfolding</span>
 <a name="line-28"></a><span class='hs-comment'>-- (However, its actual Unfolding is a DFunUnfolding, which is</span>
 <a name="line-29"></a><span class='hs-comment'>--  never inlined other than via exprIsConApp_maybe.)</span>
@@ -809,7 +805,7 @@ The main effects of CONLIKE are:
 <a name="line-52"></a>                        <span class='hs-conid'>Inline</span>    <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>True</span>
 <a name="line-53"></a>                        <span class='hs-conid'>Inlinable</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>True</span>
 <a name="line-54"></a>                        <span class='hs-keyword'>_</span>         <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>False</span>
-<a name="line-55"></a> 
+<a name="line-55"></a>
 <a name="line-56"></a><a name="inlinePragmaSat"></a><span class='hs-definition'>inlinePragmaSat</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InlinePragma</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>Arity</span>
 <a name="line-57"></a><span class='hs-definition'>inlinePragmaSat</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>inl_sat</span>
 <a name="line-58"></a>
@@ -844,9 +840,9 @@ The main effects of CONLIKE are:
 <a name="line-87"></a><a name="instance%20Outputable%20InlinePragma"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>InlinePragma</span> <span class='hs-keyword'>where</span>
 <a name="line-88"></a>  <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>InlinePragma</span> <span class='hs-layout'>{</span> <span class='hs-varid'>inl_inline</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>inline</span><span class='hs-layout'>,</span> <span class='hs-varid'>inl_act</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>activation</span>
 <a name="line-89"></a>                    <span class='hs-layout'>,</span> <span class='hs-varid'>inl_rule</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>info</span><span class='hs-layout'>,</span> <span class='hs-varid'>inl_sat</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mb_arity</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span>
-<a name="line-90"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>inline</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_act</span> <span class='hs-varid'>inline</span> <span class='hs-varid'>activation</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pp_sat</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pp_info</span> 
+<a name="line-90"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>inline</span> <span class='hs-varop'>&lt;&gt;</span> <span class='hs-varid'>pp_act</span> <span class='hs-varid'>inline</span> <span class='hs-varid'>activation</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pp_sat</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>pp_info</span>
 <a name="line-91"></a>    <span class='hs-keyword'>where</span>
-<a name="line-92"></a>      <span class='hs-varid'>pp_act</span> <span class='hs-conid'>Inline</span>   <span class='hs-conid'>AlwaysActive</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>	
+<a name="line-92"></a>      <span class='hs-varid'>pp_act</span> <span class='hs-conid'>Inline</span>   <span class='hs-conid'>AlwaysActive</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 <a name="line-93"></a>      <span class='hs-varid'>pp_act</span> <span class='hs-conid'>NoInline</span> <span class='hs-conid'>NeverActive</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 <a name="line-94"></a>      <span class='hs-varid'>pp_act</span> <span class='hs-keyword'>_</span>        <span class='hs-varid'>act</span>          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>act</span>
 <a name="line-95"></a>
@@ -876,7 +872,7 @@ The main effects of CONLIKE are:
 <a name="line-119"></a>
 <a name="line-120"></a><a name="isEarlyActive"></a><span class='hs-definition'>isEarlyActive</span> <span class='hs-conid'>AlwaysActive</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
 <a name="line-121"></a><span class='hs-definition'>isEarlyActive</span> <span class='hs-layout'>(</span><span class='hs-conid'>ActiveBefore</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>True</span>
-<a name="line-122"></a><span class='hs-definition'>isEarlyActive</span> <span class='hs-keyword'>_</span>		        <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
+<a name="line-122"></a><span class='hs-definition'>isEarlyActive</span> <span class='hs-keyword'>_</span>                 <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span>
 </pre>\end{code}
 
 

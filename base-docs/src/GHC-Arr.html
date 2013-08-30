@@ -420,7 +420,7 @@ can do better, so we override the default method for index.
 <a name="line-30"></a><a name="instance%20Eq%20(STArray%20s%20i%20e)"></a><span class='hs-comment'>-- Just pointer equality on mutable arrays:</span>
 <a name="line-31"></a><a name="instance%20Eq%20(STArray%20s%20i%20e)"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Eq</span> <span class='hs-layout'>(</span><span class='hs-conid'>STArray</span> <span class='hs-varid'>s</span> <span class='hs-varid'>i</span> <span class='hs-varid'>e</span><span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
 <a name="line-32"></a>    <span class='hs-conid'>STArray</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>arr1</span><span class='hs-cpp'>#</span> <span class='hs-varop'>==</span> <span class='hs-conid'>STArray</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>arr2</span><span class='hs-cpp'>#</span> <span class='hs-keyglyph'>=</span>
-<a name="line-33"></a>        <span class='hs-varid'>sameMutableArray</span><span class='hs-cpp'>#</span> <span class='hs-varid'>arr1</span><span class='hs-cpp'>#</span> <span class='hs-varid'>arr2</span><span class='hs-cpp'>#</span>
+<a name="line-33"></a>        <span class='hs-varid'>sameMutableArray</span> <span class='hs-varid'>arr1</span><span class='hs-cpp'>#</span> <span class='hs-varid'>arr2</span><span class='hs-cpp'>#</span>
 </pre>\end{code}
 
 

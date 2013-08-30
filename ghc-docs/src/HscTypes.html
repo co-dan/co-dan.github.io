@@ -168,98 +168,99 @@
 <a name="line-153"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Fingerprint</span>
 <a name="line-154"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>MonadUtils</span>
 <a name="line-155"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Bag</span>
-<a name="line-156"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>ErrUtils</span>
-<a name="line-157"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Platform</span>
-<a name="line-158"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Util</span>
-<a name="line-159"></a>
-<a name="line-160"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Monad</span>    <span class='hs-layout'>(</span> <span class='hs-varid'>mplus</span><span class='hs-layout'>,</span> <span class='hs-varid'>guard</span><span class='hs-layout'>,</span> <span class='hs-varid'>liftM</span><span class='hs-layout'>,</span> <span class='hs-varid'>when</span> <span class='hs-layout'>)</span>
-<a name="line-161"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Array</span>       <span class='hs-layout'>(</span> <span class='hs-conid'>Array</span><span class='hs-layout'>,</span> <span class='hs-varid'>array</span> <span class='hs-layout'>)</span>
-<a name="line-162"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>IORef</span>
-<a name="line-163"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Time</span>
-<a name="line-164"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Word</span>
-<a name="line-165"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Typeable</span>    <span class='hs-layout'>(</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>
-<a name="line-166"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Exception</span>
-<a name="line-167"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>System</span><span class='hs-varop'>.</span><span class='hs-conid'>FilePath</span>
-<a name="line-168"></a>
-<a name="line-169"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
-<a name="line-170"></a><span class='hs-comment'>-- Source Errors</span>
-<a name="line-171"></a>
-<a name="line-172"></a><span class='hs-comment'>-- When the compiler (HscMain) discovers errors, it throws an</span>
-<a name="line-173"></a><span class='hs-comment'>-- exception in the IO monad.</span>
-<a name="line-174"></a>
-<a name="line-175"></a><a name="mkSrcErr"></a><span class='hs-definition'>mkSrcErr</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ErrorMessages</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SourceError</span>
-<a name="line-176"></a><span class='hs-definition'>mkSrcErr</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SourceError</span>
-<a name="line-177"></a>
-<a name="line-178"></a><a name="srcErrorMessages"></a><span class='hs-definition'>srcErrorMessages</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ErrorMessages</span>
-<a name="line-179"></a><span class='hs-definition'>srcErrorMessages</span> <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-varid'>msgs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>msgs</span>
-<a name="line-180"></a>
-<a name="line-181"></a><a name="mkApiErr"></a><span class='hs-definition'>mkApiErr</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>GhcApiError</span>
-<a name="line-182"></a><span class='hs-definition'>mkApiErr</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>msg</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-layout'>(</span><span class='hs-varid'>showSDoc</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>msg</span><span class='hs-layout'>)</span>
-<a name="line-183"></a>
-<a name="line-184"></a><a name="throwOneError"></a><span class='hs-definition'>throwOneError</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>MonadIO</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=&gt;</span> <span class='hs-conid'>ErrMsg</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>ab</span>
-<a name="line-185"></a><span class='hs-definition'>throwOneError</span> <span class='hs-varid'>err</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>liftIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>throwIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkSrcErr</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unitBag</span> <span class='hs-varid'>err</span>
-<a name="line-186"></a>
-<a name="line-187"></a><a name="SourceError"></a><span class='hs-comment'>-- | A source error is an error that is caused by one or more errors in the</span>
-<a name="line-188"></a><a name="SourceError"></a><span class='hs-comment'>-- source code.  A 'SourceError' is thrown by many functions in the</span>
-<a name="line-189"></a><a name="SourceError"></a><span class='hs-comment'>-- compilation pipeline.  Inside GHC these errors are merely printed via</span>
-<a name="line-190"></a><a name="SourceError"></a><span class='hs-comment'>-- 'log_action', but API clients may treat them differently, for example,</span>
-<a name="line-191"></a><a name="SourceError"></a><span class='hs-comment'>-- insert them into a list box.  If you want the default behaviour, use the</span>
-<a name="line-192"></a><a name="SourceError"></a><span class='hs-comment'>-- idiom:</span>
-<a name="line-193"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
-<a name="line-194"></a><a name="SourceError"></a><span class='hs-comment'>-- &gt; handleSourceError printExceptionAndWarnings $ do</span>
-<a name="line-195"></a><a name="SourceError"></a><span class='hs-comment'>-- &gt;   ... api calls that may fail ...</span>
-<a name="line-196"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
-<a name="line-197"></a><a name="SourceError"></a><span class='hs-comment'>-- The 'SourceError's error messages can be accessed via 'srcErrorMessages'.</span>
-<a name="line-198"></a><a name="SourceError"></a><span class='hs-comment'>-- This list may be empty if the compiler failed due to @-Werror@</span>
-<a name="line-199"></a><a name="SourceError"></a><span class='hs-comment'>-- ('Opt_WarnIsError').</span>
-<a name="line-200"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
-<a name="line-201"></a><a name="SourceError"></a><span class='hs-comment'>-- See 'printExceptionAndWarnings' for more information on what to take care</span>
-<a name="line-202"></a><a name="SourceError"></a><span class='hs-comment'>-- of when writing a custom error handler.</span>
-<a name="line-203"></a><a name="SourceError"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SourceError</span> <span class='hs-conid'>ErrorMessages</span>
-<a name="line-204"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Typeable</span>
-<a name="line-205"></a>
-<a name="line-206"></a><a name="instance%20Show%20SourceError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Show</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyword'>where</span>
-<a name="line-207"></a>  <span class='hs-varid'>show</span> <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-varid'>msgs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unlines</span> <span class='hs-varop'>.</span> <span class='hs-varid'>map</span> <span class='hs-varid'>show</span> <span class='hs-varop'>.</span> <span class='hs-varid'>bagToList</span> <span class='hs-varop'>$</span> <span class='hs-varid'>msgs</span>
-<a name="line-208"></a>
-<a name="line-209"></a><a name="instance%20(SourceError%20-%3e%20m%20a)%20--%20%5e%20exception%20handler%20-%3e%20m%20a%20--%20%5e%20action%20to%20perform%20-%3e%20m%20a%20handleSourceError%20handler%20act%20=%20gcatch%20act%20(%5c(e%20::%20SourceError)%20-%3e%20handler%20e)%20--%20%7c%20An%20error%20thrown%20if%20the%20GHC%20API%20is%20used%20in%20an%20incorrect%20fashion.%20newtype%20GhcApiError%20=%20GhcApiError%20String%20deriving%20Typeable%20instance%20Show%20GhcApiError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Exception</span> <span class='hs-conid'>SourceError</span>
-<a name="line-210"></a>
-<a name="line-211"></a><a name="handleSourceError"></a><span class='hs-comment'>-- | Perform the given action and call the exception handler if the action</span>
-<a name="line-212"></a><span class='hs-comment'>-- throws a 'SourceError'.  See 'SourceError' for more information.</span>
-<a name="line-213"></a><span class='hs-definition'>handleSourceError</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>ExceptionMonad</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=&gt;</span>
-<a name="line-214"></a>                     <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ^ exception handler</span>
-<a name="line-215"></a>                  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span> <span class='hs-comment'>-- ^ action to perform</span>
-<a name="line-216"></a>                  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span>
-<a name="line-217"></a><span class='hs-definition'>handleSourceError</span> <span class='hs-varid'>handler</span> <span class='hs-varid'>act</span> <span class='hs-keyglyph'>=</span>
-<a name="line-218"></a>  <span class='hs-varid'>gcatch</span> <span class='hs-varid'>act</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span><span class='hs-layout'>(</span><span class='hs-varid'>e</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SourceError</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>handler</span> <span class='hs-varid'>e</span><span class='hs-layout'>)</span>
-<a name="line-219"></a>
-<a name="line-220"></a><a name="GhcApiError"></a><span class='hs-comment'>-- | An error thrown if the GHC API is used in an incorrect fashion.</span>
-<a name="line-221"></a><a name="GhcApiError"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-conid'>String</span>
-<a name="line-222"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Typeable</span>
-<a name="line-223"></a>
-<a name="line-224"></a><a name="instance%20Show%20GhcApiError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Show</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-keyword'>where</span>
-<a name="line-225"></a>  <span class='hs-varid'>show</span> <span class='hs-layout'>(</span><span class='hs-conid'>GhcApiError</span> <span class='hs-varid'>msg</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>msg</span>
-<a name="line-226"></a>
-<a name="line-227"></a><a name="instance%20Exception%20GhcApiError%20--%20%7c%20Given%20a%20bag%20of%20warnings,%20turn%20them%20into%20an%20exception%20if%20--%20-Werror%20is%20enabled,%20or%20print%20them%20out%20otherwise.%20printOrThrowWarnings%20::%20DynFlags%20-%3e%20Bag%20WarnMsg%20-%3e%20IO%20()%20printOrThrowWarnings%20dflags%20warns%20%7c%20gopt%20Opt_WarnIsError%20dflags%20=%20when%20(not%20(isEmptyBag%20warns))%20$%20do%20throwIO%20$%20mkSrcErr%20$%20warns%20%60snocBag%60%20warnIsErrorMsg%20dflags%20%7c%20otherwise%20=%20printBagOfErrors%20dflags%20warns%20handleFlagWarnings%20::%20DynFlags%20-%3e%20%5bLocated%20String%5d%20-%3e%20IO%20()%20handleFlagWarnings%20dflags%20warns%20=%20when%20(wopt%20Opt_WarnDeprecatedFlags%20dflags)%20$%20do%20--%20It%20would%20be%20nicer%20if%20warns%20::%20%5bLocated%20MsgDoc%5d,%20but%20that%20--%20has%20circular%20import%20problems.%20let%20bag%20=%20listToBag%20%5b%20mkPlainWarnMsg%20dflags%20loc%20(text%20warn)%20%7c%20L%20loc%20warn%20%3c-%20warns%20%5d%20printOrThrowWarnings%20dflags%20bag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Exception</span> <span class='hs-conid'>GhcApiError</span>
-<a name="line-228"></a>
-<a name="line-229"></a><a name="printOrThrowWarnings"></a><span class='hs-comment'>-- | Given a bag of warnings, turn them into an exception if</span>
-<a name="line-230"></a><span class='hs-comment'>-- -Werror is enabled, or print them out otherwise.</span>
-<a name="line-231"></a><span class='hs-definition'>printOrThrowWarnings</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bag</span> <span class='hs-conid'>WarnMsg</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-232"></a><span class='hs-definition'>printOrThrowWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
-<a name="line-233"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_WarnIsError</span> <span class='hs-varid'>dflags</span>
-<a name="line-234"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>isEmptyBag</span> <span class='hs-varid'>warns</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
-<a name="line-235"></a>      <span class='hs-varid'>throwIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkSrcErr</span> <span class='hs-varop'>$</span> <span class='hs-varid'>warns</span> <span class='hs-varop'>`snocBag`</span> <span class='hs-varid'>warnIsErrorMsg</span> <span class='hs-varid'>dflags</span>
-<a name="line-236"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>
-<a name="line-237"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>printBagOfErrors</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
-<a name="line-238"></a>
-<a name="line-239"></a><a name="handleFlagWarnings"></a><span class='hs-definition'>handleFlagWarnings</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
-<a name="line-240"></a><span class='hs-definition'>handleFlagWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
-<a name="line-241"></a> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>wopt</span> <span class='hs-conid'>Opt_WarnDeprecatedFlags</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
-<a name="line-242"></a>        <span class='hs-comment'>-- It would be nicer if warns :: [Located MsgDoc], but that</span>
-<a name="line-243"></a>        <span class='hs-comment'>-- has circular import problems.</span>
-<a name="line-244"></a>      <span class='hs-keyword'>let</span> <span class='hs-varid'>bag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>listToBag</span> <span class='hs-keyglyph'>[</span> <span class='hs-varid'>mkPlainWarnMsg</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>loc</span> <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-varid'>warn</span><span class='hs-layout'>)</span>
-<a name="line-245"></a>                          <span class='hs-keyglyph'>|</span> <span class='hs-conid'>L</span> <span class='hs-varid'>loc</span> <span class='hs-varid'>warn</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>warns</span> <span class='hs-keyglyph'>]</span>
-<a name="line-246"></a>
-<a name="line-247"></a>      <span class='hs-varid'>printOrThrowWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>bag</span>
+<a name="line-156"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Binary</span>
+<a name="line-157"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>ErrUtils</span>
+<a name="line-158"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Platform</span>
+<a name="line-159"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Util</span>
+<a name="line-160"></a>
+<a name="line-161"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Control</span><span class='hs-varop'>.</span><span class='hs-conid'>Monad</span>    <span class='hs-layout'>(</span> <span class='hs-varid'>mplus</span><span class='hs-layout'>,</span> <span class='hs-varid'>guard</span><span class='hs-layout'>,</span> <span class='hs-varid'>liftM</span><span class='hs-layout'>,</span> <span class='hs-varid'>when</span> <span class='hs-layout'>)</span>
+<a name="line-162"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Array</span>       <span class='hs-layout'>(</span> <span class='hs-conid'>Array</span><span class='hs-layout'>,</span> <span class='hs-varid'>array</span> <span class='hs-layout'>)</span>
+<a name="line-163"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>IORef</span>
+<a name="line-164"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Time</span>
+<a name="line-165"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Word</span>
+<a name="line-166"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Typeable</span>    <span class='hs-layout'>(</span> <span class='hs-conid'>Typeable</span> <span class='hs-layout'>)</span>
+<a name="line-167"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Exception</span>
+<a name="line-168"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>System</span><span class='hs-varop'>.</span><span class='hs-conid'>FilePath</span>
+<a name="line-169"></a>
+<a name="line-170"></a><span class='hs-comment'>-- -----------------------------------------------------------------------------</span>
+<a name="line-171"></a><span class='hs-comment'>-- Source Errors</span>
+<a name="line-172"></a>
+<a name="line-173"></a><span class='hs-comment'>-- When the compiler (HscMain) discovers errors, it throws an</span>
+<a name="line-174"></a><span class='hs-comment'>-- exception in the IO monad.</span>
+<a name="line-175"></a>
+<a name="line-176"></a><a name="mkSrcErr"></a><span class='hs-definition'>mkSrcErr</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ErrorMessages</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SourceError</span>
+<a name="line-177"></a><span class='hs-definition'>mkSrcErr</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SourceError</span>
+<a name="line-178"></a>
+<a name="line-179"></a><a name="srcErrorMessages"></a><span class='hs-definition'>srcErrorMessages</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ErrorMessages</span>
+<a name="line-180"></a><span class='hs-definition'>srcErrorMessages</span> <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-varid'>msgs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>msgs</span>
+<a name="line-181"></a>
+<a name="line-182"></a><a name="mkApiErr"></a><span class='hs-definition'>mkApiErr</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>GhcApiError</span>
+<a name="line-183"></a><span class='hs-definition'>mkApiErr</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>msg</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-layout'>(</span><span class='hs-varid'>showSDoc</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>msg</span><span class='hs-layout'>)</span>
+<a name="line-184"></a>
+<a name="line-185"></a><a name="throwOneError"></a><span class='hs-definition'>throwOneError</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>MonadIO</span> <span class='hs-varid'>m</span> <span class='hs-keyglyph'>=&gt;</span> <span class='hs-conid'>ErrMsg</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>ab</span>
+<a name="line-186"></a><span class='hs-definition'>throwOneError</span> <span class='hs-varid'>err</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>liftIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>throwIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkSrcErr</span> <span class='hs-varop'>$</span> <span class='hs-varid'>unitBag</span> <span class='hs-varid'>err</span>
+<a name="line-187"></a>
+<a name="line-188"></a><a name="SourceError"></a><span class='hs-comment'>-- | A source error is an error that is caused by one or more errors in the</span>
+<a name="line-189"></a><a name="SourceError"></a><span class='hs-comment'>-- source code.  A 'SourceError' is thrown by many functions in the</span>
+<a name="line-190"></a><a name="SourceError"></a><span class='hs-comment'>-- compilation pipeline.  Inside GHC these errors are merely printed via</span>
+<a name="line-191"></a><a name="SourceError"></a><span class='hs-comment'>-- 'log_action', but API clients may treat them differently, for example,</span>
+<a name="line-192"></a><a name="SourceError"></a><span class='hs-comment'>-- insert them into a list box.  If you want the default behaviour, use the</span>
+<a name="line-193"></a><a name="SourceError"></a><span class='hs-comment'>-- idiom:</span>
+<a name="line-194"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
+<a name="line-195"></a><a name="SourceError"></a><span class='hs-comment'>-- &gt; handleSourceError printExceptionAndWarnings $ do</span>
+<a name="line-196"></a><a name="SourceError"></a><span class='hs-comment'>-- &gt;   ... api calls that may fail ...</span>
+<a name="line-197"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
+<a name="line-198"></a><a name="SourceError"></a><span class='hs-comment'>-- The 'SourceError's error messages can be accessed via 'srcErrorMessages'.</span>
+<a name="line-199"></a><a name="SourceError"></a><span class='hs-comment'>-- This list may be empty if the compiler failed due to @-Werror@</span>
+<a name="line-200"></a><a name="SourceError"></a><span class='hs-comment'>-- ('Opt_WarnIsError').</span>
+<a name="line-201"></a><a name="SourceError"></a><span class='hs-comment'>--</span>
+<a name="line-202"></a><a name="SourceError"></a><span class='hs-comment'>-- See 'printExceptionAndWarnings' for more information on what to take care</span>
+<a name="line-203"></a><a name="SourceError"></a><span class='hs-comment'>-- of when writing a custom error handler.</span>
+<a name="line-204"></a><a name="SourceError"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>SourceError</span> <span class='hs-conid'>ErrorMessages</span>
+<a name="line-205"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Typeable</span>
+<a name="line-206"></a>
+<a name="line-207"></a><a name="instance%20Show%20SourceError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Show</span> <span class='hs-conid'>SourceError</span> <span class='hs-keyword'>where</span>
+<a name="line-208"></a>  <span class='hs-varid'>show</span> <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-varid'>msgs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>unlines</span> <span class='hs-varop'>.</span> <span class='hs-varid'>map</span> <span class='hs-varid'>show</span> <span class='hs-varop'>.</span> <span class='hs-varid'>bagToList</span> <span class='hs-varop'>$</span> <span class='hs-varid'>msgs</span>
+<a name="line-209"></a>
+<a name="line-210"></a><a name="instance%20(SourceError%20-%3e%20m%20a)%20--%20%5e%20exception%20handler%20-%3e%20m%20a%20--%20%5e%20action%20to%20perform%20-%3e%20m%20a%20handleSourceError%20handler%20act%20=%20gcatch%20act%20(%5c(e%20::%20SourceError)%20-%3e%20handler%20e)%20--%20%7c%20An%20error%20thrown%20if%20the%20GHC%20API%20is%20used%20in%20an%20incorrect%20fashion.%20newtype%20GhcApiError%20=%20GhcApiError%20String%20deriving%20Typeable%20instance%20Show%20GhcApiError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Exception</span> <span class='hs-conid'>SourceError</span>
+<a name="line-211"></a>
+<a name="line-212"></a><a name="handleSourceError"></a><span class='hs-comment'>-- | Perform the given action and call the exception handler if the action</span>
+<a name="line-213"></a><span class='hs-comment'>-- throws a 'SourceError'.  See 'SourceError' for more information.</span>
+<a name="line-214"></a><span class='hs-definition'>handleSourceError</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>ExceptionMonad</span> <span class='hs-varid'>m</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=&gt;</span>
+<a name="line-215"></a>                     <span class='hs-layout'>(</span><span class='hs-conid'>SourceError</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span><span class='hs-layout'>)</span> <span class='hs-comment'>-- ^ exception handler</span>
+<a name="line-216"></a>                  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span> <span class='hs-comment'>-- ^ action to perform</span>
+<a name="line-217"></a>                  <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>m</span> <span class='hs-varid'>a</span>
+<a name="line-218"></a><span class='hs-definition'>handleSourceError</span> <span class='hs-varid'>handler</span> <span class='hs-varid'>act</span> <span class='hs-keyglyph'>=</span>
+<a name="line-219"></a>  <span class='hs-varid'>gcatch</span> <span class='hs-varid'>act</span> <span class='hs-layout'>(</span><span class='hs-keyglyph'>\</span><span class='hs-layout'>(</span><span class='hs-varid'>e</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SourceError</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>handler</span> <span class='hs-varid'>e</span><span class='hs-layout'>)</span>
+<a name="line-220"></a>
+<a name="line-221"></a><a name="GhcApiError"></a><span class='hs-comment'>-- | An error thrown if the GHC API is used in an incorrect fashion.</span>
+<a name="line-222"></a><a name="GhcApiError"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-conid'>String</span>
+<a name="line-223"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Typeable</span>
+<a name="line-224"></a>
+<a name="line-225"></a><a name="instance%20Show%20GhcApiError"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Show</span> <span class='hs-conid'>GhcApiError</span> <span class='hs-keyword'>where</span>
+<a name="line-226"></a>  <span class='hs-varid'>show</span> <span class='hs-layout'>(</span><span class='hs-conid'>GhcApiError</span> <span class='hs-varid'>msg</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>msg</span>
+<a name="line-227"></a>
+<a name="line-228"></a><a name="instance%20Exception%20GhcApiError%20--%20%7c%20Given%20a%20bag%20of%20warnings,%20turn%20them%20into%20an%20exception%20if%20--%20-Werror%20is%20enabled,%20or%20print%20them%20out%20otherwise.%20printOrThrowWarnings%20::%20DynFlags%20-%3e%20Bag%20WarnMsg%20-%3e%20IO%20()%20printOrThrowWarnings%20dflags%20warns%20%7c%20gopt%20Opt_WarnIsError%20dflags%20=%20when%20(not%20(isEmptyBag%20warns))%20$%20do%20throwIO%20$%20mkSrcErr%20$%20warns%20%60snocBag%60%20warnIsErrorMsg%20dflags%20%7c%20otherwise%20=%20printBagOfErrors%20dflags%20warns%20handleFlagWarnings%20::%20DynFlags%20-%3e%20%5bLocated%20String%5d%20-%3e%20IO%20()%20handleFlagWarnings%20dflags%20warns%20=%20when%20(wopt%20Opt_WarnDeprecatedFlags%20dflags)%20$%20do%20--%20It%20would%20be%20nicer%20if%20warns%20::%20%5bLocated%20MsgDoc%5d,%20but%20that%20--%20has%20circular%20import%20problems.%20let%20bag%20=%20listToBag%20%5b%20mkPlainWarnMsg%20dflags%20loc%20(text%20warn)%20%7c%20L%20loc%20warn%20%3c-%20warns%20%5d%20printOrThrowWarnings%20dflags%20bag"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Exception</span> <span class='hs-conid'>GhcApiError</span>
+<a name="line-229"></a>
+<a name="line-230"></a><a name="printOrThrowWarnings"></a><span class='hs-comment'>-- | Given a bag of warnings, turn them into an exception if</span>
+<a name="line-231"></a><span class='hs-comment'>-- -Werror is enabled, or print them out otherwise.</span>
+<a name="line-232"></a><span class='hs-definition'>printOrThrowWarnings</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bag</span> <span class='hs-conid'>WarnMsg</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-233"></a><span class='hs-definition'>printOrThrowWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
+<a name="line-234"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>gopt</span> <span class='hs-conid'>Opt_WarnIsError</span> <span class='hs-varid'>dflags</span>
+<a name="line-235"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>not</span> <span class='hs-layout'>(</span><span class='hs-varid'>isEmptyBag</span> <span class='hs-varid'>warns</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
+<a name="line-236"></a>      <span class='hs-varid'>throwIO</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkSrcErr</span> <span class='hs-varop'>$</span> <span class='hs-varid'>warns</span> <span class='hs-varop'>`snocBag`</span> <span class='hs-varid'>warnIsErrorMsg</span> <span class='hs-varid'>dflags</span>
+<a name="line-237"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>
+<a name="line-238"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>printBagOfErrors</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
+<a name="line-239"></a>
+<a name="line-240"></a><a name="handleFlagWarnings"></a><span class='hs-definition'>handleFlagWarnings</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Located</span> <span class='hs-conid'>String</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>()</span>
+<a name="line-241"></a><span class='hs-definition'>handleFlagWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>warns</span>
+<a name="line-242"></a> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>when</span> <span class='hs-layout'>(</span><span class='hs-varid'>wopt</span> <span class='hs-conid'>Opt_WarnDeprecatedFlags</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>$</span> <span class='hs-keyword'>do</span>
+<a name="line-243"></a>        <span class='hs-comment'>-- It would be nicer if warns :: [Located MsgDoc], but that</span>
+<a name="line-244"></a>        <span class='hs-comment'>-- has circular import problems.</span>
+<a name="line-245"></a>      <span class='hs-keyword'>let</span> <span class='hs-varid'>bag</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>listToBag</span> <span class='hs-keyglyph'>[</span> <span class='hs-varid'>mkPlainWarnMsg</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>loc</span> <span class='hs-layout'>(</span><span class='hs-varid'>text</span> <span class='hs-varid'>warn</span><span class='hs-layout'>)</span>
+<a name="line-246"></a>                          <span class='hs-keyglyph'>|</span> <span class='hs-conid'>L</span> <span class='hs-varid'>loc</span> <span class='hs-varid'>warn</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>warns</span> <span class='hs-keyglyph'>]</span>
+<a name="line-247"></a>
+<a name="line-248"></a>      <span class='hs-varid'>printOrThrowWarnings</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>bag</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -726,201 +727,308 @@
 <a name="line-115"></a>                <span class='hs-comment'>-- See Note [RnNames . Trust Own Package]</span>
 <a name="line-116"></a>     <span class='hs-layout'>}</span>
 <a name="line-117"></a>
-<a name="line-118"></a><a name="IfaceExport"></a><span class='hs-comment'>-- | The original names declared of a certain module that are exported</span>
-<a name="line-119"></a><a name="IfaceExport"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>IfaceExport</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>AvailInfo</span>
-<a name="line-120"></a>
-<a name="line-121"></a><a name="emptyModIface"></a><span class='hs-comment'>-- | Constructs an empty ModIface</span>
-<a name="line-122"></a><span class='hs-definition'>emptyModIface</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ModIface</span>
-<a name="line-123"></a><span class='hs-definition'>emptyModIface</span> <span class='hs-varid'>mod</span>
-<a name="line-124"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModIface</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mi_module</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
-<a name="line-125"></a>               <span class='hs-varid'>mi_iface_hash</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
-<a name="line-126"></a>               <span class='hs-varid'>mi_mod_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
-<a name="line-127"></a>               <span class='hs-varid'>mi_flag_hash</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
-<a name="line-128"></a>               <span class='hs-varid'>mi_orphan</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
-<a name="line-129"></a>               <span class='hs-varid'>mi_finsts</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
-<a name="line-130"></a>               <span class='hs-varid'>mi_boot</span>        <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
-<a name="line-131"></a>               <span class='hs-varid'>mi_deps</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noDependencies</span><span class='hs-layout'>,</span>
-<a name="line-132"></a>               <span class='hs-varid'>mi_usages</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-133"></a>               <span class='hs-varid'>mi_exports</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-134"></a>               <span class='hs-varid'>mi_exp_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
-<a name="line-135"></a>               <span class='hs-varid'>mi_used_th</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
-<a name="line-136"></a>               <span class='hs-varid'>mi_fixities</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-137"></a>               <span class='hs-varid'>mi_warns</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoWarnings</span><span class='hs-layout'>,</span>
-<a name="line-138"></a>               <span class='hs-varid'>mi_anns</span>        <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-139"></a>               <span class='hs-varid'>mi_insts</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-140"></a>               <span class='hs-varid'>mi_fam_insts</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-141"></a>               <span class='hs-varid'>mi_rules</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-142"></a>               <span class='hs-varid'>mi_decls</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-143"></a>               <span class='hs-varid'>mi_globals</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span><span class='hs-layout'>,</span>
-<a name="line-144"></a>               <span class='hs-varid'>mi_orphan_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
-<a name="line-145"></a>               <span class='hs-varid'>mi_vect_info</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noIfaceVectInfo</span><span class='hs-layout'>,</span>
-<a name="line-146"></a>               <span class='hs-varid'>mi_warn_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceWarnCache</span><span class='hs-layout'>,</span>
-<a name="line-147"></a>               <span class='hs-varid'>mi_fix_fn</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceFixCache</span><span class='hs-layout'>,</span>
-<a name="line-148"></a>               <span class='hs-varid'>mi_hash_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceHashCache</span><span class='hs-layout'>,</span>
-<a name="line-149"></a>               <span class='hs-varid'>mi_hpc</span>         <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
-<a name="line-150"></a>               <span class='hs-varid'>mi_trust</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noIfaceTrustInfo</span><span class='hs-layout'>,</span>
-<a name="line-151"></a>               <span class='hs-varid'>mi_trust_pkg</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span> <span class='hs-layout'>}</span>
-<a name="line-152"></a>
-<a name="line-153"></a>
-<a name="line-154"></a><a name="mkIfaceHashCache"></a><span class='hs-comment'>-- | Constructs cache for the 'mi_hash_fn' field of a 'ModIface'</span>
-<a name="line-155"></a><span class='hs-definition'>mkIfaceHashCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span><span class='hs-conid'>IfaceDecl</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>
-<a name="line-156"></a>                 <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-157"></a><span class='hs-definition'>mkIfaceHashCache</span> <span class='hs-varid'>pairs</span>
-<a name="line-158"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>occ</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>lookupOccEnv</span> <span class='hs-varid'>env</span> <span class='hs-varid'>occ</span>
-<a name="line-159"></a>  <span class='hs-keyword'>where</span>
-<a name="line-160"></a>    <span class='hs-varid'>env</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-varid'>add_decl</span> <span class='hs-varid'>emptyOccEnv</span> <span class='hs-varid'>pairs</span>
-<a name="line-161"></a>    <span class='hs-varid'>add_decl</span> <span class='hs-layout'>(</span><span class='hs-varid'>v</span><span class='hs-layout'>,</span><span class='hs-varid'>d</span><span class='hs-layout'>)</span> <span class='hs-varid'>env0</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-varid'>add</span> <span class='hs-varid'>env0</span> <span class='hs-layout'>(</span><span class='hs-varid'>ifaceDeclFingerprints</span> <span class='hs-varid'>v</span> <span class='hs-varid'>d</span><span class='hs-layout'>)</span>
-<a name="line-162"></a>      <span class='hs-keyword'>where</span>
-<a name="line-163"></a>        <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-varid'>occ</span><span class='hs-layout'>,</span><span class='hs-varid'>hash</span><span class='hs-layout'>)</span> <span class='hs-varid'>env0</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>extendOccEnv</span> <span class='hs-varid'>env0</span> <span class='hs-varid'>occ</span> <span class='hs-layout'>(</span><span class='hs-varid'>occ</span><span class='hs-layout'>,</span><span class='hs-varid'>hash</span><span class='hs-layout'>)</span>
-<a name="line-164"></a>
-<a name="line-165"></a><a name="emptyIfaceHashCache"></a><span class='hs-definition'>emptyIfaceHashCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>OccName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span>
-<a name="line-166"></a><span class='hs-definition'>emptyIfaceHashCache</span> <span class='hs-sel'>_occ</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
-<a name="line-167"></a>
+<a name="line-118"></a><a name="instance%20Binary%20ModIface"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>ModIface</span> <span class='hs-keyword'>where</span>
+<a name="line-119"></a>   <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>ModIface</span> <span class='hs-layout'>{</span>
+<a name="line-120"></a>                 <span class='hs-varid'>mi_module</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
+<a name="line-121"></a>                 <span class='hs-varid'>mi_boot</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>is_boot</span><span class='hs-layout'>,</span>
+<a name="line-122"></a>                 <span class='hs-varid'>mi_iface_hash</span><span class='hs-keyglyph'>=</span> <span class='hs-varid'>iface_hash</span><span class='hs-layout'>,</span>
+<a name="line-123"></a>                 <span class='hs-varid'>mi_mod_hash</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod_hash</span><span class='hs-layout'>,</span>
+<a name="line-124"></a>                 <span class='hs-varid'>mi_flag_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>flag_hash</span><span class='hs-layout'>,</span>
+<a name="line-125"></a>                 <span class='hs-varid'>mi_orphan</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>orphan</span><span class='hs-layout'>,</span>
+<a name="line-126"></a>                 <span class='hs-varid'>mi_finsts</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hasFamInsts</span><span class='hs-layout'>,</span>
+<a name="line-127"></a>                 <span class='hs-varid'>mi_deps</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>deps</span><span class='hs-layout'>,</span>
+<a name="line-128"></a>                 <span class='hs-varid'>mi_usages</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>usages</span><span class='hs-layout'>,</span>
+<a name="line-129"></a>                 <span class='hs-varid'>mi_exports</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exports</span><span class='hs-layout'>,</span>
+<a name="line-130"></a>                 <span class='hs-varid'>mi_exp_hash</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exp_hash</span><span class='hs-layout'>,</span>
+<a name="line-131"></a>                 <span class='hs-varid'>mi_used_th</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>used_th</span><span class='hs-layout'>,</span>
+<a name="line-132"></a>                 <span class='hs-varid'>mi_fixities</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fixities</span><span class='hs-layout'>,</span>
+<a name="line-133"></a>                 <span class='hs-varid'>mi_warns</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>warns</span><span class='hs-layout'>,</span>
+<a name="line-134"></a>                 <span class='hs-varid'>mi_anns</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>anns</span><span class='hs-layout'>,</span>
+<a name="line-135"></a>                 <span class='hs-varid'>mi_decls</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>decls</span><span class='hs-layout'>,</span>
+<a name="line-136"></a>                 <span class='hs-varid'>mi_insts</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>insts</span><span class='hs-layout'>,</span>
+<a name="line-137"></a>                 <span class='hs-varid'>mi_fam_insts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fam_insts</span><span class='hs-layout'>,</span>
+<a name="line-138"></a>                 <span class='hs-varid'>mi_rules</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>rules</span><span class='hs-layout'>,</span>
+<a name="line-139"></a>                 <span class='hs-varid'>mi_orphan_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>orphan_hash</span><span class='hs-layout'>,</span>
+<a name="line-140"></a>                 <span class='hs-varid'>mi_vect_info</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>vect_info</span><span class='hs-layout'>,</span>
+<a name="line-141"></a>                 <span class='hs-varid'>mi_hpc</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hpc_info</span><span class='hs-layout'>,</span>
+<a name="line-142"></a>                 <span class='hs-varid'>mi_trust</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>trust</span><span class='hs-layout'>,</span>
+<a name="line-143"></a>                 <span class='hs-varid'>mi_trust_pkg</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>trust_pkg</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-144"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>mod</span>
+<a name="line-145"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>is_boot</span>
+<a name="line-146"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>iface_hash</span>
+<a name="line-147"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>mod_hash</span>
+<a name="line-148"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>flag_hash</span>
+<a name="line-149"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>orphan</span>
+<a name="line-150"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>hasFamInsts</span>
+<a name="line-151"></a>        <span class='hs-varid'>lazyPut</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>deps</span>
+<a name="line-152"></a>        <span class='hs-varid'>lazyPut</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>usages</span>
+<a name="line-153"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>exports</span>
+<a name="line-154"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>exp_hash</span>
+<a name="line-155"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>used_th</span>
+<a name="line-156"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>fixities</span>
+<a name="line-157"></a>        <span class='hs-varid'>lazyPut</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>warns</span>
+<a name="line-158"></a>        <span class='hs-varid'>lazyPut</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>anns</span>
+<a name="line-159"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>decls</span>
+<a name="line-160"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>insts</span>
+<a name="line-161"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>fam_insts</span>
+<a name="line-162"></a>        <span class='hs-varid'>lazyPut</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>rules</span>
+<a name="line-163"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>orphan_hash</span>
+<a name="line-164"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>vect_info</span>
+<a name="line-165"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>hpc_info</span>
+<a name="line-166"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>trust</span>
+<a name="line-167"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>trust_pkg</span>
 <a name="line-168"></a>
-<a name="line-169"></a><a name="ModDetails"></a><span class='hs-comment'>-- | The 'ModDetails' is essentially a cache for information in the 'ModIface'</span>
-<a name="line-170"></a><a name="ModDetails"></a><span class='hs-comment'>-- for home modules only. Information relating to packages will be loaded into</span>
-<a name="line-171"></a><a name="ModDetails"></a><span class='hs-comment'>-- global environments in 'ExternalPackageState'.</span>
-<a name="line-172"></a><a name="ModDetails"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ModDetails</span>
-<a name="line-173"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModDetails</span> <span class='hs-layout'>{</span>
-<a name="line-174"></a>        <span class='hs-comment'>-- The next two fields are created by the typechecker</span>
-<a name="line-175"></a>        <span class='hs-varid'>md_exports</span>   <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>AvailInfo</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-176"></a>        <span class='hs-varid'>md_types</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>TypeEnv</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Local type environment for this particular module</span>
-<a name="line-177"></a>        <span class='hs-varid'>md_insts</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>ClsInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ 'DFunId's for the instances in this module</span>
-<a name="line-178"></a>        <span class='hs-varid'>md_fam_insts</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>FamInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-179"></a>        <span class='hs-varid'>md_rules</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreRule</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Domain may include 'Id's from other modules</span>
-<a name="line-180"></a>        <span class='hs-varid'>md_anns</span>      <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>Annotation</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- ^ Annotations present in this module: currently</span>
-<a name="line-181"></a>                                        <span class='hs-comment'>-- they only annotate things also declared in this module</span>
-<a name="line-182"></a>        <span class='hs-varid'>md_vect_info</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>VectInfo</span>       <span class='hs-comment'>-- ^ Module vectorisation information</span>
-<a name="line-183"></a>     <span class='hs-layout'>}</span>
-<a name="line-184"></a>
-<a name="line-185"></a><a name="emptyModDetails"></a><span class='hs-comment'>-- | Constructs an empty ModDetails</span>
-<a name="line-186"></a><span class='hs-definition'>emptyModDetails</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModDetails</span>
-<a name="line-187"></a><span class='hs-definition'>emptyModDetails</span>
-<a name="line-188"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModDetails</span> <span class='hs-layout'>{</span> <span class='hs-varid'>md_types</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyTypeEnv</span><span class='hs-layout'>,</span>
-<a name="line-189"></a>                 <span class='hs-varid'>md_exports</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-190"></a>                 <span class='hs-varid'>md_insts</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-191"></a>                 <span class='hs-varid'>md_rules</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-192"></a>                 <span class='hs-varid'>md_fam_insts</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-193"></a>                 <span class='hs-varid'>md_anns</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
-<a name="line-194"></a>                 <span class='hs-varid'>md_vect_info</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noVectInfo</span> <span class='hs-layout'>}</span>
-<a name="line-195"></a>
-<a name="line-196"></a><a name="ImportedMods"></a><span class='hs-comment'>-- | Records the modules directly imported by a module for extracting e.g. usage information</span>
-<a name="line-197"></a><a name="ImportedMods"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>ImportedMods</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModuleEnv</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ImportedModsVal</span><span class='hs-keyglyph'>]</span>
-<a name="line-198"></a><a name="ImportedModsVal"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>ImportedModsVal</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>ModuleName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span> <span class='hs-conid'>SrcSpan</span><span class='hs-layout'>,</span> <span class='hs-conid'>IsSafeImport</span><span class='hs-layout'>)</span>
-<a name="line-199"></a>
-<a name="line-200"></a><a name="ModGuts"></a><span class='hs-comment'>-- | A ModGuts is carried through the compiler, accumulating stuff as it goes</span>
-<a name="line-201"></a><a name="ModGuts"></a><span class='hs-comment'>-- There is only one ModGuts at any time, the one for the module</span>
-<a name="line-202"></a><a name="ModGuts"></a><span class='hs-comment'>-- being compiled right now.  Once it is compiled, a 'ModIface' and</span>
-<a name="line-203"></a><a name="ModGuts"></a><span class='hs-comment'>-- 'ModDetails' are extracted and the ModGuts is discarded.</span>
-<a name="line-204"></a><a name="ModGuts"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ModGuts</span>
-<a name="line-205"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModGuts</span> <span class='hs-layout'>{</span>
-<a name="line-206"></a>        <span class='hs-varid'>mg_module</span>    <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Module</span><span class='hs-layout'>,</span>         <span class='hs-comment'>-- ^ Module being compiled</span>
-<a name="line-207"></a>        <span class='hs-varid'>mg_boot</span>      <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsBootInterface</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- ^ Whether it's an hs-boot module</span>
-<a name="line-208"></a>        <span class='hs-varid'>mg_exports</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>AvailInfo</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ What it exports</span>
-<a name="line-209"></a>        <span class='hs-varid'>mg_deps</span>      <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Dependencies</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ What it depends on, directly or</span>
-<a name="line-210"></a>                                         <span class='hs-comment'>-- otherwise</span>
-<a name="line-211"></a>        <span class='hs-varid'>mg_dir_imps</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ImportedMods</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Directly-imported modules; used to</span>
-<a name="line-212"></a>                                         <span class='hs-comment'>-- generate initialisation code</span>
-<a name="line-213"></a>        <span class='hs-varid'>mg_used_names</span><span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ What the module needed (used in 'MkIface.mkIface')</span>
-<a name="line-214"></a>
-<a name="line-215"></a>        <span class='hs-varid'>mg_used_th</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>           <span class='hs-comment'>-- ^ Did we run a TH splice?</span>
-<a name="line-216"></a>        <span class='hs-varid'>mg_rdr_env</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>GlobalRdrEnv</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Top-level lexical environment</span>
-<a name="line-217"></a>
-<a name="line-218"></a>        <span class='hs-comment'>-- These fields all describe the things **declared in this module**</span>
-<a name="line-219"></a>        <span class='hs-varid'>mg_fix_env</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>FixityEnv</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Fixities declared in this module</span>
-<a name="line-220"></a>                                         <span class='hs-comment'>-- ToDo: I'm unconvinced this is actually used anywhere</span>
-<a name="line-221"></a>        <span class='hs-varid'>mg_tcs</span>       <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ TyCons declared in this module</span>
-<a name="line-222"></a>                                         <span class='hs-comment'>-- (includes TyCons for classes)</span>
-<a name="line-223"></a>        <span class='hs-varid'>mg_insts</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>ClsInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Class instances declared in this module</span>
-<a name="line-224"></a>        <span class='hs-varid'>mg_fam_insts</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>FamInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span> 
-<a name="line-225"></a>                                         <span class='hs-comment'>-- ^ Family instances declared in this module</span>
-<a name="line-226"></a>        <span class='hs-varid'>mg_rules</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreRule</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- ^ Before the core pipeline starts, contains</span>
-<a name="line-227"></a>                                         <span class='hs-comment'>-- See Note [Overall plumbing for rules] in Rules.lhs</span>
-<a name="line-228"></a>        <span class='hs-varid'>mg_binds</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>CoreProgram</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Bindings for this module</span>
-<a name="line-229"></a>        <span class='hs-varid'>mg_foreign</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ForeignStubs</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Foreign exports declared in this module</span>
-<a name="line-230"></a>        <span class='hs-varid'>mg_warns</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Warnings</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Warnings declared in the module</span>
-<a name="line-231"></a>        <span class='hs-varid'>mg_anns</span>      <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Annotation</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Annotations declared in this module</span>
-<a name="line-232"></a>        <span class='hs-varid'>mg_hpc_info</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>HpcInfo</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ Coverage tick boxes in the module</span>
-<a name="line-233"></a>        <span class='hs-varid'>mg_modBreaks</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ModBreaks</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Breakpoints for the module</span>
-<a name="line-234"></a>        <span class='hs-varid'>mg_vect_decls</span><span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreVect</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- ^ Vectorisation declarations in this module</span>
-<a name="line-235"></a>                                         <span class='hs-comment'>--   (produced by desugarer &amp; consumed by vectoriser)</span>
-<a name="line-236"></a>        <span class='hs-varid'>mg_vect_info</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>VectInfo</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Pool of vectorised declarations in the module</span>
-<a name="line-237"></a>
-<a name="line-238"></a>        <span class='hs-comment'>-- The next two fields are unusual, because they give instance</span>
-<a name="line-239"></a>        <span class='hs-comment'>-- environments for *all* modules in the home package, including</span>
-<a name="line-240"></a>        <span class='hs-comment'>-- this module, rather than for *just* this module.</span>
-<a name="line-241"></a>        <span class='hs-comment'>-- Reason: when looking up an instance we don't want to have to</span>
-<a name="line-242"></a>        <span class='hs-comment'>--        look at each module in the home package in turn</span>
-<a name="line-243"></a>        <span class='hs-varid'>mg_inst_env</span>     <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InstEnv</span><span class='hs-layout'>,</span>
-<a name="line-244"></a>        <span class='hs-comment'>-- ^ Class instance environment from /home-package/ modules (including</span>
-<a name="line-245"></a>        <span class='hs-comment'>-- this one); c.f. 'tcg_inst_env'</span>
-<a name="line-246"></a>        <span class='hs-varid'>mg_fam_inst_env</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FamInstEnv</span><span class='hs-layout'>,</span>
-<a name="line-247"></a>        <span class='hs-comment'>-- ^ Type-family instance enviroment for /home-package/ modules</span>
-<a name="line-248"></a>        <span class='hs-comment'>-- (including this one); c.f. 'tcg_fam_inst_env'</span>
-<a name="line-249"></a>        <span class='hs-varid'>mg_safe_haskell</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SafeHaskellMode</span><span class='hs-layout'>,</span>
-<a name="line-250"></a>        <span class='hs-comment'>-- ^ Safe Haskell mode</span>
-<a name="line-251"></a>        <span class='hs-varid'>mg_trust_pkg</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>
-<a name="line-252"></a>        <span class='hs-comment'>-- ^ Do we need to trust our own package for Safe Haskell?</span>
-<a name="line-253"></a>        <span class='hs-comment'>-- See Note [RnNames . Trust Own Package]</span>
-<a name="line-254"></a>        <span class='hs-varid'>mg_dependent_files</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- ^ dependencies from addDependentFile</span>
-<a name="line-255"></a>    <span class='hs-layout'>}</span>
-<a name="line-256"></a>
-<a name="line-257"></a><span class='hs-comment'>-- The ModGuts takes on several slightly different forms:</span>
-<a name="line-258"></a><span class='hs-comment'>--</span>
-<a name="line-259"></a><span class='hs-comment'>-- After simplification, the following fields change slightly:</span>
-<a name="line-260"></a><span class='hs-comment'>--      mg_rules        Orphan rules only (local ones now attached to binds)</span>
-<a name="line-261"></a><span class='hs-comment'>--      mg_binds        With rules attached</span>
-<a name="line-262"></a>
-<a name="line-263"></a>
-<a name="line-264"></a><span class='hs-comment'>---------------------------------------------------------</span>
-<a name="line-265"></a><span class='hs-comment'>-- The Tidy pass forks the information about this module:</span>
-<a name="line-266"></a><span class='hs-comment'>--      * one lot goes to interface file generation (ModIface)</span>
-<a name="line-267"></a><span class='hs-comment'>--        and later compilations (ModDetails)</span>
-<a name="line-268"></a><span class='hs-comment'>--      * the other lot goes to code generation (CgGuts)</span>
-<a name="line-269"></a>
-<a name="line-270"></a><a name="CgGuts"></a><span class='hs-comment'>-- | A restricted form of 'ModGuts' for code generation purposes</span>
-<a name="line-271"></a><a name="CgGuts"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>CgGuts</span>
-<a name="line-272"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CgGuts</span> <span class='hs-layout'>{</span>
-<a name="line-273"></a>        <span class='hs-varid'>cg_module</span>    <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Module</span><span class='hs-layout'>,</span>
-<a name="line-274"></a>                <span class='hs-comment'>-- ^ Module being compiled</span>
+<a name="line-169"></a>   <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-170"></a>        <span class='hs-varid'>mod_name</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-171"></a>        <span class='hs-varid'>is_boot</span>     <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-172"></a>        <span class='hs-varid'>iface_hash</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-173"></a>        <span class='hs-varid'>mod_hash</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-174"></a>        <span class='hs-varid'>flag_hash</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-175"></a>        <span class='hs-varid'>orphan</span>      <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-176"></a>        <span class='hs-varid'>hasFamInsts</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-177"></a>        <span class='hs-varid'>deps</span>        <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>lazyGet</span> <span class='hs-varid'>bh</span>
+<a name="line-178"></a>        <span class='hs-varid'>usages</span>      <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_usages" #-}</span> <span class='hs-varid'>lazyGet</span> <span class='hs-varid'>bh</span>
+<a name="line-179"></a>        <span class='hs-varid'>exports</span>     <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_exports" #-}</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-180"></a>        <span class='hs-varid'>exp_hash</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-181"></a>        <span class='hs-varid'>used_th</span>     <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-182"></a>        <span class='hs-varid'>fixities</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_fixities" #-}</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-183"></a>        <span class='hs-varid'>warns</span>       <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_warns" #-}</span> <span class='hs-varid'>lazyGet</span> <span class='hs-varid'>bh</span>
+<a name="line-184"></a>        <span class='hs-varid'>anns</span>        <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_anns" #-}</span> <span class='hs-varid'>lazyGet</span> <span class='hs-varid'>bh</span>
+<a name="line-185"></a>        <span class='hs-varid'>decls</span>       <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_tycldecls" #-}</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-186"></a>        <span class='hs-varid'>insts</span>       <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_insts" #-}</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-187"></a>        <span class='hs-varid'>fam_insts</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_fam_insts" #-}</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-188"></a>        <span class='hs-varid'>rules</span>       <span class='hs-keyglyph'>&lt;-</span> <span class='hs-comment'>{-# SCC "bin_rules" #-}</span> <span class='hs-varid'>lazyGet</span> <span class='hs-varid'>bh</span>
+<a name="line-189"></a>        <span class='hs-varid'>orphan_hash</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-190"></a>        <span class='hs-varid'>vect_info</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-191"></a>        <span class='hs-varid'>hpc_info</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-192"></a>        <span class='hs-varid'>trust</span>       <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-193"></a>        <span class='hs-varid'>trust_pkg</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-194"></a>        <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>ModIface</span> <span class='hs-layout'>{</span>
+<a name="line-195"></a>                 <span class='hs-varid'>mi_module</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod_name</span><span class='hs-layout'>,</span>
+<a name="line-196"></a>                 <span class='hs-varid'>mi_boot</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>is_boot</span><span class='hs-layout'>,</span>
+<a name="line-197"></a>                 <span class='hs-varid'>mi_iface_hash</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>iface_hash</span><span class='hs-layout'>,</span>
+<a name="line-198"></a>                 <span class='hs-varid'>mi_mod_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod_hash</span><span class='hs-layout'>,</span>
+<a name="line-199"></a>                 <span class='hs-varid'>mi_flag_hash</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>flag_hash</span><span class='hs-layout'>,</span>
+<a name="line-200"></a>                 <span class='hs-varid'>mi_orphan</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>orphan</span><span class='hs-layout'>,</span>
+<a name="line-201"></a>                 <span class='hs-varid'>mi_finsts</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hasFamInsts</span><span class='hs-layout'>,</span>
+<a name="line-202"></a>                 <span class='hs-varid'>mi_deps</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>deps</span><span class='hs-layout'>,</span>
+<a name="line-203"></a>                 <span class='hs-varid'>mi_usages</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>usages</span><span class='hs-layout'>,</span>
+<a name="line-204"></a>                 <span class='hs-varid'>mi_exports</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exports</span><span class='hs-layout'>,</span>
+<a name="line-205"></a>                 <span class='hs-varid'>mi_exp_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exp_hash</span><span class='hs-layout'>,</span>
+<a name="line-206"></a>                 <span class='hs-varid'>mi_used_th</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>used_th</span><span class='hs-layout'>,</span>
+<a name="line-207"></a>                 <span class='hs-varid'>mi_anns</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>anns</span><span class='hs-layout'>,</span>
+<a name="line-208"></a>                 <span class='hs-varid'>mi_fixities</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fixities</span><span class='hs-layout'>,</span>
+<a name="line-209"></a>                 <span class='hs-varid'>mi_warns</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>warns</span><span class='hs-layout'>,</span>
+<a name="line-210"></a>                 <span class='hs-varid'>mi_decls</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>decls</span><span class='hs-layout'>,</span>
+<a name="line-211"></a>                 <span class='hs-varid'>mi_globals</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span><span class='hs-layout'>,</span>
+<a name="line-212"></a>                 <span class='hs-varid'>mi_insts</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>insts</span><span class='hs-layout'>,</span>
+<a name="line-213"></a>                 <span class='hs-varid'>mi_fam_insts</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fam_insts</span><span class='hs-layout'>,</span>
+<a name="line-214"></a>                 <span class='hs-varid'>mi_rules</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>rules</span><span class='hs-layout'>,</span>
+<a name="line-215"></a>                 <span class='hs-varid'>mi_orphan_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>orphan_hash</span><span class='hs-layout'>,</span>
+<a name="line-216"></a>                 <span class='hs-varid'>mi_vect_info</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>vect_info</span><span class='hs-layout'>,</span>
+<a name="line-217"></a>                 <span class='hs-varid'>mi_hpc</span>         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hpc_info</span><span class='hs-layout'>,</span>
+<a name="line-218"></a>                 <span class='hs-varid'>mi_trust</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>trust</span><span class='hs-layout'>,</span>
+<a name="line-219"></a>                 <span class='hs-varid'>mi_trust_pkg</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>trust_pkg</span><span class='hs-layout'>,</span>
+<a name="line-220"></a>                        <span class='hs-comment'>-- And build the cached values</span>
+<a name="line-221"></a>                 <span class='hs-varid'>mi_warn_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkIfaceWarnCache</span> <span class='hs-varid'>warns</span><span class='hs-layout'>,</span>
+<a name="line-222"></a>                 <span class='hs-varid'>mi_fix_fn</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkIfaceFixCache</span> <span class='hs-varid'>fixities</span><span class='hs-layout'>,</span>
+<a name="line-223"></a>                 <span class='hs-varid'>mi_hash_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkIfaceHashCache</span> <span class='hs-varid'>decls</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span>
+<a name="line-224"></a>
+<a name="line-225"></a><a name="IfaceExport"></a><span class='hs-comment'>-- | The original names declared of a certain module that are exported</span>
+<a name="line-226"></a><a name="IfaceExport"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>IfaceExport</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>AvailInfo</span>
+<a name="line-227"></a>
+<a name="line-228"></a><a name="emptyModIface"></a><span class='hs-comment'>-- | Constructs an empty ModIface</span>
+<a name="line-229"></a><span class='hs-definition'>emptyModIface</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ModIface</span>
+<a name="line-230"></a><span class='hs-definition'>emptyModIface</span> <span class='hs-varid'>mod</span>
+<a name="line-231"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModIface</span> <span class='hs-layout'>{</span> <span class='hs-varid'>mi_module</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
+<a name="line-232"></a>               <span class='hs-varid'>mi_iface_hash</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
+<a name="line-233"></a>               <span class='hs-varid'>mi_mod_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
+<a name="line-234"></a>               <span class='hs-varid'>mi_flag_hash</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
+<a name="line-235"></a>               <span class='hs-varid'>mi_orphan</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
+<a name="line-236"></a>               <span class='hs-varid'>mi_finsts</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
+<a name="line-237"></a>               <span class='hs-varid'>mi_boot</span>        <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
+<a name="line-238"></a>               <span class='hs-varid'>mi_deps</span>        <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noDependencies</span><span class='hs-layout'>,</span>
+<a name="line-239"></a>               <span class='hs-varid'>mi_usages</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-240"></a>               <span class='hs-varid'>mi_exports</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-241"></a>               <span class='hs-varid'>mi_exp_hash</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
+<a name="line-242"></a>               <span class='hs-varid'>mi_used_th</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
+<a name="line-243"></a>               <span class='hs-varid'>mi_fixities</span>    <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-244"></a>               <span class='hs-varid'>mi_warns</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoWarnings</span><span class='hs-layout'>,</span>
+<a name="line-245"></a>               <span class='hs-varid'>mi_anns</span>        <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-246"></a>               <span class='hs-varid'>mi_insts</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-247"></a>               <span class='hs-varid'>mi_fam_insts</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-248"></a>               <span class='hs-varid'>mi_rules</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-249"></a>               <span class='hs-varid'>mi_decls</span>       <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-250"></a>               <span class='hs-varid'>mi_globals</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span><span class='hs-layout'>,</span>
+<a name="line-251"></a>               <span class='hs-varid'>mi_orphan_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fingerprint0</span><span class='hs-layout'>,</span>
+<a name="line-252"></a>               <span class='hs-varid'>mi_vect_info</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noIfaceVectInfo</span><span class='hs-layout'>,</span>
+<a name="line-253"></a>               <span class='hs-varid'>mi_warn_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceWarnCache</span><span class='hs-layout'>,</span>
+<a name="line-254"></a>               <span class='hs-varid'>mi_fix_fn</span>      <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceFixCache</span><span class='hs-layout'>,</span>
+<a name="line-255"></a>               <span class='hs-varid'>mi_hash_fn</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyIfaceHashCache</span><span class='hs-layout'>,</span>
+<a name="line-256"></a>               <span class='hs-varid'>mi_hpc</span>         <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span><span class='hs-layout'>,</span>
+<a name="line-257"></a>               <span class='hs-varid'>mi_trust</span>       <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noIfaceTrustInfo</span><span class='hs-layout'>,</span>
+<a name="line-258"></a>               <span class='hs-varid'>mi_trust_pkg</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>False</span> <span class='hs-layout'>}</span>
+<a name="line-259"></a>
+<a name="line-260"></a>
+<a name="line-261"></a><a name="mkIfaceHashCache"></a><span class='hs-comment'>-- | Constructs cache for the 'mi_hash_fn' field of a 'ModIface'</span>
+<a name="line-262"></a><span class='hs-definition'>mkIfaceHashCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span><span class='hs-conid'>IfaceDecl</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span>
+<a name="line-263"></a>                 <span class='hs-keyglyph'>-&gt;</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-264"></a><span class='hs-definition'>mkIfaceHashCache</span> <span class='hs-varid'>pairs</span>
+<a name="line-265"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-varid'>occ</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>lookupOccEnv</span> <span class='hs-varid'>env</span> <span class='hs-varid'>occ</span>
+<a name="line-266"></a>  <span class='hs-keyword'>where</span>
+<a name="line-267"></a>    <span class='hs-varid'>env</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-varid'>add_decl</span> <span class='hs-varid'>emptyOccEnv</span> <span class='hs-varid'>pairs</span>
+<a name="line-268"></a>    <span class='hs-varid'>add_decl</span> <span class='hs-layout'>(</span><span class='hs-varid'>v</span><span class='hs-layout'>,</span><span class='hs-varid'>d</span><span class='hs-layout'>)</span> <span class='hs-varid'>env0</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>foldr</span> <span class='hs-varid'>add</span> <span class='hs-varid'>env0</span> <span class='hs-layout'>(</span><span class='hs-varid'>ifaceDeclFingerprints</span> <span class='hs-varid'>v</span> <span class='hs-varid'>d</span><span class='hs-layout'>)</span>
+<a name="line-269"></a>      <span class='hs-keyword'>where</span>
+<a name="line-270"></a>        <span class='hs-varid'>add</span> <span class='hs-layout'>(</span><span class='hs-varid'>occ</span><span class='hs-layout'>,</span><span class='hs-varid'>hash</span><span class='hs-layout'>)</span> <span class='hs-varid'>env0</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>extendOccEnv</span> <span class='hs-varid'>env0</span> <span class='hs-varid'>occ</span> <span class='hs-layout'>(</span><span class='hs-varid'>occ</span><span class='hs-layout'>,</span><span class='hs-varid'>hash</span><span class='hs-layout'>)</span>
+<a name="line-271"></a>
+<a name="line-272"></a><a name="emptyIfaceHashCache"></a><span class='hs-definition'>emptyIfaceHashCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>OccName</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span>
+<a name="line-273"></a><span class='hs-definition'>emptyIfaceHashCache</span> <span class='hs-sel'>_occ</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
+<a name="line-274"></a>
 <a name="line-275"></a>
-<a name="line-276"></a>        <span class='hs-varid'>cg_tycons</span>    <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-277"></a>                <span class='hs-comment'>-- ^ Algebraic data types (including ones that started</span>
-<a name="line-278"></a>                <span class='hs-comment'>-- life as classes); generate constructors and info</span>
-<a name="line-279"></a>                <span class='hs-comment'>-- tables. Includes newtypes, just for the benefit of</span>
-<a name="line-280"></a>                <span class='hs-comment'>-- External Core</span>
-<a name="line-281"></a>
-<a name="line-282"></a>        <span class='hs-varid'>cg_binds</span>     <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CoreProgram</span><span class='hs-layout'>,</span>
-<a name="line-283"></a>                <span class='hs-comment'>-- ^ The tidied main bindings, including</span>
-<a name="line-284"></a>                <span class='hs-comment'>-- previously-implicit bindings for record and class</span>
-<a name="line-285"></a>                <span class='hs-comment'>-- selectors, and data constructor wrappers.  But *not*</span>
-<a name="line-286"></a>                <span class='hs-comment'>-- data constructor workers; reason: we we regard them</span>
-<a name="line-287"></a>                <span class='hs-comment'>-- as part of the code-gen of tycons</span>
-<a name="line-288"></a>
-<a name="line-289"></a>        <span class='hs-varid'>cg_foreign</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ForeignStubs</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Foreign export stubs</span>
-<a name="line-290"></a>        <span class='hs-varid'>cg_dep_pkgs</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Dependent packages, used to</span>
-<a name="line-291"></a>                                         <span class='hs-comment'>-- generate #includes for C code gen</span>
-<a name="line-292"></a>        <span class='hs-varid'>cg_hpc_info</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>HpcInfo</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ Program coverage tick box information</span>
-<a name="line-293"></a>        <span class='hs-varid'>cg_modBreaks</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ModBreaks</span>       <span class='hs-comment'>-- ^ Module breakpoints</span>
-<a name="line-294"></a>    <span class='hs-layout'>}</span>
-<a name="line-295"></a>
-<a name="line-296"></a><a name="ForeignStubs"></a><span class='hs-comment'>-----------------------------------</span>
-<a name="line-297"></a><a name="ForeignStubs"></a><span class='hs-comment'>-- | Foreign export stubs</span>
-<a name="line-298"></a><a name="ForeignStubs"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ForeignStubs</span>
-<a name="line-299"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoStubs</span>
-<a name="line-300"></a>      <span class='hs-comment'>-- ^ We don't have any stubs</span>
-<a name="line-301"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-conid'>SDoc</span> <span class='hs-conid'>SDoc</span>
-<a name="line-302"></a>      <span class='hs-comment'>-- ^ There are some stubs. Parameters:</span>
-<a name="line-303"></a>      <span class='hs-comment'>--</span>
-<a name="line-304"></a>      <span class='hs-comment'>--  1) Header file prototypes for</span>
-<a name="line-305"></a>      <span class='hs-comment'>--     "foreign exported" functions</span>
-<a name="line-306"></a>      <span class='hs-comment'>--</span>
-<a name="line-307"></a>      <span class='hs-comment'>--  2) C stubs to use when calling</span>
-<a name="line-308"></a>      <span class='hs-comment'>--     "foreign exported" functions</span>
-<a name="line-309"></a>
-<a name="line-310"></a><a name="appendStubC"></a><span class='hs-definition'>appendStubC</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ForeignStubs</span>
-<a name="line-311"></a><span class='hs-definition'>appendStubC</span> <span class='hs-conid'>NoStubs</span>            <span class='hs-varid'>c_code</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>empty</span> <span class='hs-varid'>c_code</span>
-<a name="line-312"></a><span class='hs-definition'>appendStubC</span> <span class='hs-layout'>(</span><span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>h</span> <span class='hs-varid'>c</span><span class='hs-layout'>)</span> <span class='hs-varid'>c_code</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>h</span> <span class='hs-layout'>(</span><span class='hs-varid'>c</span> <span class='hs-varop'>$$</span> <span class='hs-varid'>c_code</span><span class='hs-layout'>)</span>
+<a name="line-276"></a><a name="ModDetails"></a><span class='hs-comment'>-- | The 'ModDetails' is essentially a cache for information in the 'ModIface'</span>
+<a name="line-277"></a><a name="ModDetails"></a><span class='hs-comment'>-- for home modules only. Information relating to packages will be loaded into</span>
+<a name="line-278"></a><a name="ModDetails"></a><span class='hs-comment'>-- global environments in 'ExternalPackageState'.</span>
+<a name="line-279"></a><a name="ModDetails"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ModDetails</span>
+<a name="line-280"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModDetails</span> <span class='hs-layout'>{</span>
+<a name="line-281"></a>        <span class='hs-comment'>-- The next two fields are created by the typechecker</span>
+<a name="line-282"></a>        <span class='hs-varid'>md_exports</span>   <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>AvailInfo</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-283"></a>        <span class='hs-varid'>md_types</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>TypeEnv</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Local type environment for this particular module</span>
+<a name="line-284"></a>        <span class='hs-varid'>md_insts</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>ClsInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ 'DFunId's for the instances in this module</span>
+<a name="line-285"></a>        <span class='hs-varid'>md_fam_insts</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>FamInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-286"></a>        <span class='hs-varid'>md_rules</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreRule</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Domain may include 'Id's from other modules</span>
+<a name="line-287"></a>        <span class='hs-varid'>md_anns</span>      <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>Annotation</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>  <span class='hs-comment'>-- ^ Annotations present in this module: currently</span>
+<a name="line-288"></a>                                        <span class='hs-comment'>-- they only annotate things also declared in this module</span>
+<a name="line-289"></a>        <span class='hs-varid'>md_vect_info</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>VectInfo</span>       <span class='hs-comment'>-- ^ Module vectorisation information</span>
+<a name="line-290"></a>     <span class='hs-layout'>}</span>
+<a name="line-291"></a>
+<a name="line-292"></a><a name="emptyModDetails"></a><span class='hs-comment'>-- | Constructs an empty ModDetails</span>
+<a name="line-293"></a><span class='hs-definition'>emptyModDetails</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModDetails</span>
+<a name="line-294"></a><span class='hs-definition'>emptyModDetails</span>
+<a name="line-295"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModDetails</span> <span class='hs-layout'>{</span> <span class='hs-varid'>md_types</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>emptyTypeEnv</span><span class='hs-layout'>,</span>
+<a name="line-296"></a>                 <span class='hs-varid'>md_exports</span>   <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-297"></a>                 <span class='hs-varid'>md_insts</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-298"></a>                 <span class='hs-varid'>md_rules</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-299"></a>                 <span class='hs-varid'>md_fam_insts</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-300"></a>                 <span class='hs-varid'>md_anns</span>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>[]</span><span class='hs-layout'>,</span>
+<a name="line-301"></a>                 <span class='hs-varid'>md_vect_info</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>noVectInfo</span> <span class='hs-layout'>}</span>
+<a name="line-302"></a>
+<a name="line-303"></a><a name="ImportedMods"></a><span class='hs-comment'>-- | Records the modules directly imported by a module for extracting e.g. usage information</span>
+<a name="line-304"></a><a name="ImportedMods"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>ImportedMods</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModuleEnv</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>ImportedModsVal</span><span class='hs-keyglyph'>]</span>
+<a name="line-305"></a><a name="ImportedModsVal"></a><span class='hs-keyword'>type</span> <span class='hs-conid'>ImportedModsVal</span> <span class='hs-keyglyph'>=</span> <span class='hs-layout'>(</span><span class='hs-conid'>ModuleName</span><span class='hs-layout'>,</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span> <span class='hs-conid'>SrcSpan</span><span class='hs-layout'>,</span> <span class='hs-conid'>IsSafeImport</span><span class='hs-layout'>)</span>
+<a name="line-306"></a>
+<a name="line-307"></a><a name="ModGuts"></a><span class='hs-comment'>-- | A ModGuts is carried through the compiler, accumulating stuff as it goes</span>
+<a name="line-308"></a><a name="ModGuts"></a><span class='hs-comment'>-- There is only one ModGuts at any time, the one for the module</span>
+<a name="line-309"></a><a name="ModGuts"></a><span class='hs-comment'>-- being compiled right now.  Once it is compiled, a 'ModIface' and</span>
+<a name="line-310"></a><a name="ModGuts"></a><span class='hs-comment'>-- 'ModDetails' are extracted and the ModGuts is discarded.</span>
+<a name="line-311"></a><a name="ModGuts"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ModGuts</span>
+<a name="line-312"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ModGuts</span> <span class='hs-layout'>{</span>
+<a name="line-313"></a>        <span class='hs-varid'>mg_module</span>    <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Module</span><span class='hs-layout'>,</span>         <span class='hs-comment'>-- ^ Module being compiled</span>
+<a name="line-314"></a>        <span class='hs-varid'>mg_boot</span>      <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsBootInterface</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- ^ Whether it's an hs-boot module</span>
+<a name="line-315"></a>        <span class='hs-varid'>mg_exports</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>AvailInfo</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ What it exports</span>
+<a name="line-316"></a>        <span class='hs-varid'>mg_deps</span>      <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Dependencies</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ What it depends on, directly or</span>
+<a name="line-317"></a>                                         <span class='hs-comment'>-- otherwise</span>
+<a name="line-318"></a>        <span class='hs-varid'>mg_dir_imps</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ImportedMods</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Directly-imported modules; used to</span>
+<a name="line-319"></a>                                         <span class='hs-comment'>-- generate initialisation code</span>
+<a name="line-320"></a>        <span class='hs-varid'>mg_used_names</span><span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>NameSet</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ What the module needed (used in 'MkIface.mkIface')</span>
+<a name="line-321"></a>
+<a name="line-322"></a>        <span class='hs-varid'>mg_used_th</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>           <span class='hs-comment'>-- ^ Did we run a TH splice?</span>
+<a name="line-323"></a>        <span class='hs-varid'>mg_rdr_env</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>GlobalRdrEnv</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Top-level lexical environment</span>
+<a name="line-324"></a>
+<a name="line-325"></a>        <span class='hs-comment'>-- These fields all describe the things **declared in this module**</span>
+<a name="line-326"></a>        <span class='hs-varid'>mg_fix_env</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>FixityEnv</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Fixities declared in this module</span>
+<a name="line-327"></a>                                         <span class='hs-comment'>-- ToDo: I'm unconvinced this is actually used anywhere</span>
+<a name="line-328"></a>        <span class='hs-varid'>mg_tcs</span>       <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ TyCons declared in this module</span>
+<a name="line-329"></a>                                         <span class='hs-comment'>-- (includes TyCons for classes)</span>
+<a name="line-330"></a>        <span class='hs-varid'>mg_insts</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>ClsInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Class instances declared in this module</span>
+<a name="line-331"></a>        <span class='hs-varid'>mg_fam_insts</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>FamInst</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-332"></a>                                         <span class='hs-comment'>-- ^ Family instances declared in this module</span>
+<a name="line-333"></a>        <span class='hs-varid'>mg_rules</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreRule</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- ^ Before the core pipeline starts, contains</span>
+<a name="line-334"></a>                                         <span class='hs-comment'>-- See Note [Overall plumbing for rules] in Rules.lhs</span>
+<a name="line-335"></a>        <span class='hs-varid'>mg_binds</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>CoreProgram</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Bindings for this module</span>
+<a name="line-336"></a>        <span class='hs-varid'>mg_foreign</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ForeignStubs</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Foreign exports declared in this module</span>
+<a name="line-337"></a>        <span class='hs-varid'>mg_warns</span>     <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Warnings</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Warnings declared in the module</span>
+<a name="line-338"></a>        <span class='hs-varid'>mg_anns</span>      <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Annotation</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Annotations declared in this module</span>
+<a name="line-339"></a>        <span class='hs-varid'>mg_hpc_info</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>HpcInfo</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ Coverage tick boxes in the module</span>
+<a name="line-340"></a>        <span class='hs-varid'>mg_modBreaks</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ModBreaks</span><span class='hs-layout'>,</span>      <span class='hs-comment'>-- ^ Breakpoints for the module</span>
+<a name="line-341"></a>        <span class='hs-varid'>mg_vect_decls</span><span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>CoreVect</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>     <span class='hs-comment'>-- ^ Vectorisation declarations in this module</span>
+<a name="line-342"></a>                                         <span class='hs-comment'>--   (produced by desugarer &amp; consumed by vectoriser)</span>
+<a name="line-343"></a>        <span class='hs-varid'>mg_vect_info</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>VectInfo</span><span class='hs-layout'>,</span>       <span class='hs-comment'>-- ^ Pool of vectorised declarations in the module</span>
+<a name="line-344"></a>
+<a name="line-345"></a>        <span class='hs-comment'>-- The next two fields are unusual, because they give instance</span>
+<a name="line-346"></a>        <span class='hs-comment'>-- environments for *all* modules in the home package, including</span>
+<a name="line-347"></a>        <span class='hs-comment'>-- this module, rather than for *just* this module.</span>
+<a name="line-348"></a>        <span class='hs-comment'>-- Reason: when looking up an instance we don't want to have to</span>
+<a name="line-349"></a>        <span class='hs-comment'>--        look at each module in the home package in turn</span>
+<a name="line-350"></a>        <span class='hs-varid'>mg_inst_env</span>     <span class='hs-keyglyph'>::</span> <span class='hs-conid'>InstEnv</span><span class='hs-layout'>,</span>
+<a name="line-351"></a>        <span class='hs-comment'>-- ^ Class instance environment from /home-package/ modules (including</span>
+<a name="line-352"></a>        <span class='hs-comment'>-- this one); c.f. 'tcg_inst_env'</span>
+<a name="line-353"></a>        <span class='hs-varid'>mg_fam_inst_env</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FamInstEnv</span><span class='hs-layout'>,</span>
+<a name="line-354"></a>        <span class='hs-comment'>-- ^ Type-family instance enviroment for /home-package/ modules</span>
+<a name="line-355"></a>        <span class='hs-comment'>-- (including this one); c.f. 'tcg_fam_inst_env'</span>
+<a name="line-356"></a>        <span class='hs-varid'>mg_safe_haskell</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>SafeHaskellMode</span><span class='hs-layout'>,</span>
+<a name="line-357"></a>        <span class='hs-comment'>-- ^ Safe Haskell mode</span>
+<a name="line-358"></a>        <span class='hs-varid'>mg_trust_pkg</span>    <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Bool</span><span class='hs-layout'>,</span>
+<a name="line-359"></a>        <span class='hs-comment'>-- ^ Do we need to trust our own package for Safe Haskell?</span>
+<a name="line-360"></a>        <span class='hs-comment'>-- See Note [RnNames . Trust Own Package]</span>
+<a name="line-361"></a>        <span class='hs-varid'>mg_dependent_files</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>FilePath</span><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- ^ dependencies from addDependentFile</span>
+<a name="line-362"></a>    <span class='hs-layout'>}</span>
+<a name="line-363"></a>
+<a name="line-364"></a><span class='hs-comment'>-- The ModGuts takes on several slightly different forms:</span>
+<a name="line-365"></a><span class='hs-comment'>--</span>
+<a name="line-366"></a><span class='hs-comment'>-- After simplification, the following fields change slightly:</span>
+<a name="line-367"></a><span class='hs-comment'>--      mg_rules        Orphan rules only (local ones now attached to binds)</span>
+<a name="line-368"></a><span class='hs-comment'>--      mg_binds        With rules attached</span>
+<a name="line-369"></a>
+<a name="line-370"></a>
+<a name="line-371"></a><span class='hs-comment'>---------------------------------------------------------</span>
+<a name="line-372"></a><span class='hs-comment'>-- The Tidy pass forks the information about this module:</span>
+<a name="line-373"></a><span class='hs-comment'>--      * one lot goes to interface file generation (ModIface)</span>
+<a name="line-374"></a><span class='hs-comment'>--        and later compilations (ModDetails)</span>
+<a name="line-375"></a><span class='hs-comment'>--      * the other lot goes to code generation (CgGuts)</span>
+<a name="line-376"></a>
+<a name="line-377"></a><a name="CgGuts"></a><span class='hs-comment'>-- | A restricted form of 'ModGuts' for code generation purposes</span>
+<a name="line-378"></a><a name="CgGuts"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>CgGuts</span>
+<a name="line-379"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CgGuts</span> <span class='hs-layout'>{</span>
+<a name="line-380"></a>        <span class='hs-varid'>cg_module</span>    <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>Module</span><span class='hs-layout'>,</span>
+<a name="line-381"></a>                <span class='hs-comment'>-- ^ Module being compiled</span>
+<a name="line-382"></a>
+<a name="line-383"></a>        <span class='hs-varid'>cg_tycons</span>    <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyCon</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-384"></a>                <span class='hs-comment'>-- ^ Algebraic data types (including ones that started</span>
+<a name="line-385"></a>                <span class='hs-comment'>-- life as classes); generate constructors and info</span>
+<a name="line-386"></a>                <span class='hs-comment'>-- tables. Includes newtypes, just for the benefit of</span>
+<a name="line-387"></a>                <span class='hs-comment'>-- External Core</span>
+<a name="line-388"></a>
+<a name="line-389"></a>        <span class='hs-varid'>cg_binds</span>     <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CoreProgram</span><span class='hs-layout'>,</span>
+<a name="line-390"></a>                <span class='hs-comment'>-- ^ The tidied main bindings, including</span>
+<a name="line-391"></a>                <span class='hs-comment'>-- previously-implicit bindings for record and class</span>
+<a name="line-392"></a>                <span class='hs-comment'>-- selectors, and data constructor wrappers.  But *not*</span>
+<a name="line-393"></a>                <span class='hs-comment'>-- data constructor workers; reason: we we regard them</span>
+<a name="line-394"></a>                <span class='hs-comment'>-- as part of the code-gen of tycons</span>
+<a name="line-395"></a>
+<a name="line-396"></a>        <span class='hs-varid'>cg_foreign</span>   <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ForeignStubs</span><span class='hs-layout'>,</span>   <span class='hs-comment'>-- ^ Foreign export stubs</span>
+<a name="line-397"></a>        <span class='hs-varid'>cg_dep_pkgs</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-keyglyph'>[</span><span class='hs-conid'>PackageId</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>    <span class='hs-comment'>-- ^ Dependent packages, used to</span>
+<a name="line-398"></a>                                         <span class='hs-comment'>-- generate #includes for C code gen</span>
+<a name="line-399"></a>        <span class='hs-varid'>cg_hpc_info</span>  <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>HpcInfo</span><span class='hs-layout'>,</span>        <span class='hs-comment'>-- ^ Program coverage tick box information</span>
+<a name="line-400"></a>        <span class='hs-varid'>cg_modBreaks</span> <span class='hs-keyglyph'>::</span> <span class='hs-varop'>!</span><span class='hs-conid'>ModBreaks</span>       <span class='hs-comment'>-- ^ Module breakpoints</span>
+<a name="line-401"></a>    <span class='hs-layout'>}</span>
+<a name="line-402"></a>
+<a name="line-403"></a><a name="ForeignStubs"></a><span class='hs-comment'>-----------------------------------</span>
+<a name="line-404"></a><a name="ForeignStubs"></a><span class='hs-comment'>-- | Foreign export stubs</span>
+<a name="line-405"></a><a name="ForeignStubs"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>ForeignStubs</span>
+<a name="line-406"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>NoStubs</span>
+<a name="line-407"></a>      <span class='hs-comment'>-- ^ We don't have any stubs</span>
+<a name="line-408"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-conid'>SDoc</span> <span class='hs-conid'>SDoc</span>
+<a name="line-409"></a>      <span class='hs-comment'>-- ^ There are some stubs. Parameters:</span>
+<a name="line-410"></a>      <span class='hs-comment'>--</span>
+<a name="line-411"></a>      <span class='hs-comment'>--  1) Header file prototypes for</span>
+<a name="line-412"></a>      <span class='hs-comment'>--     "foreign exported" functions</span>
+<a name="line-413"></a>      <span class='hs-comment'>--</span>
+<a name="line-414"></a>      <span class='hs-comment'>--  2) C stubs to use when calling</span>
+<a name="line-415"></a>      <span class='hs-comment'>--     "foreign exported" functions</span>
+<a name="line-416"></a>
+<a name="line-417"></a><a name="appendStubC"></a><span class='hs-definition'>appendStubC</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>SDoc</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ForeignStubs</span>
+<a name="line-418"></a><span class='hs-definition'>appendStubC</span> <span class='hs-conid'>NoStubs</span>            <span class='hs-varid'>c_code</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>empty</span> <span class='hs-varid'>c_code</span>
+<a name="line-419"></a><span class='hs-definition'>appendStubC</span> <span class='hs-layout'>(</span><span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>h</span> <span class='hs-varid'>c</span><span class='hs-layout'>)</span> <span class='hs-varid'>c_code</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ForeignStubs</span> <span class='hs-varid'>h</span> <span class='hs-layout'>(</span><span class='hs-varid'>c</span> <span class='hs-varop'>$$</span> <span class='hs-varid'>c_code</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -972,7 +1080,7 @@
 <a name="line-40"></a>
 <a name="line-41"></a>         <span class='hs-varid'>ic_fix_env</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FixityEnv</span><span class='hs-layout'>,</span>
 <a name="line-42"></a>            <span class='hs-comment'>-- ^ Fixities declared in let statements</span>
-<a name="line-43"></a>         
+<a name="line-43"></a>
 <a name="line-44"></a>         <span class='hs-varid'>ic_int_print</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span><span class='hs-layout'>,</span>
 <a name="line-45"></a>             <span class='hs-comment'>-- ^ The function that is used for printing results</span>
 <a name="line-46"></a>             <span class='hs-comment'>-- of expressions in ghci and -e mode.</span>
@@ -1435,7 +1543,7 @@ Examples:
 <a name="line-17"></a>       <span class='hs-varid'>return</span> <span class='hs-varid'>x</span>
 <a name="line-18"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>
 <a name="line-19"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>lookupNameEnv</span> <span class='hs-varid'>pte</span> <span class='hs-varid'>name</span>
-<a name="line-20"></a>  <span class='hs-keyword'>where</span> 
+<a name="line-20"></a>  <span class='hs-keyword'>where</span>
 <a name="line-21"></a>    <span class='hs-varid'>mod</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT2</span><span class='hs-layout'>(</span> <span class='hs-varid'>isExternalName</span> <span class='hs-varid'>name</span><span class='hs-layout'>,</span> <span class='hs-varid'>ppr</span> <span class='hs-varid'>name</span> <span class='hs-layout'>)</span> <span class='hs-varid'>nameModule</span> <span class='hs-varid'>name</span>
 <a name="line-22"></a>    <span class='hs-varid'>this_pkg</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>thisPackage</span> <span class='hs-varid'>dflags</span>
 <a name="line-23"></a>
@@ -1536,21 +1644,39 @@ but they are mostly elaborated elsewhere
 <a name="line-27"></a>     <span class='hs-comment'>--        a Name to its fixity declaration.</span>
 <a name="line-28"></a>  <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span> <span class='hs-layout'>)</span>
 <a name="line-29"></a>
-<a name="line-30"></a><a name="mkIfaceWarnCache"></a><span class='hs-comment'>-- | Constructs the cache for the 'mi_warn_fn' field of a 'ModIface'</span>
-<a name="line-31"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>WarningTxt</span>
-<a name="line-32"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-conid'>NoWarnings</span>  <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Nothing</span>
-<a name="line-33"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>t</span>
-<a name="line-34"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>lookupOccEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkOccEnv</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span> <span class='hs-varop'>.</span> <span class='hs-varid'>nameOccName</span>
-<a name="line-35"></a>
-<a name="line-36"></a><a name="emptyIfaceWarnCache"></a><span class='hs-definition'>emptyIfaceWarnCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>WarningTxt</span>
-<a name="line-37"></a><span class='hs-definition'>emptyIfaceWarnCache</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
+<a name="line-30"></a><a name="instance%20Binary%20Warnings"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyword'>where</span>
+<a name="line-31"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-conid'>NoWarnings</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>0</span>
+<a name="line-32"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-33"></a>            <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>1</span>
+<a name="line-34"></a>            <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>t</span>
+<a name="line-35"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>ts</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-36"></a>            <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>2</span>
+<a name="line-37"></a>            <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>ts</span>
 <a name="line-38"></a>
-<a name="line-39"></a><a name="plusWarns"></a><span class='hs-definition'>plusWarns</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Warnings</span>
-<a name="line-40"></a><span class='hs-definition'>plusWarns</span> <span class='hs-varid'>d</span> <span class='hs-conid'>NoWarnings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>d</span>
-<a name="line-41"></a><span class='hs-definition'>plusWarns</span> <span class='hs-conid'>NoWarnings</span> <span class='hs-varid'>d</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>d</span>
-<a name="line-42"></a><span class='hs-definition'>plusWarns</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span>
-<a name="line-43"></a><span class='hs-definition'>plusWarns</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span>
-<a name="line-44"></a><span class='hs-definition'>plusWarns</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>v1</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>v2</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnSome</span> <span class='hs-layout'>(</span><span class='hs-varid'>v1</span> <span class='hs-varop'>++</span> <span class='hs-varid'>v2</span><span class='hs-layout'>)</span>
+<a name="line-39"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-40"></a>            <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getByte</span> <span class='hs-varid'>bh</span>
+<a name="line-41"></a>            <span class='hs-keyword'>case</span> <span class='hs-varid'>h</span> <span class='hs-keyword'>of</span>
+<a name="line-42"></a>              <span class='hs-num'>0</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>return</span> <span class='hs-conid'>NoWarnings</span>
+<a name="line-43"></a>              <span class='hs-num'>1</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>aa</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-44"></a>                      <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>aa</span><span class='hs-layout'>)</span>
+<a name="line-45"></a>              <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>aa</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-46"></a>                      <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>aa</span><span class='hs-layout'>)</span>
+<a name="line-47"></a>
+<a name="line-48"></a><a name="mkIfaceWarnCache"></a><span class='hs-comment'>-- | Constructs the cache for the 'mi_warn_fn' field of a 'ModIface'</span>
+<a name="line-49"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>WarningTxt</span>
+<a name="line-50"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-conid'>NoWarnings</span>  <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Nothing</span>
+<a name="line-51"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>\</span><span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Just</span> <span class='hs-varid'>t</span>
+<a name="line-52"></a><span class='hs-definition'>mkIfaceWarnCache</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>lookupOccEnv</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkOccEnv</span> <span class='hs-varid'>pairs</span><span class='hs-layout'>)</span> <span class='hs-varop'>.</span> <span class='hs-varid'>nameOccName</span>
+<a name="line-53"></a>
+<a name="line-54"></a><a name="emptyIfaceWarnCache"></a><span class='hs-definition'>emptyIfaceWarnCache</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>WarningTxt</span>
+<a name="line-55"></a><span class='hs-definition'>emptyIfaceWarnCache</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
+<a name="line-56"></a>
+<a name="line-57"></a><a name="plusWarns"></a><span class='hs-definition'>plusWarns</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Warnings</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Warnings</span>
+<a name="line-58"></a><span class='hs-definition'>plusWarns</span> <span class='hs-varid'>d</span> <span class='hs-conid'>NoWarnings</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>d</span>
+<a name="line-59"></a><span class='hs-definition'>plusWarns</span> <span class='hs-conid'>NoWarnings</span> <span class='hs-varid'>d</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>d</span>
+<a name="line-60"></a><span class='hs-definition'>plusWarns</span> <span class='hs-keyword'>_</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span>
+<a name="line-61"></a><span class='hs-definition'>plusWarns</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span><span class='hs-layout'>)</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnAll</span> <span class='hs-varid'>t</span>
+<a name="line-62"></a><span class='hs-definition'>plusWarns</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>v1</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-conid'>WarnSome</span> <span class='hs-varid'>v2</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>WarnSome</span> <span class='hs-layout'>(</span><span class='hs-varid'>v1</span> <span class='hs-varop'>++</span> <span class='hs-varid'>v2</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 \begin{code}
@@ -1634,54 +1760,119 @@ but they are mostly elaborated elsewhere
 <a name="line-41"></a>        <span class='hs-comment'>-- Equality used only for old/new comparison in MkIface.addFingerprints</span>
 <a name="line-42"></a>        <span class='hs-comment'>-- See 'TcRnTypes.ImportAvails' for details on dependencies.</span>
 <a name="line-43"></a>
-<a name="line-44"></a><a name="noDependencies"></a><span class='hs-definition'>noDependencies</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Dependencies</span>
-<a name="line-45"></a><span class='hs-definition'>noDependencies</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Deps</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span>
-<a name="line-46"></a>
-<a name="line-47"></a><a name="Usage"></a><span class='hs-comment'>-- | Records modules that we depend on by making a direct import from</span>
-<a name="line-48"></a><a name="Usage"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Usage</span>
-<a name="line-49"></a>  <span class='hs-comment'>-- | Module from another package</span>
-<a name="line-50"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>UsagePackageModule</span> <span class='hs-layout'>{</span>
-<a name="line-51"></a>        <span class='hs-varid'>usg_mod</span>      <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span><span class='hs-layout'>,</span>
-<a name="line-52"></a>           <span class='hs-comment'>-- ^ External package module depended on</span>
-<a name="line-53"></a>        <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
-<a name="line-54"></a>            <span class='hs-comment'>-- ^ Cached module fingerprint</span>
-<a name="line-55"></a>        <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsSafeImport</span>
-<a name="line-56"></a>            <span class='hs-comment'>-- ^ Was this module imported as a safe import</span>
-<a name="line-57"></a>    <span class='hs-layout'>}</span>
-<a name="line-58"></a>  <span class='hs-comment'>-- | Module from the current package</span>
-<a name="line-59"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>UsageHomeModule</span> <span class='hs-layout'>{</span>
-<a name="line-60"></a>        <span class='hs-varid'>usg_mod_name</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span><span class='hs-layout'>,</span>
-<a name="line-61"></a>            <span class='hs-comment'>-- ^ Name of the module</span>
-<a name="line-62"></a>        <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
-<a name="line-63"></a>            <span class='hs-comment'>-- ^ Cached module fingerprint</span>
-<a name="line-64"></a>        <span class='hs-varid'>usg_entities</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span><span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
-<a name="line-65"></a>            <span class='hs-comment'>-- ^ Entities we depend on, sorted by occurrence name and fingerprinted.</span>
-<a name="line-66"></a>            <span class='hs-comment'>-- NB: usages are for parent names only, e.g. type constructors</span>
-<a name="line-67"></a>            <span class='hs-comment'>-- but not the associated data constructors.</span>
-<a name="line-68"></a>        <span class='hs-varid'>usg_exports</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
-<a name="line-69"></a>            <span class='hs-comment'>-- ^ Fingerprint for the export list we used to depend on this module,</span>
-<a name="line-70"></a>            <span class='hs-comment'>-- if we depend on the export list</span>
-<a name="line-71"></a>        <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsSafeImport</span>
-<a name="line-72"></a>            <span class='hs-comment'>-- ^ Was this module imported as a safe import</span>
-<a name="line-73"></a>    <span class='hs-layout'>}</span>                                           <span class='hs-comment'>-- ^ Module from the current package</span>
-<a name="line-74"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>UsageFile</span> <span class='hs-layout'>{</span>
-<a name="line-75"></a>        <span class='hs-varid'>usg_file_path</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FilePath</span><span class='hs-layout'>,</span>
-<a name="line-76"></a>        <span class='hs-varid'>usg_mtime</span>      <span class='hs-keyglyph'>::</span> <span class='hs-conid'>UTCTime</span>
-<a name="line-77"></a>        <span class='hs-comment'>-- ^ External file dependency. From a CPP #include or TH addDependentFile. Should be absolute.</span>
-<a name="line-78"></a>  <span class='hs-layout'>}</span>
-<a name="line-79"></a>    <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span> <span class='hs-layout'>)</span>
-<a name="line-80"></a>        <span class='hs-comment'>-- The export list field is (Just v) if we depend on the export list:</span>
-<a name="line-81"></a>        <span class='hs-comment'>--      i.e. we imported the module directly, whether or not we</span>
-<a name="line-82"></a>        <span class='hs-comment'>--           enumerated the things we imported, or just imported</span>
-<a name="line-83"></a>        <span class='hs-comment'>--           everything</span>
-<a name="line-84"></a>        <span class='hs-comment'>-- We need to recompile if M's exports change, because</span>
-<a name="line-85"></a>        <span class='hs-comment'>-- if the import was    import M,       we might now have a name clash</span>
-<a name="line-86"></a>        <span class='hs-comment'>--                                      in the importing module.</span>
-<a name="line-87"></a>        <span class='hs-comment'>-- if the import was    import M(x)     M might no longer export x</span>
-<a name="line-88"></a>        <span class='hs-comment'>-- The only way we don't depend on the export list is if we have</span>
-<a name="line-89"></a>        <span class='hs-comment'>--                      import M()</span>
-<a name="line-90"></a>        <span class='hs-comment'>-- And of course, for modules that aren't imported directly we don't</span>
-<a name="line-91"></a>        <span class='hs-comment'>-- depend on their export lists</span>
+<a name="line-44"></a><a name="instance%20Binary%20Dependencies"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>Dependencies</span> <span class='hs-keyword'>where</span>
+<a name="line-45"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>deps</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>dep_mods</span> <span class='hs-varid'>deps</span><span class='hs-layout'>)</span>
+<a name="line-46"></a>                      <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>dep_pkgs</span> <span class='hs-varid'>deps</span><span class='hs-layout'>)</span>
+<a name="line-47"></a>                      <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>dep_orphs</span> <span class='hs-varid'>deps</span><span class='hs-layout'>)</span>
+<a name="line-48"></a>                      <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>dep_finsts</span> <span class='hs-varid'>deps</span><span class='hs-layout'>)</span>
+<a name="line-49"></a>
+<a name="line-50"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>ms</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-51"></a>                <span class='hs-varid'>ps</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-52"></a>                <span class='hs-varid'>os</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-53"></a>                <span class='hs-varid'>fis</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-54"></a>                <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>Deps</span> <span class='hs-layout'>{</span> <span class='hs-varid'>dep_mods</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ms</span><span class='hs-layout'>,</span> <span class='hs-varid'>dep_pkgs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ps</span><span class='hs-layout'>,</span> <span class='hs-varid'>dep_orphs</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>os</span><span class='hs-layout'>,</span>
+<a name="line-55"></a>                               <span class='hs-varid'>dep_finsts</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fis</span> <span class='hs-layout'>}</span><span class='hs-layout'>)</span>
+<a name="line-56"></a>
+<a name="line-57"></a><a name="noDependencies"></a><span class='hs-definition'>noDependencies</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Dependencies</span>
+<a name="line-58"></a><span class='hs-definition'>noDependencies</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Deps</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span>
+<a name="line-59"></a>
+<a name="line-60"></a><a name="Usage"></a><span class='hs-comment'>-- | Records modules that we depend on by making a direct import from</span>
+<a name="line-61"></a><a name="Usage"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>Usage</span>
+<a name="line-62"></a>  <span class='hs-comment'>-- | Module from another package</span>
+<a name="line-63"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>UsagePackageModule</span> <span class='hs-layout'>{</span>
+<a name="line-64"></a>        <span class='hs-varid'>usg_mod</span>      <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Module</span><span class='hs-layout'>,</span>
+<a name="line-65"></a>           <span class='hs-comment'>-- ^ External package module depended on</span>
+<a name="line-66"></a>        <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
+<a name="line-67"></a>            <span class='hs-comment'>-- ^ Cached module fingerprint</span>
+<a name="line-68"></a>        <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsSafeImport</span>
+<a name="line-69"></a>            <span class='hs-comment'>-- ^ Was this module imported as a safe import</span>
+<a name="line-70"></a>    <span class='hs-layout'>}</span>
+<a name="line-71"></a>  <span class='hs-comment'>-- | Module from the current package</span>
+<a name="line-72"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>UsageHomeModule</span> <span class='hs-layout'>{</span>
+<a name="line-73"></a>        <span class='hs-varid'>usg_mod_name</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>ModuleName</span><span class='hs-layout'>,</span>
+<a name="line-74"></a>            <span class='hs-comment'>-- ^ Name of the module</span>
+<a name="line-75"></a>        <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
+<a name="line-76"></a>            <span class='hs-comment'>-- ^ Cached module fingerprint</span>
+<a name="line-77"></a>        <span class='hs-varid'>usg_entities</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>OccName</span><span class='hs-layout'>,</span><span class='hs-conid'>Fingerprint</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span>
+<a name="line-78"></a>            <span class='hs-comment'>-- ^ Entities we depend on, sorted by occurrence name and fingerprinted.</span>
+<a name="line-79"></a>            <span class='hs-comment'>-- NB: usages are for parent names only, e.g. type constructors</span>
+<a name="line-80"></a>            <span class='hs-comment'>-- but not the associated data constructors.</span>
+<a name="line-81"></a>        <span class='hs-varid'>usg_exports</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>Fingerprint</span><span class='hs-layout'>,</span>
+<a name="line-82"></a>            <span class='hs-comment'>-- ^ Fingerprint for the export list we used to depend on this module,</span>
+<a name="line-83"></a>            <span class='hs-comment'>-- if we depend on the export list</span>
+<a name="line-84"></a>        <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IsSafeImport</span>
+<a name="line-85"></a>            <span class='hs-comment'>-- ^ Was this module imported as a safe import</span>
+<a name="line-86"></a>    <span class='hs-layout'>}</span>                                           <span class='hs-comment'>-- ^ Module from the current package</span>
+<a name="line-87"></a>  <span class='hs-comment'>-- | A file upon which the module depends, e.g. a CPP #include, or using TH's</span>
+<a name="line-88"></a>  <span class='hs-comment'>-- 'addDependentFile'</span>
+<a name="line-89"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>UsageFile</span> <span class='hs-layout'>{</span>
+<a name="line-90"></a>        <span class='hs-varid'>usg_file_path</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>FilePath</span><span class='hs-layout'>,</span>
+<a name="line-91"></a>        <span class='hs-comment'>-- ^ External file dependency. From a CPP #include or TH</span>
+<a name="line-92"></a>        <span class='hs-comment'>-- addDependentFile. Should be absolute.</span>
+<a name="line-93"></a>        <span class='hs-varid'>usg_file_hash</span>  <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Fingerprint</span>
+<a name="line-94"></a>        <span class='hs-comment'>-- ^ 'Fingerprint' of the file contents.</span>
+<a name="line-95"></a>
+<a name="line-96"></a>        <span class='hs-comment'>-- Note: We don't consider things like modification timestamps</span>
+<a name="line-97"></a>        <span class='hs-comment'>-- here, because there's no reason to recompile if the actual</span>
+<a name="line-98"></a>        <span class='hs-comment'>-- contents don't change.  This previously lead to odd</span>
+<a name="line-99"></a>        <span class='hs-comment'>-- recompilation behaviors; see #8114</span>
+<a name="line-100"></a>  <span class='hs-layout'>}</span>
+<a name="line-101"></a>    <span class='hs-keyword'>deriving</span><span class='hs-layout'>(</span> <span class='hs-conid'>Eq</span> <span class='hs-layout'>)</span>
+<a name="line-102"></a>        <span class='hs-comment'>-- The export list field is (Just v) if we depend on the export list:</span>
+<a name="line-103"></a>        <span class='hs-comment'>--      i.e. we imported the module directly, whether or not we</span>
+<a name="line-104"></a>        <span class='hs-comment'>--           enumerated the things we imported, or just imported</span>
+<a name="line-105"></a>        <span class='hs-comment'>--           everything</span>
+<a name="line-106"></a>        <span class='hs-comment'>-- We need to recompile if M's exports change, because</span>
+<a name="line-107"></a>        <span class='hs-comment'>-- if the import was    import M,       we might now have a name clash</span>
+<a name="line-108"></a>        <span class='hs-comment'>--                                      in the importing module.</span>
+<a name="line-109"></a>        <span class='hs-comment'>-- if the import was    import M(x)     M might no longer export x</span>
+<a name="line-110"></a>        <span class='hs-comment'>-- The only way we don't depend on the export list is if we have</span>
+<a name="line-111"></a>        <span class='hs-comment'>--                      import M()</span>
+<a name="line-112"></a>        <span class='hs-comment'>-- And of course, for modules that aren't imported directly we don't</span>
+<a name="line-113"></a>        <span class='hs-comment'>-- depend on their export lists</span>
+<a name="line-114"></a>
+<a name="line-115"></a><a name="instance%20Binary%20Usage"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>Usage</span> <span class='hs-keyword'>where</span>
+<a name="line-116"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>usg</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>UsagePackageModule</span><span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-117"></a>        <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>0</span>
+<a name="line-118"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_mod</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-119"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_mod_hash</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-120"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_safe</span>     <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-121"></a>
+<a name="line-122"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>usg</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>UsageHomeModule</span><span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-123"></a>        <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>1</span>
+<a name="line-124"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_mod_name</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-125"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_mod_hash</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-126"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_exports</span>  <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-127"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_entities</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-128"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_safe</span>     <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-129"></a>
+<a name="line-130"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>usg</span><span class='hs-keyglyph'>@</span><span class='hs-conid'>UsageFile</span><span class='hs-layout'>{</span><span class='hs-layout'>}</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-131"></a>        <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>2</span>
+<a name="line-132"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_file_path</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-133"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-varid'>usg_file_hash</span> <span class='hs-varid'>usg</span><span class='hs-layout'>)</span>
+<a name="line-134"></a>
+<a name="line-135"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-136"></a>        <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getByte</span> <span class='hs-varid'>bh</span>
+<a name="line-137"></a>        <span class='hs-keyword'>case</span> <span class='hs-varid'>h</span> <span class='hs-keyword'>of</span>
+<a name="line-138"></a>          <span class='hs-num'>0</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-139"></a>            <span class='hs-varid'>nm</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-140"></a>            <span class='hs-varid'>mod</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-141"></a>            <span class='hs-keyword'>safe</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-142"></a>            <span class='hs-varid'>return</span> <span class='hs-conid'>UsagePackageModule</span> <span class='hs-layout'>{</span> <span class='hs-varid'>usg_mod</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nm</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>safe</span> <span class='hs-layout'>}</span>
+<a name="line-143"></a>          <span class='hs-num'>1</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-144"></a>            <span class='hs-varid'>nm</span>    <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-145"></a>            <span class='hs-varid'>mod</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-146"></a>            <span class='hs-varid'>exps</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-147"></a>            <span class='hs-varid'>ents</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-148"></a>            <span class='hs-keyword'>safe</span>  <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-149"></a>            <span class='hs-varid'>return</span> <span class='hs-conid'>UsageHomeModule</span> <span class='hs-layout'>{</span> <span class='hs-varid'>usg_mod_name</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>nm</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_mod_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mod</span><span class='hs-layout'>,</span>
+<a name="line-150"></a>                     <span class='hs-varid'>usg_exports</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>exps</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_entities</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ents</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_safe</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>safe</span> <span class='hs-layout'>}</span>
+<a name="line-151"></a>          <span class='hs-num'>2</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span>
+<a name="line-152"></a>            <span class='hs-varid'>fp</span>   <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-153"></a>            <span class='hs-varid'>hash</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-154"></a>            <span class='hs-varid'>return</span> <span class='hs-conid'>UsageFile</span> <span class='hs-layout'>{</span> <span class='hs-varid'>usg_file_path</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>fp</span><span class='hs-layout'>,</span> <span class='hs-varid'>usg_file_hash</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>hash</span> <span class='hs-layout'>}</span>
+<a name="line-155"></a>          <span class='hs-varid'>i</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>error</span> <span class='hs-layout'>(</span><span class='hs-str'>"Binary.get(Usage): "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span>
+<a name="line-156"></a>
 </pre>\end{code}
 
 
@@ -2069,6 +2260,21 @@ on just the OccName easily in a Core pass.
 <a name="line-68"></a>             <span class='hs-layout'>,</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"parallel vars   :"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>vectInfoParallelVars</span>   <span class='hs-varid'>info</span><span class='hs-layout'>)</span>
 <a name="line-69"></a>             <span class='hs-layout'>,</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"parallel tycons :"</span><span class='hs-layout'>)</span> <span class='hs-varop'>&lt;+&gt;</span> <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-varid'>vectInfoParallelTyCons</span> <span class='hs-varid'>info</span><span class='hs-layout'>)</span>
 <a name="line-70"></a>             <span class='hs-keyglyph'>]</span>
+<a name="line-71"></a>
+<a name="line-72"></a><a name="instance%20Binary%20IfaceVectInfo"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>IfaceVectInfo</span> <span class='hs-keyword'>where</span>
+<a name="line-73"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>IfaceVectInfo</span> <span class='hs-varid'>a1</span> <span class='hs-varid'>a2</span> <span class='hs-varid'>a3</span> <span class='hs-varid'>a4</span> <span class='hs-varid'>a5</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-74"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>a1</span>
+<a name="line-75"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>a2</span>
+<a name="line-76"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>a3</span>
+<a name="line-77"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>a4</span>
+<a name="line-78"></a>        <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>a5</span>
+<a name="line-79"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-80"></a>        <span class='hs-varid'>a1</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-81"></a>        <span class='hs-varid'>a2</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-82"></a>        <span class='hs-varid'>a3</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-83"></a>        <span class='hs-varid'>a4</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-84"></a>        <span class='hs-varid'>a5</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-85"></a>        <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>IfaceVectInfo</span> <span class='hs-varid'>a1</span> <span class='hs-varid'>a2</span> <span class='hs-varid'>a3</span> <span class='hs-varid'>a4</span> <span class='hs-varid'>a5</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -2120,6 +2326,10 @@ primarily about storing under what trust type a module has been compiled.
 <a name="line-37"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>TrustInfo</span> <span class='hs-conid'>Sf_Trustworthy</span><span class='hs-layout'>)</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-varop'>$</span> <span class='hs-varid'>sLit</span> <span class='hs-str'>"trustworthy"</span>
 <a name="line-38"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>TrustInfo</span> <span class='hs-conid'>Sf_Safe</span><span class='hs-layout'>)</span>          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-varop'>$</span> <span class='hs-varid'>sLit</span> <span class='hs-str'>"safe"</span>
 <a name="line-39"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>TrustInfo</span> <span class='hs-conid'>Sf_SafeInferred</span><span class='hs-layout'>)</span>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-varop'>$</span> <span class='hs-varid'>sLit</span> <span class='hs-str'>"safe-inferred"</span>
+<a name="line-40"></a>
+<a name="line-41"></a><a name="instance%20Binary%20IfaceTrustInfo"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>IfaceTrustInfo</span> <span class='hs-keyword'>where</span>
+<a name="line-42"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>iftrust</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-varop'>$</span> <span class='hs-varid'>trustInfoToNum</span> <span class='hs-varid'>iftrust</span>
+<a name="line-43"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>getByte</span> <span class='hs-varid'>bh</span> <span class='hs-varop'>&gt;&gt;=</span> <span class='hs-layout'>(</span><span class='hs-varid'>return</span> <span class='hs-varop'>.</span> <span class='hs-varid'>numToTrustInfo</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 
 %************************************************************************
@@ -2265,6 +2475,5 @@ stuff is the *dynamic* linker, and isn't present in a stage-1 compiler
 <a name="line-25"></a>   <span class='hs-layout'>,</span> <span class='hs-varid'>modBreaks_decls</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>array</span> <span class='hs-layout'>(</span><span class='hs-num'>0</span><span class='hs-layout'>,</span><span class='hs-comment'>-</span><span class='hs-num'>1</span><span class='hs-layout'>)</span> <span class='hs-conid'>[]</span>
 <a name="line-26"></a>   <span class='hs-layout'>}</span>
 </pre>\end{code}
-
 </body>
 </html>

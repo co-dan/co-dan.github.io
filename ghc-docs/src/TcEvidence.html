@@ -88,6 +88,12 @@ differences
   * The kind of a TcCoercion is  t1 ~  t2 
              of a Coercion   is  t1 ~# t2
 
+  * TcCoercions are essentially all at role Nominal -- the type-checker
+    reasons only about nominal equality, not representational.
+    --> Exception: there can be newtype axioms wrapped up in TcCoercions.
+                   These, of course, are only used in casts, so the desugarer
+                   will still produce the right 'Coercion's.
+
   * TcAxiomInstCo takes Types, not Coecions as arguments;
     the generality is required only in the Simplifier
 
@@ -105,7 +111,7 @@ differences
 <a name="line-4"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcAppCo</span> <span class='hs-conid'>TcCoercion</span> <span class='hs-conid'>TcCoercion</span>
 <a name="line-5"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcForAllCo</span> <span class='hs-conid'>TyVar</span> <span class='hs-conid'>TcCoercion</span> 
 <a name="line-6"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcInstCo</span> <span class='hs-conid'>TcCoercion</span> <span class='hs-conid'>TcType</span>
-<a name="line-7"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcCoVarCo</span> <span class='hs-conid'>EqVar</span>
+<a name="line-7"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcCoVarCo</span> <span class='hs-conid'>EqVar</span>               <span class='hs-comment'>-- variable always at role N</span>
 <a name="line-8"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcAxiomInstCo</span> <span class='hs-layout'>(</span><span class='hs-conid'>CoAxiom</span> <span class='hs-conid'>Branched</span><span class='hs-layout'>)</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TcType</span><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- Int specifies branch number</span>
 <a name="line-9"></a>                                                  <span class='hs-comment'>-- See [CoAxiom Index] in Coercion.lhs</span>
 <a name="line-10"></a>  <span class='hs-keyglyph'>|</span> <span class='hs-conid'>TcSymCo</span> <span class='hs-conid'>TcCoercion</span>

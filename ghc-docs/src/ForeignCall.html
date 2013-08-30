@@ -165,7 +165,7 @@ platforms.
 See: http://www.programmersheaven.com/2/Calling-conventions
 
 \begin{code}
-<pre><a name="line-1"></a><a name="CCallConv"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>CApiConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>StdCallConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PrimCallConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>JavaScriptCallConv</span>
+<pre><a name="line-1"></a><a name="CCallConv"></a><span class='hs-keyword'>data</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>CApiConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>StdCallConv</span> <span class='hs-keyglyph'>|</span> <span class='hs-conid'>PrimCallConv</span>
 <a name="line-2"></a>  <span class='hs-keyword'>deriving</span> <span class='hs-layout'>(</span><span class='hs-conid'>Eq</span><span class='hs-layout'>,</span> <span class='hs-conid'>Data</span><span class='hs-layout'>,</span> <span class='hs-conid'>Typeable</span><span class='hs-layout'>)</span>
 <a name="line-3"></a>  <span class='hs-comment'>{-! derive: Binary !-}</span>
 <a name="line-4"></a>
@@ -174,17 +174,15 @@ See: http://www.programmersheaven.com/2/Calling-conventions
 <a name="line-7"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>CCallConv</span>   <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"ccall"</span><span class='hs-layout'>)</span>
 <a name="line-8"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>CApiConv</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"capi"</span><span class='hs-layout'>)</span>
 <a name="line-9"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>PrimCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"prim"</span><span class='hs-layout'>)</span>
-<a name="line-10"></a>  <span class='hs-varid'>ppr</span> <span class='hs-conid'>JavaScriptCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>ptext</span> <span class='hs-layout'>(</span><span class='hs-varid'>sLit</span> <span class='hs-str'>"javascript"</span><span class='hs-layout'>)</span>
-<a name="line-11"></a>
-<a name="line-12"></a><a name="defaultCCallConv"></a><span class='hs-definition'>defaultCCallConv</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CCallConv</span>
-<a name="line-13"></a><span class='hs-definition'>defaultCCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CCallConv</span>
-<a name="line-14"></a>
-<a name="line-15"></a><a name="ccallConvToInt"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
-<a name="line-16"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>StdCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-num'>0</span>
-<a name="line-17"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>CCallConv</span>   <span class='hs-keyglyph'>=</span> <span class='hs-num'>1</span>
-<a name="line-18"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>CApiConv</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvToInt CApiConv"</span>
-<a name="line-19"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-layout'>(</span><span class='hs-conid'>PrimCallConv</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvToInt PrimCallConv"</span>
-<a name="line-20"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>JavaScriptCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvToInt JavaScriptCallConv"</span>
+<a name="line-10"></a>
+<a name="line-11"></a><a name="defaultCCallConv"></a><span class='hs-definition'>defaultCCallConv</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CCallConv</span>
+<a name="line-12"></a><span class='hs-definition'>defaultCCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>CCallConv</span>
+<a name="line-13"></a>
+<a name="line-14"></a><a name="ccallConvToInt"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>CCallConv</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
+<a name="line-15"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>StdCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-num'>0</span>
+<a name="line-16"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>CCallConv</span>   <span class='hs-keyglyph'>=</span> <span class='hs-num'>1</span>
+<a name="line-17"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-conid'>CApiConv</span>    <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvToInt CApiConv"</span>
+<a name="line-18"></a><span class='hs-definition'>ccallConvToInt</span> <span class='hs-layout'>(</span><span class='hs-conid'>PrimCallConv</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvToInt PrimCallConv"</span>
 </pre>\end{code}
 
 Generate the gcc attribute corresponding to the given
@@ -196,7 +194,6 @@ calling convention (used by PprAbsC):
 <a name="line-3"></a><span class='hs-definition'>ccallConvAttribute</span> <span class='hs-conid'>CCallConv</span>         <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 <a name="line-4"></a><span class='hs-definition'>ccallConvAttribute</span> <span class='hs-conid'>CApiConv</span>          <span class='hs-keyglyph'>=</span> <span class='hs-varid'>empty</span>
 <a name="line-5"></a><span class='hs-definition'>ccallConvAttribute</span> <span class='hs-layout'>(</span><span class='hs-conid'>PrimCallConv</span> <span class='hs-layout'>{</span><span class='hs-layout'>}</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvAttribute PrimCallConv"</span>
-<a name="line-6"></a><span class='hs-definition'>ccallConvAttribute</span> <span class='hs-conid'>JavaScriptCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>panic</span> <span class='hs-str'>"ccallConvAttribute JavaScriptCallConv"</span>
 </pre>\end{code}
 
 \begin{code}
@@ -336,28 +333,25 @@ Printing into C files:
 <a name="line-63"></a>            <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>2</span>
 <a name="line-64"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-conid'>CApiConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
 <a name="line-65"></a>            <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>3</span>
-<a name="line-66"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-conid'>JavaScriptCallConv</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-67"></a>            <span class='hs-varid'>putByte</span> <span class='hs-varid'>bh</span> <span class='hs-num'>4</span>
-<a name="line-68"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<a name="line-69"></a>            <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getByte</span> <span class='hs-varid'>bh</span>
-<a name="line-70"></a>            <span class='hs-keyword'>case</span> <span class='hs-varid'>h</span> <span class='hs-keyword'>of</span>
-<a name="line-71"></a>              <span class='hs-num'>0</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>CCallConv</span>
-<a name="line-72"></a>              <span class='hs-num'>1</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>StdCallConv</span>
-<a name="line-73"></a>              <span class='hs-num'>2</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>PrimCallConv</span>
-<a name="line-74"></a>              <span class='hs-num'>3</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>CApiConv</span>
-<a name="line-75"></a>              <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>JavaScriptCallConv</span>
-<a name="line-76"></a>
-<a name="line-77"></a><a name="instance%20Binary%20CType"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>CType</span> <span class='hs-keyword'>where</span>
-<a name="line-78"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>CType</span> <span class='hs-varid'>mh</span> <span class='hs-varid'>fs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>mh</span>
-<a name="line-79"></a>                               <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>fs</span>
-<a name="line-80"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>mh</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
-<a name="line-81"></a>                <span class='hs-varid'>fs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
-<a name="line-82"></a>                <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>CType</span> <span class='hs-varid'>mh</span> <span class='hs-varid'>fs</span><span class='hs-layout'>)</span>
-<a name="line-83"></a>
-<a name="line-84"></a><a name="instance%20Binary%20Header"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>Header</span> <span class='hs-keyword'>where</span>
-<a name="line-85"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>Header</span> <span class='hs-varid'>h</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>h</span>
-<a name="line-86"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
-<a name="line-87"></a>                <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>Header</span> <span class='hs-varid'>h</span><span class='hs-layout'>)</span>
+<a name="line-66"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<a name="line-67"></a>            <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>getByte</span> <span class='hs-varid'>bh</span>
+<a name="line-68"></a>            <span class='hs-keyword'>case</span> <span class='hs-varid'>h</span> <span class='hs-keyword'>of</span>
+<a name="line-69"></a>              <span class='hs-num'>0</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>CCallConv</span>
+<a name="line-70"></a>              <span class='hs-num'>1</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>StdCallConv</span>
+<a name="line-71"></a>              <span class='hs-num'>2</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>PrimCallConv</span>
+<a name="line-72"></a>              <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>return</span> <span class='hs-conid'>CApiConv</span>
+<a name="line-73"></a>
+<a name="line-74"></a><a name="instance%20Binary%20CType"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>CType</span> <span class='hs-keyword'>where</span>
+<a name="line-75"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>CType</span> <span class='hs-varid'>mh</span> <span class='hs-varid'>fs</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>mh</span>
+<a name="line-76"></a>                               <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>fs</span>
+<a name="line-77"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>mh</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-78"></a>                <span class='hs-varid'>fs</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-79"></a>                <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>CType</span> <span class='hs-varid'>mh</span> <span class='hs-varid'>fs</span><span class='hs-layout'>)</span>
+<a name="line-80"></a>
+<a name="line-81"></a><a name="instance%20Binary%20Header"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Binary</span> <span class='hs-conid'>Header</span> <span class='hs-keyword'>where</span>
+<a name="line-82"></a>    <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-layout'>(</span><span class='hs-conid'>Header</span> <span class='hs-varid'>h</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>put_</span> <span class='hs-varid'>bh</span> <span class='hs-varid'>h</span>
+<a name="line-83"></a>    <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-varid'>h</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>get</span> <span class='hs-varid'>bh</span>
+<a name="line-84"></a>                <span class='hs-varid'>return</span> <span class='hs-layout'>(</span><span class='hs-conid'>Header</span> <span class='hs-varid'>h</span><span class='hs-layout'>)</span>
 </pre>\end{code}
 </body>
 </html>

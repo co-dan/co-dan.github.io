@@ -137,12 +137,12 @@
 <a name="line-128"></a>
 <a name="line-129"></a><span class='hs-comment'>-- Coercion Construction -----------------------------------------------------</span>
 <a name="line-130"></a>
-<a name="line-131"></a><a name="mkBuiltinCo"></a><span class='hs-comment'>-- |Make a coersion to some builtin type.</span>
+<a name="line-131"></a><a name="mkBuiltinCo"></a><span class='hs-comment'>-- |Make a representational coersion to some builtin type.</span>
 <a name="line-132"></a><span class='hs-comment'>--</span>
 <a name="line-133"></a><span class='hs-definition'>mkBuiltinCo</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Builtins</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TyCon</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>VM</span> <span class='hs-conid'>Coercion</span>
 <a name="line-134"></a><span class='hs-definition'>mkBuiltinCo</span> <span class='hs-varid'>get_tc</span>
 <a name="line-135"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span> <span class='hs-layout'>{</span> <span class='hs-varid'>tc</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>builtin</span> <span class='hs-varid'>get_tc</span>
-<a name="line-136"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkTyConAppCo</span> <span class='hs-varid'>tc</span> <span class='hs-conid'>[]</span>
+<a name="line-136"></a>       <span class='hs-layout'>;</span> <span class='hs-varid'>return</span> <span class='hs-varop'>$</span> <span class='hs-varid'>mkTyConAppCo</span> <span class='hs-conid'>Representational</span> <span class='hs-varid'>tc</span> <span class='hs-conid'>[]</span>
 <a name="line-137"></a>       <span class='hs-layout'>}</span>
 <a name="line-138"></a>
 <a name="line-139"></a>

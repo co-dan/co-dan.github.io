@@ -348,7 +348,7 @@
 <a name="line-339"></a>
 <a name="line-340"></a>              <span class='hs-comment'>-- create new IO managers for the new caps:</span>
 <a name="line-341"></a>              <span class='hs-varid'>forM_</span> <span class='hs-keyglyph'>[</span><span class='hs-varid'>old_n_caps</span><span class='hs-keyglyph'>..</span><span class='hs-varid'>new_n_caps</span><span class='hs-comment'>-</span><span class='hs-num'>1</span><span class='hs-keyglyph'>]</span> <span class='hs-varop'>$</span>
-<a name="line-342"></a>                <span class='hs-varid'>startIOManagerThread</span> <span class='hs-varid'>eventManagerArray</span>
+<a name="line-342"></a>                <span class='hs-varid'>startIOManagerThread</span> <span class='hs-varid'>new_eventManagerArray</span>
 <a name="line-343"></a>
 <a name="line-344"></a>              <span class='hs-comment'>-- update the event manager array reference:</span>
 <a name="line-345"></a>              <span class='hs-varid'>writeIORef</span> <span class='hs-varid'>eventManager</span> <span class='hs-varid'>new_eventManagerArray</span>

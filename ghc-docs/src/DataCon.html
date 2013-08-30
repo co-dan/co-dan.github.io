@@ -659,14 +659,15 @@ dcr_bangs field; we don't know what the user originally said.
 <a name="line-66"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>isJust</span> <span class='hs-layout'>(</span><span class='hs-varid'>promotableTyCon_maybe</span> <span class='hs-varid'>rep_tycon</span><span class='hs-layout'>)</span>
 <a name="line-67"></a>          <span class='hs-comment'>-- The TyCon is promotable only if all its datacons</span>
 <a name="line-68"></a>          <span class='hs-comment'>-- are, so the promoteType for prom_kind should succeed</span>
-<a name="line-69"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPromotedDataCon</span> <span class='hs-varid'>con</span> <span class='hs-varid'>name</span> <span class='hs-layout'>(</span><span class='hs-varid'>getUnique</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-varid'>prom_kind</span> <span class='hs-varid'>arity</span><span class='hs-layout'>)</span>
+<a name="line-69"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPromotedDataCon</span> <span class='hs-varid'>con</span> <span class='hs-varid'>name</span> <span class='hs-layout'>(</span><span class='hs-varid'>getUnique</span> <span class='hs-varid'>name</span><span class='hs-layout'>)</span> <span class='hs-varid'>prom_kind</span> <span class='hs-varid'>roles</span><span class='hs-layout'>)</span>
 <a name="line-70"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span> 
 <a name="line-71"></a>      <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>          
 <a name="line-72"></a>    <span class='hs-varid'>prom_kind</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>promoteType</span> <span class='hs-layout'>(</span><span class='hs-varid'>dataConUserType</span> <span class='hs-varid'>con</span><span class='hs-layout'>)</span>
-<a name="line-73"></a>    <span class='hs-varid'>arity</span>     <span class='hs-keyglyph'>=</span> <span class='hs-varid'>dataConSourceArity</span> <span class='hs-varid'>con</span>
-<a name="line-74"></a>
-<a name="line-75"></a><a name="eqSpecPreds"></a><span class='hs-definition'>eqSpecPreds</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>TyVar</span><span class='hs-layout'>,</span><span class='hs-conid'>Type</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ThetaType</span>
-<a name="line-76"></a><span class='hs-definition'>eqSpecPreds</span> <span class='hs-varid'>spec</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span> <span class='hs-varid'>mkEqPred</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-varid'>ty</span> <span class='hs-keyglyph'>|</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span><span class='hs-layout'>,</span><span class='hs-varid'>ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>spec</span> <span class='hs-keyglyph'>]</span>
+<a name="line-73"></a>    <span class='hs-varid'>roles</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-varid'>const</span> <span class='hs-conid'>Nominal</span><span class='hs-layout'>)</span>          <span class='hs-layout'>(</span><span class='hs-varid'>univ_tvs</span> <span class='hs-varop'>++</span> <span class='hs-varid'>ex_tvs</span><span class='hs-layout'>)</span> <span class='hs-varop'>++</span>
+<a name="line-74"></a>            <span class='hs-varid'>map</span> <span class='hs-layout'>(</span><span class='hs-varid'>const</span> <span class='hs-conid'>Representational</span><span class='hs-layout'>)</span> <span class='hs-varid'>orig_arg_tys</span>
+<a name="line-75"></a>
+<a name="line-76"></a><a name="eqSpecPreds"></a><span class='hs-definition'>eqSpecPreds</span> <span class='hs-keyglyph'>::</span> <span class='hs-keyglyph'>[</span><span class='hs-layout'>(</span><span class='hs-conid'>TyVar</span><span class='hs-layout'>,</span><span class='hs-conid'>Type</span><span class='hs-layout'>)</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ThetaType</span>
+<a name="line-77"></a><span class='hs-definition'>eqSpecPreds</span> <span class='hs-varid'>spec</span> <span class='hs-keyglyph'>=</span> <span class='hs-keyglyph'>[</span> <span class='hs-varid'>mkEqPred</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkTyVarTy</span> <span class='hs-varid'>tv</span><span class='hs-layout'>)</span> <span class='hs-varid'>ty</span> <span class='hs-keyglyph'>|</span> <span class='hs-layout'>(</span><span class='hs-varid'>tv</span><span class='hs-layout'>,</span><span class='hs-varid'>ty</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>&lt;-</span> <span class='hs-varid'>spec</span> <span class='hs-keyglyph'>]</span>
 </pre>\end{code}
 
 Note [Unpack equality predicates]
@@ -1005,29 +1006,30 @@ space for each equality predicate, so it's pretty important!
 \begin{code}
 <pre><a name="line-1"></a><a name="buildAlgTyCon"></a><span class='hs-definition'>buildAlgTyCon</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Name</span> 
 <a name="line-2"></a>              <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>TyVar</span><span class='hs-keyglyph'>]</span>               <span class='hs-comment'>-- ^ Kind variables and type variables</span>
-<a name="line-3"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>CType</span>
-<a name="line-4"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ThetaType</span>	       <span class='hs-comment'>-- ^ Stupid theta</span>
-<a name="line-5"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>AlgTyConRhs</span>
-<a name="line-6"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>RecFlag</span>
-<a name="line-7"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>		       <span class='hs-comment'>-- ^ True &lt;=&gt; this TyCon is promotable</span>
-<a name="line-8"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>		       <span class='hs-comment'>-- ^ True &lt;=&gt; was declared in GADT syntax</span>
-<a name="line-9"></a>              <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TyConParent</span>
-<a name="line-10"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TyCon</span>
-<a name="line-11"></a>
-<a name="line-12"></a><span class='hs-definition'>buildAlgTyCon</span> <span class='hs-varid'>tc_name</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>rhs</span> 
-<a name="line-13"></a>              <span class='hs-varid'>is_rec</span> <span class='hs-varid'>is_promotable</span> <span class='hs-varid'>gadt_syn</span> <span class='hs-varid'>parent</span>
-<a name="line-14"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tc</span>
-<a name="line-15"></a>  <span class='hs-keyword'>where</span> 
-<a name="line-16"></a>    <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPiKinds</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>liftedTypeKind</span>
-<a name="line-17"></a>
-<a name="line-18"></a>    <span class='hs-comment'>-- tc and mb_promoted_tc are mutually recursive</span>
-<a name="line-19"></a>    <span class='hs-varid'>tc</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAlgTyCon</span> <span class='hs-varid'>tc_name</span> <span class='hs-varid'>kind</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> 
-<a name="line-20"></a>                    <span class='hs-varid'>rhs</span> <span class='hs-varid'>parent</span> <span class='hs-varid'>is_rec</span> <span class='hs-varid'>gadt_syn</span> 
-<a name="line-21"></a>                    <span class='hs-varid'>mb_promoted_tc</span>
-<a name="line-22"></a>
-<a name="line-23"></a>    <span class='hs-varid'>mb_promoted_tc</span>
-<a name="line-24"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>is_promotable</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPromotedTyCon</span> <span class='hs-varid'>tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>promoteKind</span> <span class='hs-varid'>kind</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-25"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
+<a name="line-3"></a>              <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Role</span><span class='hs-keyglyph'>]</span>
+<a name="line-4"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Maybe</span> <span class='hs-conid'>CType</span>
+<a name="line-5"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ThetaType</span>	       <span class='hs-comment'>-- ^ Stupid theta</span>
+<a name="line-6"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>AlgTyConRhs</span>
+<a name="line-7"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>RecFlag</span>
+<a name="line-8"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>		       <span class='hs-comment'>-- ^ True &lt;=&gt; this TyCon is promotable</span>
+<a name="line-9"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Bool</span>		       <span class='hs-comment'>-- ^ True &lt;=&gt; was declared in GADT syntax</span>
+<a name="line-10"></a>              <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TyConParent</span>
+<a name="line-11"></a>	      <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>TyCon</span>
+<a name="line-12"></a>
+<a name="line-13"></a><span class='hs-definition'>buildAlgTyCon</span> <span class='hs-varid'>tc_name</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>roles</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> <span class='hs-varid'>rhs</span> 
+<a name="line-14"></a>              <span class='hs-varid'>is_rec</span> <span class='hs-varid'>is_promotable</span> <span class='hs-varid'>gadt_syn</span> <span class='hs-varid'>parent</span>
+<a name="line-15"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-varid'>tc</span>
+<a name="line-16"></a>  <span class='hs-keyword'>where</span> 
+<a name="line-17"></a>    <span class='hs-varid'>kind</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkPiKinds</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>liftedTypeKind</span>
+<a name="line-18"></a>
+<a name="line-19"></a>    <span class='hs-comment'>-- tc and mb_promoted_tc are mutually recursive</span>
+<a name="line-20"></a>    <span class='hs-varid'>tc</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkAlgTyCon</span> <span class='hs-varid'>tc_name</span> <span class='hs-varid'>kind</span> <span class='hs-varid'>ktvs</span> <span class='hs-varid'>roles</span> <span class='hs-varid'>cType</span> <span class='hs-varid'>stupid_theta</span> 
+<a name="line-21"></a>                    <span class='hs-varid'>rhs</span> <span class='hs-varid'>parent</span> <span class='hs-varid'>is_rec</span> <span class='hs-varid'>gadt_syn</span> 
+<a name="line-22"></a>                    <span class='hs-varid'>mb_promoted_tc</span>
+<a name="line-23"></a>
+<a name="line-24"></a>    <span class='hs-varid'>mb_promoted_tc</span>
+<a name="line-25"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>is_promotable</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Just</span> <span class='hs-layout'>(</span><span class='hs-varid'>mkPromotedTyCon</span> <span class='hs-varid'>tc</span> <span class='hs-layout'>(</span><span class='hs-varid'>promoteKind</span> <span class='hs-varid'>kind</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-26"></a>      <span class='hs-keyglyph'>|</span> <span class='hs-varid'>otherwise</span>     <span class='hs-keyglyph'>=</span> <span class='hs-conid'>Nothing</span>
 </pre>\end{code}
 
 

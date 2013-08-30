@@ -98,7 +98,7 @@ For the generic representation we need to generate:
 <a name="line-18"></a>        <span class='hs-varid'>s_occ</span> <span class='hs-varid'>m</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>mkGenS</span> <span class='hs-varid'>tc_occ</span> <span class='hs-varid'>m</span> <span class='hs-varid'>n</span>
 <a name="line-19"></a>
 <a name="line-20"></a>        <span class='hs-varid'>mkTyCon</span> <span class='hs-varid'>name</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>ASSERT</span><span class='hs-layout'>(</span> <span class='hs-varid'>isExternalName</span> <span class='hs-varid'>name</span> <span class='hs-layout'>)</span>
-<a name="line-21"></a>                       <span class='hs-varid'>buildAlgTyCon</span> <span class='hs-varid'>name</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>Nothing</span> <span class='hs-conid'>[]</span> <span class='hs-varid'>distinctAbstractTyConRhs</span>
+<a name="line-21"></a>                       <span class='hs-varid'>buildAlgTyCon</span> <span class='hs-varid'>name</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>[]</span> <span class='hs-conid'>Nothing</span> <span class='hs-conid'>[]</span> <span class='hs-varid'>distinctAbstractTyConRhs</span>
 <a name="line-22"></a>                                          <span class='hs-conid'>NonRecursive</span> 
 <a name="line-23"></a>                                          <span class='hs-conid'>False</span>          <span class='hs-comment'>-- Not promotable</span>
 <a name="line-24"></a>                                          <span class='hs-conid'>False</span>          <span class='hs-comment'>-- Not GADT syntax</span>

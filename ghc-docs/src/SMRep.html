@@ -25,44 +25,54 @@ Storage manager representation of closures
 <a name="line-8"></a>        <span class='hs-conid'>WordOff</span><span class='hs-layout'>,</span> <span class='hs-conid'>ByteOff</span><span class='hs-layout'>,</span>
 <a name="line-9"></a>        <span class='hs-varid'>roundUpToWords</span><span class='hs-layout'>,</span>
 <a name="line-10"></a>
-<a name="line-11"></a>        <span class='hs-comment'>-- * Closure repesentation</span>
-<a name="line-12"></a>        <span class='hs-conid'>SMRep</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- CmmInfo sees the rep; no one else does</span>
-<a name="line-13"></a>        <span class='hs-conid'>IsStatic</span><span class='hs-layout'>,</span>
-<a name="line-14"></a>        <span class='hs-conid'>ClosureTypeInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>ArgDescr</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Liveness</span><span class='hs-layout'>,</span>
-<a name="line-15"></a>        <span class='hs-conid'>ConstrDescription</span><span class='hs-layout'>,</span>
-<a name="line-16"></a>
-<a name="line-17"></a>        <span class='hs-comment'>-- ** Construction</span>
-<a name="line-18"></a>        <span class='hs-varid'>mkHeapRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>blackHoleRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>indStaticRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkStackRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkRTSRep</span><span class='hs-layout'>,</span>
-<a name="line-19"></a>
-<a name="line-20"></a>        <span class='hs-comment'>-- ** Predicates</span>
-<a name="line-21"></a>        <span class='hs-varid'>isStaticRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isConRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isThunkRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isFunRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isStaticNoCafCon</span><span class='hs-layout'>,</span>
-<a name="line-22"></a>        <span class='hs-varid'>isStackRep</span><span class='hs-layout'>,</span>
-<a name="line-23"></a>
-<a name="line-24"></a>        <span class='hs-comment'>-- ** Size-related things</span>
-<a name="line-25"></a>        <span class='hs-varid'>heapClosureSize</span><span class='hs-layout'>,</span>
-<a name="line-26"></a>        <span class='hs-varid'>fixedHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>arrWordsHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>arrPtrsHdrSize</span><span class='hs-layout'>,</span>
-<a name="line-27"></a>        <span class='hs-varid'>profHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>thunkHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>nonHdrSize</span><span class='hs-layout'>,</span>
+<a name="line-11"></a><span class='hs-cpp'>#if __GLASGOW_HASKELL__ &gt; 706</span>
+<a name="line-12"></a>        <span class='hs-comment'>-- ** Immutable arrays of StgWords</span>
+<a name="line-13"></a>        <span class='hs-conid'>UArrayStgWord</span><span class='hs-layout'>,</span> <span class='hs-varid'>listArray</span><span class='hs-layout'>,</span> <span class='hs-varid'>toByteArray</span><span class='hs-layout'>,</span>
+<a name="line-14"></a><span class='hs-cpp'>#endif</span>
+<a name="line-15"></a>
+<a name="line-16"></a>        <span class='hs-comment'>-- * Closure repesentation</span>
+<a name="line-17"></a>        <span class='hs-conid'>SMRep</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-comment'>-- CmmInfo sees the rep; no one else does</span>
+<a name="line-18"></a>        <span class='hs-conid'>IsStatic</span><span class='hs-layout'>,</span>
+<a name="line-19"></a>        <span class='hs-conid'>ClosureTypeInfo</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>ArgDescr</span><span class='hs-layout'>(</span><span class='hs-keyglyph'>..</span><span class='hs-layout'>)</span><span class='hs-layout'>,</span> <span class='hs-conid'>Liveness</span><span class='hs-layout'>,</span>
+<a name="line-20"></a>        <span class='hs-conid'>ConstrDescription</span><span class='hs-layout'>,</span>
+<a name="line-21"></a>
+<a name="line-22"></a>        <span class='hs-comment'>-- ** Construction</span>
+<a name="line-23"></a>        <span class='hs-varid'>mkHeapRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>blackHoleRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>indStaticRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkStackRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>mkRTSRep</span><span class='hs-layout'>,</span>
+<a name="line-24"></a>
+<a name="line-25"></a>        <span class='hs-comment'>-- ** Predicates</span>
+<a name="line-26"></a>        <span class='hs-varid'>isStaticRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isConRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isThunkRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isFunRep</span><span class='hs-layout'>,</span> <span class='hs-varid'>isStaticNoCafCon</span><span class='hs-layout'>,</span>
+<a name="line-27"></a>        <span class='hs-varid'>isStackRep</span><span class='hs-layout'>,</span>
 <a name="line-28"></a>
-<a name="line-29"></a>        <span class='hs-comment'>-- ** RTS closure types</span>
-<a name="line-30"></a>        <span class='hs-varid'>rtsClosureType</span><span class='hs-layout'>,</span> <span class='hs-varid'>rET_SMALL</span><span class='hs-layout'>,</span> <span class='hs-varid'>rET_BIG</span><span class='hs-layout'>,</span>
-<a name="line-31"></a>        <span class='hs-varid'>aRG_GEN</span><span class='hs-layout'>,</span> <span class='hs-varid'>aRG_GEN_BIG</span><span class='hs-layout'>,</span>
-<a name="line-32"></a>
-<a name="line-33"></a>        <span class='hs-comment'>-- * Operations over [Word8] strings that don't belong here</span>
-<a name="line-34"></a>        <span class='hs-varid'>pprWord8String</span><span class='hs-layout'>,</span> <span class='hs-varid'>stringToWord8s</span>
-<a name="line-35"></a>    <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
-<a name="line-36"></a>
-<a name="line-37"></a><span class='hs-cpp'>#include "../HsVersions.h"</span>
-<a name="line-38"></a><span class='hs-cpp'>#include "../includes/MachDeps.h"</span>
-<a name="line-39"></a>
-<a name="line-40"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DynFlags</span>
-<a name="line-41"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
-<a name="line-42"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Platform</span>
-<a name="line-43"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
+<a name="line-29"></a>        <span class='hs-comment'>-- ** Size-related things</span>
+<a name="line-30"></a>        <span class='hs-varid'>heapClosureSize</span><span class='hs-layout'>,</span>
+<a name="line-31"></a>        <span class='hs-varid'>fixedHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>arrWordsHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>arrPtrsHdrSize</span><span class='hs-layout'>,</span>
+<a name="line-32"></a>        <span class='hs-varid'>profHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>thunkHdrSize</span><span class='hs-layout'>,</span> <span class='hs-varid'>nonHdrSize</span><span class='hs-layout'>,</span>
+<a name="line-33"></a>
+<a name="line-34"></a>        <span class='hs-comment'>-- ** RTS closure types</span>
+<a name="line-35"></a>        <span class='hs-varid'>rtsClosureType</span><span class='hs-layout'>,</span> <span class='hs-varid'>rET_SMALL</span><span class='hs-layout'>,</span> <span class='hs-varid'>rET_BIG</span><span class='hs-layout'>,</span>
+<a name="line-36"></a>        <span class='hs-varid'>aRG_GEN</span><span class='hs-layout'>,</span> <span class='hs-varid'>aRG_GEN_BIG</span><span class='hs-layout'>,</span>
+<a name="line-37"></a>
+<a name="line-38"></a>        <span class='hs-comment'>-- * Operations over [Word8] strings that don't belong here</span>
+<a name="line-39"></a>        <span class='hs-varid'>pprWord8String</span><span class='hs-layout'>,</span> <span class='hs-varid'>stringToWord8s</span>
+<a name="line-40"></a>    <span class='hs-layout'>)</span> <span class='hs-keyword'>where</span>
+<a name="line-41"></a>
+<a name="line-42"></a><span class='hs-cpp'>#include "../HsVersions.h"</span>
+<a name="line-43"></a><span class='hs-cpp'>#include "../includes/MachDeps.h"</span>
 <a name="line-44"></a>
-<a name="line-45"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>Base</span>
-<a name="line-46"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Char</span><span class='hs-layout'>(</span> <span class='hs-varid'>ord</span> <span class='hs-layout'>)</span>
-<a name="line-47"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Word</span>
-<a name="line-48"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Bits</span>
+<a name="line-45"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>DynFlags</span>
+<a name="line-46"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Outputable</span>
+<a name="line-47"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Platform</span>
+<a name="line-48"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>FastString</span>
+<a name="line-49"></a><span class='hs-keyword'>import</span> <span class='hs-keyword'>qualified</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>Base</span> <span class='hs-keyword'>as</span> <span class='hs-conid'>Array</span>
+<a name="line-50"></a>
+<a name="line-51"></a><span class='hs-cpp'>#if __GLASGOW_HASKELL__ &gt; 706</span>
+<a name="line-52"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>GHC</span><span class='hs-varop'>.</span><span class='hs-conid'>Base</span> <span class='hs-layout'>(</span> <span class='hs-conid'>ByteArray</span><span class='hs-cpp'>#</span> <span class='hs-layout'>)</span>
+<a name="line-53"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Ix</span>
+<a name="line-54"></a><span class='hs-cpp'>#endif</span>
+<a name="line-55"></a>
+<a name="line-56"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Char</span><span class='hs-layout'>(</span> <span class='hs-varid'>ord</span> <span class='hs-layout'>)</span>
+<a name="line-57"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Word</span>
+<a name="line-58"></a><span class='hs-keyword'>import</span> <span class='hs-conid'>Data</span><span class='hs-varop'>.</span><span class='hs-conid'>Bits</span>
 </pre>\end{code}
 
 
@@ -89,51 +99,79 @@ StgWord is a type representing an StgWord on the target platform.
 <a name="line-4"></a><span class='hs-cpp'>#if __GLASGOW_HASKELL__ &lt; 706</span>
 <a name="line-5"></a>              <span class='hs-conid'>Num</span><span class='hs-layout'>,</span>
 <a name="line-6"></a><span class='hs-cpp'>#endif</span>
-<a name="line-7"></a>              <span class='hs-conid'>Bits</span><span class='hs-layout'>,</span> <span class='hs-conid'>IArray</span> <span class='hs-conid'>UArray</span><span class='hs-layout'>)</span>
-<a name="line-8"></a>
-<a name="line-9"></a><a name="fromStgWord"></a><span class='hs-definition'>fromStgWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>StgWord</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span>
-<a name="line-10"></a><span class='hs-definition'>fromStgWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgWord</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>toInteger</span> <span class='hs-varid'>i</span>
-<a name="line-11"></a>
-<a name="line-12"></a><a name="toStgWord"></a><span class='hs-definition'>toStgWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span>
-<a name="line-13"></a><span class='hs-definition'>toStgWord</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>i</span>
-<a name="line-14"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
-<a name="line-15"></a>      <span class='hs-comment'>-- These conversions mean that things like toStgWord (-1)</span>
-<a name="line-16"></a>      <span class='hs-comment'>-- do the right thing</span>
-<a name="line-17"></a>      <span class='hs-num'>4</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromIntegral</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word32</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-18"></a>      <span class='hs-num'>8</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word64</span><span class='hs-layout'>)</span>
-<a name="line-19"></a>      <span class='hs-varid'>w</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"toStgWord: Unknown platformWordSize: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
-<a name="line-20"></a>
-<a name="line-21"></a><a name="instance%20Outputable%20StgWord"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>StgWord</span> <span class='hs-keyword'>where</span>
-<a name="line-22"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgWord</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>integer</span> <span class='hs-layout'>(</span><span class='hs-varid'>toInteger</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span>
-<a name="line-23"></a>
-<a name="line-24"></a><span class='hs-comment'>--</span>
-<a name="line-25"></a>
-<a name="line-26"></a><a name="StgHalfWord"></a><span class='hs-comment'>-- A Word32 is large enough to hold half a Word for either a 32bit or</span>
-<a name="line-27"></a><a name="StgHalfWord"></a><span class='hs-comment'>-- 64bit platform</span>
-<a name="line-28"></a><a name="StgHalfWord"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-conid'>Word32</span>
-<a name="line-29"></a>    <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Eq</span>
-<a name="line-30"></a>
-<a name="line-31"></a><a name="fromStgHalfWord"></a><span class='hs-definition'>fromStgHalfWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span>
-<a name="line-32"></a><span class='hs-definition'>fromStgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgHalfWord</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>toInteger</span> <span class='hs-varid'>w</span>
-<a name="line-33"></a>
-<a name="line-34"></a><a name="toStgHalfWord"></a><span class='hs-definition'>toStgHalfWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span>
-<a name="line-35"></a><span class='hs-definition'>toStgHalfWord</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>i</span>
-<a name="line-36"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
-<a name="line-37"></a>      <span class='hs-comment'>-- These conversions mean that things like toStgHalfWord (-1)</span>
-<a name="line-38"></a>      <span class='hs-comment'>-- do the right thing</span>
-<a name="line-39"></a>      <span class='hs-num'>4</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromIntegral</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word16</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<a name="line-40"></a>      <span class='hs-num'>8</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word32</span><span class='hs-layout'>)</span>
-<a name="line-41"></a>      <span class='hs-varid'>w</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"toStgHalfWord: Unknown platformWordSize: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
-<a name="line-42"></a>
-<a name="line-43"></a><a name="instance%20Outputable%20StgHalfWord"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyword'>where</span>
-<a name="line-44"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgHalfWord</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>integer</span> <span class='hs-layout'>(</span><span class='hs-varid'>toInteger</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
-<a name="line-45"></a>
-<a name="line-46"></a><a name="hALF_WORD_SIZE"></a><span class='hs-definition'>hALF_WORD_SIZE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ByteOff</span>
-<a name="line-47"></a><span class='hs-definition'>hALF_WORD_SIZE</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>`shiftR`</span> <span class='hs-num'>1</span>
-<a name="line-48"></a><a name="hALF_WORD_SIZE_IN_BITS"></a><span class='hs-definition'>hALF_WORD_SIZE_IN_BITS</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
-<a name="line-49"></a><span class='hs-definition'>hALF_WORD_SIZE_IN_BITS</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>`shiftL`</span> <span class='hs-num'>2</span>
+<a name="line-7"></a>
+<a name="line-8"></a><span class='hs-cpp'>#if __GLASGOW_HASKELL__ &lt;= 706</span>
+<a name="line-9"></a>              <span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>IArray</span> <span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>UArray</span><span class='hs-layout'>,</span>
+<a name="line-10"></a><span class='hs-cpp'>#endif</span>
+<a name="line-11"></a>              <span class='hs-conid'>Bits</span><span class='hs-layout'>)</span>
+<a name="line-12"></a>
+<a name="line-13"></a><a name="fromStgWord"></a><span class='hs-definition'>fromStgWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>StgWord</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span>
+<a name="line-14"></a><span class='hs-definition'>fromStgWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgWord</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>toInteger</span> <span class='hs-varid'>i</span>
+<a name="line-15"></a>
+<a name="line-16"></a><a name="toStgWord"></a><span class='hs-definition'>toStgWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span>
+<a name="line-17"></a><span class='hs-definition'>toStgWord</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>i</span>
+<a name="line-18"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
+<a name="line-19"></a>      <span class='hs-comment'>-- These conversions mean that things like toStgWord (-1)</span>
+<a name="line-20"></a>      <span class='hs-comment'>-- do the right thing</span>
+<a name="line-21"></a>      <span class='hs-num'>4</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromIntegral</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word32</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-22"></a>      <span class='hs-num'>8</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word64</span><span class='hs-layout'>)</span>
+<a name="line-23"></a>      <span class='hs-varid'>w</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"toStgWord: Unknown platformWordSize: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
+<a name="line-24"></a>
+<a name="line-25"></a><a name="instance%20Outputable%20StgWord"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>StgWord</span> <span class='hs-keyword'>where</span>
+<a name="line-26"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgWord</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>integer</span> <span class='hs-layout'>(</span><span class='hs-varid'>toInteger</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span>
+<a name="line-27"></a>
+<a name="line-28"></a><span class='hs-comment'>--</span>
+<a name="line-29"></a>
+<a name="line-30"></a><a name="StgHalfWord"></a><span class='hs-comment'>-- A Word32 is large enough to hold half a Word for either a 32bit or</span>
+<a name="line-31"></a><a name="StgHalfWord"></a><span class='hs-comment'>-- 64bit platform</span>
+<a name="line-32"></a><a name="StgHalfWord"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-conid'>Word32</span>
+<a name="line-33"></a>    <span class='hs-keyword'>deriving</span> <span class='hs-conid'>Eq</span>
+<a name="line-34"></a>
+<a name="line-35"></a><a name="fromStgHalfWord"></a><span class='hs-definition'>fromStgHalfWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span>
+<a name="line-36"></a><span class='hs-definition'>fromStgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgHalfWord</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>toInteger</span> <span class='hs-varid'>w</span>
+<a name="line-37"></a>
+<a name="line-38"></a><a name="toStgHalfWord"></a><span class='hs-definition'>toStgHalfWord</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Integer</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span>
+<a name="line-39"></a><span class='hs-definition'>toStgHalfWord</span> <span class='hs-varid'>dflags</span> <span class='hs-varid'>i</span>
+<a name="line-40"></a>    <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-keyword'>of</span>
+<a name="line-41"></a>      <span class='hs-comment'>-- These conversions mean that things like toStgHalfWord (-1)</span>
+<a name="line-42"></a>      <span class='hs-comment'>-- do the right thing</span>
+<a name="line-43"></a>      <span class='hs-num'>4</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromIntegral</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word16</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<a name="line-44"></a>      <span class='hs-num'>8</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-layout'>(</span><span class='hs-varid'>fromInteger</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Word32</span><span class='hs-layout'>)</span>
+<a name="line-45"></a>      <span class='hs-varid'>w</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-varid'>panic</span> <span class='hs-layout'>(</span><span class='hs-str'>"toStgHalfWord: Unknown platformWordSize: "</span> <span class='hs-varop'>++</span> <span class='hs-varid'>show</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
+<a name="line-46"></a>
+<a name="line-47"></a><a name="instance%20Outputable%20StgHalfWord"></a><span class='hs-keyword'>instance</span> <span class='hs-conid'>Outputable</span> <span class='hs-conid'>StgHalfWord</span> <span class='hs-keyword'>where</span>
+<a name="line-48"></a>    <span class='hs-varid'>ppr</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgHalfWord</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>integer</span> <span class='hs-layout'>(</span><span class='hs-varid'>toInteger</span> <span class='hs-varid'>w</span><span class='hs-layout'>)</span>
+<a name="line-49"></a>
+<a name="line-50"></a><a name="hALF_WORD_SIZE"></a><span class='hs-definition'>hALF_WORD_SIZE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ByteOff</span>
+<a name="line-51"></a><span class='hs-definition'>hALF_WORD_SIZE</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>`shiftR`</span> <span class='hs-num'>1</span>
+<a name="line-52"></a><a name="hALF_WORD_SIZE_IN_BITS"></a><span class='hs-definition'>hALF_WORD_SIZE_IN_BITS</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>DynFlags</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
+<a name="line-53"></a><span class='hs-definition'>hALF_WORD_SIZE_IN_BITS</span> <span class='hs-varid'>dflags</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>platformWordSize</span> <span class='hs-layout'>(</span><span class='hs-varid'>targetPlatform</span> <span class='hs-varid'>dflags</span><span class='hs-layout'>)</span> <span class='hs-varop'>`shiftL`</span> <span class='hs-num'>2</span>
 </pre>\end{code}
 
+%************************************************************************
+%*                                                                      *
+                Immutable arrays of StgWords
+%*                                                                      *
+%************************************************************************
+
+\begin{code}
+<pre><a name="line-1"></a>
+<a name="line-2"></a><span class='hs-cpp'>#if __GLASGOW_HASKELL__ &gt; 706</span>
+<a name="line-3"></a><span class='hs-comment'>-- TODO: Improve with newtype coercions!</span>
+<a name="line-4"></a>
+<a name="line-5"></a><a name="UArrayStgWord"></a><span class='hs-keyword'>newtype</span> <span class='hs-conid'>UArrayStgWord</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>=</span> <span class='hs-conid'>UArrayStgWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>UArray</span> <span class='hs-varid'>i</span> <span class='hs-conid'>Word64</span><span class='hs-layout'>)</span>
+<a name="line-6"></a>
+<a name="line-7"></a><a name="listArray"></a><span class='hs-definition'>listArray</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Ix</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>=&gt;</span> <span class='hs-layout'>(</span><span class='hs-varid'>i</span><span class='hs-layout'>,</span> <span class='hs-varid'>i</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>StgWord</span><span class='hs-keyglyph'>]</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>UArrayStgWord</span> <span class='hs-varid'>i</span>
+<a name="line-8"></a><span class='hs-definition'>listArray</span> <span class='hs-layout'>(</span><span class='hs-varid'>i</span><span class='hs-layout'>,</span><span class='hs-varid'>j</span><span class='hs-layout'>)</span> <span class='hs-varid'>words</span>
+<a name="line-9"></a>  <span class='hs-keyglyph'>=</span> <span class='hs-conid'>UArrayStgWord</span> <span class='hs-varop'>$</span> <span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-varid'>listArray</span> <span class='hs-layout'>(</span><span class='hs-varid'>i</span><span class='hs-layout'>,</span><span class='hs-varid'>j</span><span class='hs-layout'>)</span> <span class='hs-layout'>(</span><span class='hs-varid'>map</span> <span class='hs-varid'>unStgWord</span> <span class='hs-varid'>words</span><span class='hs-layout'>)</span>
+<a name="line-10"></a>  <span class='hs-keyword'>where</span> <span class='hs-varid'>unStgWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>StgWord</span> <span class='hs-varid'>w64</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>w64</span>
+<a name="line-11"></a>
+<a name="line-12"></a><a name="toByteArray"></a><span class='hs-definition'>toByteArray</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>UArrayStgWord</span> <span class='hs-varid'>i</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>ByteArray</span><span class='hs-cpp'>#</span>
+<a name="line-13"></a><span class='hs-definition'>toByteArray</span> <span class='hs-layout'>(</span><span class='hs-conid'>UArrayStgWord</span> <span class='hs-layout'>(</span><span class='hs-conid'>Array</span><span class='hs-varop'>.</span><span class='hs-conid'>UArray</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-keyword'>_</span> <span class='hs-varid'>b</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <span class='hs-varid'>b</span>
+<a name="line-14"></a>
+<a name="line-15"></a><span class='hs-cpp'>#endif</span>
+<a name="line-16"></a>
+</pre>\end{code}
 
 %************************************************************************
 %*                                                                      *
