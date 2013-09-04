@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>    
+    <!-- Ghcjs output -->
+    <script language="javascript" src="lib.js"></script>
+    <script language="javascript" src="rts.js"></script>
+    <script language="javascript" src="lib1.js"></script>
+    <script language="javascript" src="out.js"></script>  
+  </head>
+  <body>
+    <input id="num" type="text" />
+    <button onclick='go();'>fib</button>
+    <p id="result"></p>
+  </body>
+  <script language="javascript">
+    // this should be h$mkJSRef, but right now 
+    // it's broken in ghcjs HEAD (probably my fault:
+    // https://github.com/ghcjs/ghcjs/issues/95
+    function mkJSRefNew(x) {
+       return h$c1(h$ghcjszmprimzm0zi1zi0zi0ZCGHCJSziPrimziJSRef_con_e, x);
+    }
+    function go() {
+       var i = parseInt($("#num").val(), 10);
+       var o = { result : null };
+       /*var oref = mkJSRefNew(o); 
+       var act = h$c3( h$ap2_e
+                     , h$mainZCMainzifibAction
+                     , oref
+                     , i );
+       h$runSync(act);
+       $("#result").text(o.result);
+    };
+  </script>
+</html>
