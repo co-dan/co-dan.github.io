@@ -15,16 +15,16 @@
     <p id="result"></p>
   </body>
   <script language="javascript">
-    // this should be h$mkJSRef, but right now 
-    // it's broken in ghcjs HEAD (probably my fault:
-    // https://github.com/ghcjs/ghcjs/issues/95
+    /* this should be h$mkJSRef, but right now 
+     it's broken in ghcjs HEAD (probably my fault:
+     https://github.com/ghcjs/ghcjs/issues/95 */
     function mkJSRefNew(x) {
        return h$c1(h$ghcjszmprimzm0zi1zi0zi0ZCGHCJSziPrimziJSRef_con_e, x);
-    }
+    };
     function go() {
        var i = parseInt($("#num").val(), 10);
        var o = { result : null };
-       /*var oref = mkJSRefNew(o); 
+       var oref = mkJSRefNew(o); 
        var act = h$c3( h$ap2_e
                      , h$mainZCMainzifibAction
                      , oref
