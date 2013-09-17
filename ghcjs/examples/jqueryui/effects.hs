@@ -42,7 +42,7 @@ main = do
              [ "linear", "swing", "easeOutBounce" ]
     width <- jq_getWidth tracks
     let handler _ = forM_ boxes $ \(Box easing box) -> forkIO $ do
-            jq_stop box
+            jq_stop True box
             setCss "left" "5px" box
             delta <- (-) <$> jq_getWidth tracks <*> jq_getWidth box
             let d = delta - 50
