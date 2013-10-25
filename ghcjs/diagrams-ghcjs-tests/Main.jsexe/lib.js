@@ -11468,6 +11468,37 @@ function h$isInstanceOf(o,c) {
   return o instanceof c;
 }
 
+function h$getpagesize() {
+  return 4096;
+}
+
+var h$MAP_ANONYMOUS = 0x20;
+function h$mmap(addr_d, addr_o, len, prot, flags, fd, offset1, offset2) {
+  if(flags & h$MAP_ANONYMOUS || fd === -1) {
+    h$ret1 = 0;
+    return h$newByteArray(len);
+  } else {
+    throw "h$mmap: mapping a file is not yet supported";
+  }
+}
+
+function h$mprotect(addr_d, addr_o, size, prot) {
+  return 0;
+}
+
+function h$munmap(addr_d, addr_o, size) {
+  if(addr_d && addr_o === 0 && size >= addr_d.len) {
+    addr_d.buf = null;
+    addr_d.i3  = null;
+    addr_d.u8  = null;
+    addr_d.u1  = null;
+    addr_d.f3  = null;
+    addr_d.f6  = null;
+    addr_d.dv  = null;
+  }
+  return 0;
+}
+
 /*
   do garbage collection where the JavaScript GC doesn't suffice or needs some help:
   - run finalizers for weak references
@@ -13151,6 +13182,75 @@ function h$writePtrPtrU8(ptr, ptr_off, v, x, y) {
   arr[0].dv.putUint8(arr[1] + y, v);
 }
 
+// allocate a list
+function h$cl(arr) {
+  var r = h$ghczmprimZCGHCziTypesziZMZN;
+  var i = arr.length - 1;
+  while(i>=0) {
+    r = h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, arr[i], r);
+    --i;
+  }
+  return r;
+}
+
+// allocate a list, prepended to r
+function h$clr(arr, r) {
+  var i = arr.length - 1;
+  while(i>=0) {
+    r = h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, arr[i], r);
+    --i;
+  }
+  return r;
+}
+
+// convert JavaScript String to a Haskell String
+function h$toHsString(str) {
+  var i = str.length - 1;
+  var r = h$ghczmprimZCGHCziTypesziZMZN;
+  while(i>=0) {
+    var cp = str.charCodeAt(i);
+    if((0xDC00 & cp) && i > 0) {
+      --i;
+      cp = (cp - 0xDC00) + (str.charCodeAt(i) & 0xD800) * 1024;
+    }
+    r = h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, cp, r);
+    --i;
+  }
+  return r;
+}
+
+// ascii only version of the above
+function h$toHsStringA(str) {
+  var i = str.length - 1;
+  var r = h$ghczmprimZCGHCziTypesziZMZN;
+  while(i>=0) {
+    r = h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, str.charCodeAt(i), r);
+    --i;
+  }
+  return r;
+}
+
+// unpack ascii string, append to existing Haskell string
+function h$appendToHsStringA(str, appendTo) {
+  var i = str.length - 1;
+  var r = appendTo;
+  while(i>=0) {
+    r = h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, str.charCodeAt(i), r);
+    --i;
+  }
+  return r;
+}
+
+// throw e wrapped in a GHCJS.Prim.JSException  in the current thread
+function h$throwJSException(e) {
+  // a GHCJS.Prim.JSException
+  var jsE = h$c2(h$ghcjszmprimZCGHCJSziPrimziJSException_con_e,e,h$toHsString(e.toString()));
+  // wrap it in a SomeException, adding the Exception dictionary
+  var someE = h$c2(h$baseZCGHCziExceptionziSomeException_con_e,
+     h$ghcjszmprimZCGHCJSziPrimzizdfExceptionJSException, jsE);
+  return h$throw(someE, true);
+}
+
 // function encodeSame(inbuf, inbuf_off, insize, insize_off
 
 /* specialized implementations of utf8 <-> utf32, utf8 <-> utf16
@@ -14377,7 +14477,7 @@ function h$mainLoop() {
   if(h$running) return;
   h$running = true;
   h$run_init_static();
-  var h$currentThread = h$next;
+  h$currentThread = h$next;
   var c = null; // fixme is this ok?
   var count;
   var start = Date.now();
@@ -14408,22 +14508,33 @@ function h$mainLoop() {
     }
     // preemptively schedule threads after 9990 calls
     // but not earlier than after 25ms
-    while(c !== h$reschedule && Date.now() - scheduled < 25) {
-      count = 0;
-      while(c !== h$reschedule && ++count < 1000) {
-//        h$logCall(c);
-//        h$logStack();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
-        c = c();
+    try {
+      while(c !== h$reschedule && Date.now() - scheduled < 25) {
+        count = 0;
+        while(c !== h$reschedule && ++count < 1000) {
+//          h$logCall(c);
+//          h$logStack();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+          c = c();
+        }
       }
+    } catch(e) {
+      // uncaught exception in haskell code, kill thread
+      // would we ever need to remove the thread from queues?
+      h$currentThread.status = h$threadDied;
+      h$currentThread.stack = null;
+      h$currentThread = null;
+      h$stack = null;
+      c = null;
+      console.log("uncaught exception in Haskell thread: " + e.toString());
     }
   } while(true);
 }
@@ -15180,6 +15291,70 @@ function h$stmCommitInvariant(localInv) {
   } catch (e) { if(e !== goog.iter.StopIteration) { throw e; } }
 }
 
+// JS Objects stuff
+
+function h$isFloat (n) {
+  return n===+n && n!==(n|0);
+}
+
+function h$isInteger (n) {
+  return n===+n && n===(n|0);
+}
+
+/*
+        -- 0 - null, 1 - integer,
+        -- 2 - float, 3 - bool,
+        -- 4 - string, 5 - array
+        -- 6 - object
+*/
+function h$typeOf(o) {
+    if (!(o instanceof Object)) {
+        if (o == null) { 
+            return 0; 
+        } else if (typeof o == 'number') {
+            if (h$isInteger(o)) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else if (typeof o == 'boolean') {
+            return 3;
+        } else {
+            return 4;
+        }
+    } else {
+        if (Object.prototype.toString.call(o) == '[object Array]') {
+            // it's an array
+            return 5;
+        } else if (!o) {
+            // null 
+            return 0;
+        } else {
+            // it's an object
+            return 6;
+        }
+    }
+}
+
+function h$listprops(o) {
+    if (!(o instanceof Object)) {
+        return [];
+    }
+    var l = [];
+    for (var prop in o) {
+        l.push(prop);
+    }
+    return l;
+}
+
+function h$flattenObj(o) {
+    var l = [];
+    for (var prop in o) {
+        l.push([prop, o[prop]]);
+    }
+    return l;
+}
+
 function h$ghcjs_setLineDash(arr, ctx) {
     if (typeof ctx.setLineDash !== 'undefined' ) {
         ctx.setLineDash(arr);
@@ -15204,34 +15379,38 @@ function h$ghcjs_currentDocument() {
 };
 
 
-/*
- * These hash functions were developed by Thomas Wang.
+/* FNV-1 hash
  *
- * http://www.concentric.net/~ttwang/tech/inthash.htm
+ * The FNV-1 hash description: http://isthe.com/chongo/tech/comp/fnv/
+ * The FNV-1 hash is public domain: http://isthe.com/chongo/tech/comp/fnv/#public_domain
  */
-
-function h$hashable_wang_32(a) {
-  a = (a ^ 61) ^ (a >> 16);
-  a = a + (a << 3);
-  a = a ^ (a >> 4);
-  a = a * 0x27d4eb2d;
-  a = a ^ (a >> 15);
-  return a;
+function h$hashable_fnv_hash_offset(str_a, o, len, hash) {
+  return h$hashable_fnv_hash(str_a, o, len, hash);
 }
 
-/*
-uint64_t hashable_wang_64(uint64_t key)
-{
-    key = (~key) + (key << 21); // key = (key << 21) - key - 1;
-    key = key ^ ((key >> 24) | (key << 40));
-    key = (key + (key << 3)) + (key << 8); // key * 265
-    key = key ^ ((key >> 14) | (key << 50));
-    key = (key + (key << 2)) + (key << 4); // key * 21
-    key = key ^ ((key >> 28) | (key << 36));
-    key = key + (key << 31);
-    return key;
+function h$hashable_fnv_hash(str_d, str_o, len, hash) {
+  if(len > 0) {
+    var d = str_d.u8;
+    for(var i=0;i<len;i++) {
+      hash = h$mulInt32(hash, 16777619) ^ d[str_o+i];
+    }
+  }
+  return hash;
 }
-*/
+
+
+// int hashable_getRandomBytes(unsigned char *dest, int nbytes)
+function h$hashable_getRandomBytes(dest_d, dest_o, len) {
+  if(len > 0) {
+    var d = dest_d.u8;
+    for(var i=0;i<len;i++) {
+      d[dest_o+i] = Math.floor(Math.random() * 256);
+    }
+  }
+  return len;
+}
+
+
 
 function h$_hs_text_memcpy(dst_v,dst_o2,src_v,src_o2,n) {
   return h$memcpy(dst_v,2*dst_o2,src_v,2*src_o2,2*n);
